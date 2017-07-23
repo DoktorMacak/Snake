@@ -17,8 +17,8 @@ public class main extends ApplicationAdapter implements InputProcessor{
 	public static float WIDTH;
 	public static float HEIGHT;
 
-	public static float BLOCK_WIDTH = 60;
-	public static float BLOCK_HEIGHT = 60;
+	public static float BLOCK_WIDTH = 90;
+	public static float BLOCK_HEIGHT = 90;
 
 	private int prevX;
 	private int prevY;

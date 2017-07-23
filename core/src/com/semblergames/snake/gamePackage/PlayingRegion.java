@@ -12,7 +12,6 @@ public class PlayingRegion {
 
     public static final int EMPTY = -1;
     public static final int WALL = 1;
-    public static final int TAKEN = 0;
 
     private Color wallColor;
 
@@ -23,77 +22,43 @@ public class PlayingRegion {
 
     public PlayingRegion(){
         field = new int[32][18];
-        wallColor = new Color(Color.RED);
+        wallColor = new Color(Color.GRAY);
         init();
     }
 
     public void init(){
         clear();
 
+
         Random random = new Random();
 
-        for(int i = 0; i < 32;i++){
-            for(int j = 0; j< 18;j++){
+        for(int i = 0; i < 4;i++){
+            for(int j = 0;j<2;j++){
+                int patID = random.nextInt(PlayState.patterns.size());
+                Pattern pattern = PlayState.patterns.get(patID);
 
-                int k = 0;
+                int[] xs = pattern.getXs();
+                int[] ys = pattern.getYs();
 
-                while (j + k < 18 && field[i][j + k] == EMPTY) {
-                    k++;
-                }
+                boolean flippedX = random.nextBoolean();
+                boolean flippedY = random.nextBoolean();
 
-                int counter = k;
+                for (int u = 0; u < pattern.getAmount(); u++) {
+
+                    int y = ys[u];
+                    int x = xs[u];
 
 
-                if (counter > 0) {
-                    int newW = random.nextInt(counter) + 1;
-                    int patId;
-                    Pattern pattern;
-                    if (PlayState.patterns.get(newW) instanceof ArrayList) {
-                        patId = random.nextInt(((ArrayList) PlayState.patterns.get(newW)).size());
-                        pattern = (Pattern) ((ArrayList) PlayState.patterns.get(newW)).get(patId);
-                    } else break;
-
-                    int[] xs = pattern.getXs();
-                    int[] ys = pattern.getYs();
-
-                    int heightOffset = 2 + random.nextInt(3);
-
-                    int widthOffset = 2 + random.nextInt(3);
-
-                    for (int u = 0; u < pattern.getHeight()+ heightOffset; u++) {
-                        for (int w = 0; w < pattern.getWidth()+ widthOffset; w++) {
-                            if(i+u < 32 && j + w < 18) {
-                                field[i + u][j + w] = TAKEN;
-                            }
-                        }
+                    if (flippedX) {
+                        x = Math.abs(x - 8);
                     }
 
-                    boolean flippedX = random.nextBoolean();
-                    boolean flippedY = random.nextBoolean();
-
-                    for (int u = 0; u < pattern.getAmount(); u++) {
-
-                        int y = i+ys[u];
-                        int x = j+xs[u];
-
-                        if(flippedX){
-                            x = Math.abs(x - pattern.getWidth() + 1);
-                        }
-
-                        if(flippedY){
-                            y = Math.abs(y - pattern.getHeight() + 1);
-                        }
-
-                        if(y < 32) {
-                            field[y][x] = WALL;
-                        }
+                    if (flippedY) {
+                        y = Math.abs(y - 7);
                     }
 
+                    field[i * 8 + y][j * 9 + x] = WALL;
                 }
-
-
-
-
             }
         }
 
@@ -171,7 +136,7 @@ public class PlayingRegion {
                     int posy = ys[i]+l;
 
                     if(posx >= 0 && posx < 18 && posy >= 0 && posy < 32 && field[posy][posx] == EMPTY){
-                        field[posy][posx] = TAKEN;
+                       // field[posy][posx] = TAKEN;
                     }
                 }
             }

@@ -42,9 +42,9 @@ public class Pattern {
         return ys;
     }
 
-    public static Map<Integer, ArrayList<Pattern>> loadPatterns(){
+    public static ArrayList<Pattern> loadPatterns(){
 
-        Map<Integer, ArrayList<Pattern>> patterns = new HashMap<Integer, ArrayList<Pattern>>();
+        ArrayList<Pattern> patterns = new ArrayList<Pattern>();
 
 
         for(int j = 0; j < lines.length;j++){
@@ -59,17 +59,11 @@ public class Pattern {
             for(int i = 0; i < amount; i++){
                 String [] c = s[3+i].split(",");
                 xs[i] = Integer.parseInt(c[0]);
-                ys[i] = Integer.parseInt(c[1]);
+                ys[i] = Integer.parseInt(c[1]); /********/
             }
             Pattern pattern = new Pattern(width,height,amount,xs,ys);
 
-            if(patterns.containsKey(width)){
-                patterns.get(width).add(pattern);
-            }else{
-                ArrayList<Pattern> newPatterns = new ArrayList<Pattern>();
-                newPatterns.add(pattern);
-                patterns.put(width, newPatterns);
-            }
+            patterns.add(pattern);
         }
 
         return patterns;
@@ -77,12 +71,10 @@ public class Pattern {
     }
 
     private static String [] lines = {
-            "1 3 3 0,0 0,1 0,2 ",
-            "2 3 4 1,0 1,1 0,1 0,2 \n",
-            "3 2 4 0,0 1,0 2,0 0,1 \n",
-            "4 3 6 0,0 1,0 2,0 3,0 2,1 2,2 \n",
-            "5 4 8 0,0 1,0 2,0 3,0 4,0 0,1 0,2 0,3 \n",
-            "6 2 7 0,0 1,0 2,0 3,0 4,0 5,0 0,1 \n"
+            "9 8 17 1,0 2,0 3,0 1,1 1,2 5,2 5,3 5,4 5,5 5,6 5,7 7,4 8,4 0,6 1,6 2,6 3,6",
+            "9 8 18 3,1 4,1 5,1 3,2 4,2 5,2 3,3 8,2 8,3 8,4 1,4 1,5 1,6 2,6 3,6 4,6 5,6 6,6",
+            "9 8 14 1,3 2,3 3,3 1,4 2,4 3,4 6,1 7,1 7,2 7,3 7,4 7,5 7,6 6,6",
+            "9 8 17 5,1 6,1 7,1 6,2 7,2 6,3 7,3 6,4 7,4 1,3 2,3 3,3 1,4 1,5 1,6 5,6 5,7"
             };
 
 

@@ -10,9 +10,10 @@ import java.util.Map;
 
 public class PlayState extends GameState {
 
-    public static Map patterns;
+    public static ArrayList <Pattern> patterns;
 
-    PlayingRegion pl;
+    private PlayingRegion[][] regions;
+
 
     Snake snake;
 
@@ -26,8 +27,14 @@ public class PlayState extends GameState {
     public void init() {
         patterns = Pattern.loadPatterns();
 
-        pl = new PlayingRegion();
-        pl.setRelativePos(0,0);
+        regions = new PlayingRegion[3][3];
+        for(int i = 0; i < 3;i++){
+            for (int j = 0; j < 3; j++){
+                regions[i][j] = new PlayingRegion();
+                regions[i][j].init();
+            }
+        }
+
         snake = new Snake(3, Direction.up, 5, 3);
         speed = 0.8f;
         time = 0f;
@@ -46,7 +53,7 @@ public class PlayState extends GameState {
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         time+=delta;
         snake.draw(renderer);
-        pl.drawRegion(renderer);
+        //pl.drawRegion(renderer);
         if (time > speed){
             snake.update();
             time = 0f;
