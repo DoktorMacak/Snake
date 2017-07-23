@@ -43,7 +43,8 @@ public class Snake {
             case right: x++;
         }
         segments.add(new Segment(x,y));
-        segments.remove(0);
+        if (!grow) segments.remove(0);
+        grow = false;
     }
 
     public void grow(){
