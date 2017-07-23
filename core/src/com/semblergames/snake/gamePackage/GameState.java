@@ -1,6 +1,7 @@
 package com.semblergames.snake.gamePackage;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public abstract class GameState {
 
@@ -8,34 +9,20 @@ public abstract class GameState {
 
   //  protected DataBundle bundle;
 
-    protected float scaleX;
 
-    protected float scaleY;
+    public GameState() {
 
-    protected int width;
-
-    protected int height;
-
-    public GameState(
-          //  DataBundle bundle,
-            float scaleX,
-            float scaleY,
-            int width,
-            int height) {
-     //   this.bundle = bundle;
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
-        this.width = width;
-        this.height = height;
     }
 
     public abstract void init();
 
-    public abstract void initTextures();
+    protected abstract void initTextures();
 
-    public abstract void render(SpriteBatch batch, float alpha);
+    public abstract void render(SpriteBatch batch, ShapeRenderer renderer, float alpha);
 
     public abstract void touchDown(int x, int y);
+
+    public abstract void touchDragged(int prevX, int prevY, int x, int y);
 
     public abstract void touchUp(int x, int y);
 
@@ -47,9 +34,9 @@ public abstract class GameState {
         disposeTextures();
     }
 
-    protected void disposeTextures(){}
+    protected abstract void disposeTextures();
 
-  //  public void setChangeListener(ChangeState listener){
+    //  public void setChangeListener(ChangeState listener){
       //  this.listener = listener;
    // }
 
