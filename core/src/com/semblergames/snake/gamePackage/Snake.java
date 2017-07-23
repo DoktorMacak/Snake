@@ -1,5 +1,8 @@
 package com.semblergames.snake.gamePackage;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Direction;
 
 import java.util.ArrayList;
@@ -53,6 +56,15 @@ public class Snake {
 
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public void draw(ShapeRenderer renderer){
+        renderer.setColor(Color.BLUE);
+        float width = main.BLOCK_WIDTH;
+        float height = main.BLOCK_HEIGHT;
+        for(Segment x:segments){
+            renderer.rect(x.getX() * width, x.getY() * height, width, height);
+        }
     }
 
     public List<Segment> getSegments() {
