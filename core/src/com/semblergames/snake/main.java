@@ -17,8 +17,8 @@ public class main extends ApplicationAdapter implements InputProcessor{
 	public static float WIDTH;
 	public static float HEIGHT;
 
-	public static float BLOCK_WIDTH = 20;
-	public static float BLOCK_HEIGHT = 30;
+	public static float BLOCK_WIDTH = 120;
+	public static float BLOCK_HEIGHT = 120;
 
 	private int prevX;
 	private int prevY;
@@ -34,6 +34,16 @@ public class main extends ApplicationAdapter implements InputProcessor{
 
 	@Override
 	public void create () {
+
+		WIDTH = Gdx.graphics.getWidth();
+		HEIGHT = Gdx.graphics.getHeight();
+
+		SCALEX = WIDTH / 1080;
+		SCALEY = HEIGHT / 1920;
+
+		BLOCK_WIDTH *= SCALEX;
+		BLOCK_HEIGHT *= SCALEY;
+
 		batch = new SpriteBatch();
 		renderer = new ShapeRenderer();
 
@@ -48,7 +58,7 @@ public class main extends ApplicationAdapter implements InputProcessor{
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		renderer.setAutoShapeType(true);
-		renderer.begin();
+		renderer.begin(ShapeRenderer.ShapeType.Filled);
 		playState.render(batch, renderer, alpha);
 		renderer.end();
 	}

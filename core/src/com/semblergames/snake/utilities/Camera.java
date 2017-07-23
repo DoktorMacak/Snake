@@ -1,4 +1,4 @@
-package com.semblergames.snake.utilPackage;
+package com.semblergames.snake.utilities;
 
 public class Camera {
 

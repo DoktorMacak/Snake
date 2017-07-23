@@ -11,8 +11,8 @@ public class PlayingRegion {
 
     private Color wallColor;
 
-    private float relativeX;
-    private float relativeY;
+    private short relativeX;
+    private short relativeY;
 
     private short [][]field;
 
@@ -30,14 +30,13 @@ public class PlayingRegion {
         }
     }
 
-    public void setRelativePos(float relativeX, float relativeY){
+    public void setRelativePos(short relativeX, short relativeY){
         this.relativeX = relativeX;
         this.relativeY = relativeY;
     }
 
-    public void move(float dx, float dy){
-        relativeX += dx;
-        relativeY += dy;
+    public void update(){
+
     }
 
     public void setWall(short row, short column){
