@@ -38,8 +38,8 @@ public class main extends ApplicationAdapter implements InputProcessor{
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
 
-		SCALEX = WIDTH / 1080;
-		SCALEY = HEIGHT / 1920;
+		SCALEX = WIDTH / (float)1080;
+		SCALEY = HEIGHT / (float)1920;
 
 		BLOCK_WIDTH *= SCALEX;
 		BLOCK_HEIGHT *= SCALEY;
@@ -51,16 +51,16 @@ public class main extends ApplicationAdapter implements InputProcessor{
 		playState.init();
 
 		alpha = 1f;
+
+		Gdx.input.setInputProcessor(this);
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		renderer.setAutoShapeType(true);
-		renderer.begin(ShapeRenderer.ShapeType.Filled);
+
 		playState.render(batch, renderer, alpha);
-		renderer.end();
 	}
 	
 	@Override
@@ -100,7 +100,11 @@ public class main extends ApplicationAdapter implements InputProcessor{
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
+		int y = (int)HEIGHT - screenY;
+		playState.touchDragged(prevX, prevX, screenX, y);
 
+		prevX = screenX;
+		prevY = y;
 		return false;
 	}
 

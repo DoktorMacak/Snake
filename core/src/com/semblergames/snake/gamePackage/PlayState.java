@@ -14,8 +14,6 @@ public class PlayState extends GameState {
     public void init() {
         pl = new PlayingRegion();
         pl.setRelativePos(0,0);
-
-        pl.setWall((short)5,(short)5);
     }
 
     @Override
@@ -25,7 +23,11 @@ public class PlayState extends GameState {
 
     @Override
     public void render(SpriteBatch batch, ShapeRenderer renderer, float alpha) {
+        //ShapeRenderer.ShapeType.Filled
+        renderer.setAutoShapeType(true);
+        renderer.begin();
         pl.drawRegion(renderer);
+        renderer.end();
     }
 
     @Override

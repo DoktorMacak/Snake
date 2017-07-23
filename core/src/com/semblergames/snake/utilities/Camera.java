@@ -2,53 +2,33 @@ package com.semblergames.snake.utilities;
 
 public class Camera {
 
-    private float x;
-    private float y;
+    private int x;
+    private int y;
 
-    private float width;
-    private float height;
 
-    public Camera(float x, float y, float width, float height){
+    public Camera(int x, int y){
         this.x = x;
         this.y = y;
-        this.width = width;
-        this.height = height;
     }
 
-    public void move(float dx, float dy){
+    public void move(int dx, int dy){
         this.x += dx;
         this.y += dy;
     }
 
-    public float getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(float x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public float getY() {
+    public int getY() {
         return y;
     }
 
-    public void setY(float y) {
+    public void setY(int y) {
         this.y = y;
-    }
-
-    public float getWidth() {
-        return width;
-    }
-
-    public void setWidth(float width) {
-        this.width = width;
-    }
-
-    public float getHeight() {
-        return height;
-    }
-
-    public void setHeight(float height) {
-        this.height = height;
     }
 }
