@@ -2,9 +2,15 @@ package com.semblergames.snake.gamePackage;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.DataInput;
 import com.semblergames.snake.utilities.Direction;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 public class PlayState extends GameState {
+
+    public static Map patterns;
 
     PlayingRegion pl;
 
@@ -18,11 +24,14 @@ public class PlayState extends GameState {
 
     @Override
     public void init() {
+        patterns = Pattern.loadPatterns();
+
         pl = new PlayingRegion();
         pl.setRelativePos(0,0);
         snake = new Snake(3, Direction.up, 5, 3);
         speed = 0.8f;
         time = 0f;
+
     }
 
     @Override
@@ -47,7 +56,6 @@ public class PlayState extends GameState {
 
     @Override
     public void touchDown(int x, int y) {
-
     }
 
     @Override

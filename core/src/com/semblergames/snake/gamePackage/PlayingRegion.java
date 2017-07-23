@@ -32,18 +32,68 @@ public class PlayingRegion {
 
         Random random = new Random();
 
-        int offset = random.nextInt(5);
-
-        int counter = 0;
-
         for(int i = 0; i < 32;i++){
             for(int j = 0; j< 18;j++){
-                counter++;
-                if(counter >= offset && field[i][j] == EMPTY){
-                    generateRegion(random, j, i);
-                    offset = random.nextInt(15)+7;
-                    counter = 0;
+
+                int k = 0;
+
+                while (j + k < 18 && field[i][j + k] == EMPTY) {
+                    k++;
                 }
+
+                int counter = k;
+
+
+                if (counter > 0) {
+                    int newW = random.nextInt(counter) + 1;
+                    int patId;
+                    Pattern pattern;
+                    if (PlayState.patterns.get(newW) instanceof ArrayList) {
+                        patId = random.nextInt(((ArrayList) PlayState.patterns.get(newW)).size());
+                        pattern = (Pattern) ((ArrayList) PlayState.patterns.get(newW)).get(patId);
+                    } else break;
+
+                    int[] xs = pattern.getXs();
+                    int[] ys = pattern.getYs();
+
+                    int heightOffset = 2 + random.nextInt(3);
+
+                    int widthOffset = 2 + random.nextInt(3);
+
+                    for (int u = 0; u < pattern.getHeight()+ heightOffset; u++) {
+                        for (int w = 0; w < pattern.getWidth()+ widthOffset; w++) {
+                            if(i+u < 32 && j + w < 18) {
+                                field[i + u][j + w] = TAKEN;
+                            }
+                        }
+                    }
+
+                    boolean flippedX = random.nextBoolean();
+                    boolean flippedY = random.nextBoolean();
+
+                    for (int u = 0; u < pattern.getAmount(); u++) {
+
+                        int y = i+ys[u];
+                        int x = j+xs[u];
+
+                        if(flippedX){
+                            x = Math.abs(x - pattern.getWidth() + 1);
+                        }
+
+                        if(flippedY){
+                            y = Math.abs(y - pattern.getHeight() + 1);
+                        }
+
+                        if(y < 32) {
+                            field[y][x] = WALL;
+                        }
+                    }
+
+                }
+
+
+
+
             }
         }
 
