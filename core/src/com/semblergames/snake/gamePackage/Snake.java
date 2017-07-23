@@ -27,23 +27,31 @@ public class Snake {
         switch (direction){
             case left: for(int i = 0; i < initialLength; i++)
                 segments.add(new Segment(initialX + i, initialY));
+                break;
             case right: for(int i = 0; i < initialLength; i++)
-                segments.add(new Segment(initialX + i, initialY));
+                segments.add(new Segment(initialX - i, initialY));
+                break;
             case up: for(int i = 0; i < initialLength; i++)
                 segments.add(new Segment(initialX, initialY + i));
+                break;
             case down: for(int i = 0; i < initialLength; i++)
-                segments.add(new Segment(initialX + i, initialY));
+                segments.add(new Segment(initialX , initialY - i));
+                break;
         }
     }
 
     public void update(){
-        int x = segments.get(segments.size()).getX();
-        int y = segments.get(segments.size()).getY();
+        int x = segments.get(segments.size()-1).getX();
+        int y = segments.get(segments.size()-1).getY();
         switch (direction){
             case up: y++;
+                break;
             case down: y--;
+                break;
             case left: x--;
+                break;
             case right: x++;
+                break;
         }
         segments.add(new Segment(x,y));
         if (!grow) segments.remove(0);

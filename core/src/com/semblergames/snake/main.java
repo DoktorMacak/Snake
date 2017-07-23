@@ -60,7 +60,7 @@ public class main extends ApplicationAdapter implements InputProcessor{
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		playState.render(batch, renderer, alpha);
+		playState.render(batch, renderer, alpha, Gdx.graphics.getDeltaTime());
 	}
 	
 	@Override
@@ -95,16 +95,17 @@ public class main extends ApplicationAdapter implements InputProcessor{
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+		int y = (int)HEIGHT - screenY;
+		playState.touchUp(prevX - screenX, prevY - y);
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-		int y = (int)HEIGHT - screenY;
-		playState.touchDragged(prevX, prevX, screenX, y);
-
-		prevX = screenX;
-		prevY = y;
+//		int y = (int)HEIGHT - screenY;
+//		playState.touchDragged(prevX, prevX, screenX, y);
+//		prevX = screenX;
+//		prevY = y;
 		return false;
 	}
 

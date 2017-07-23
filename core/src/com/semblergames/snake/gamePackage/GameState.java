@@ -18,7 +18,7 @@ public abstract class GameState {
 
     protected abstract void initTextures();
 
-    public abstract void render(SpriteBatch batch, ShapeRenderer renderer, float alpha);
+    public abstract void render(SpriteBatch batch, ShapeRenderer renderer, float alpha, float delta);
 
     public abstract void touchDown(int x, int y);
 
