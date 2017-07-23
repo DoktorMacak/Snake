@@ -14,8 +14,6 @@ public class PlayingRegion {
     public static final int WALL = 1;
     public static final int TAKEN = 0;
 
-    private int []directions;
-
     private Color wallColor;
 
     private int relativeX;
@@ -26,7 +24,6 @@ public class PlayingRegion {
     public PlayingRegion(){
         field = new int[32][18];
         wallColor = new Color(Color.RED);
-        directions = new int[4];
         init();
     }
 
@@ -42,9 +39,9 @@ public class PlayingRegion {
         for(int i = 0; i < 32;i++){
             for(int j = 0; j< 18;j++){
                 counter++;
-                if(counter == offset && field[i][j] == EMPTY){
+                if(counter >= offset && field[i][j] == EMPTY){
                     generateRegion(random, j, i);
-                    offset = random.nextInt(4)+1;
+                    offset = random.nextInt(15)+7;
                     counter = 0;
                 }
             }
@@ -55,26 +52,81 @@ public class PlayingRegion {
     private void generateRegion(Random random, int x, int y){
         int amount = random.nextInt(6)+2;
 
-        field[x][y] = WALL;
+        int []xs = new int[amount];
 
-        for(int i = 0; i < amount; i++){
+        int []ys = new int[amount];
+
+        int counter = 0;
+
+        field[y][x] = WALL;
+
+        xs[counter] = x;
+        ys[counter] = y;
+
+        counter++;
+
+        boolean failed = false;
+
+        int prevD = -1;
+
+        for(int i = 1; i < amount && !failed; i++){
             int direction = random.nextInt(4);
-            switch (direction){
+            while(prevD == direction+2 || prevD == direction -2){
+                direction = random.nextInt(4);
+            }
+            prevD = direction;
+            switch(direction){
                 case 0:
-                    if(field[x][y+1] == EMPTY){
+                    if(y+1 < 32 && field[y+1][x] == EMPTY){
                         y++;
-                        field[x][y] = WALL;
+                    }else{
+                        failed =  true;
                     }
                     break;
                 case 1:
+                    if(x+1 < 18 && field[y][x+1] == EMPTY){
+                        x++;
+                    }else{
+                        failed = true;
+                    }
                     break;
                 case 2:
+                    if(y-1 >= 0 && field[y-1][x] == EMPTY){
+                        y--;
+                    }else{
+                        failed = true;
+                    }
                     break;
                 case 3:
+                    if(x-1 >= 0 && field[y][x-1] == EMPTY){
+                        x--;
+                    }else{
+                        failed = true;
+                    }
                     break;
             }
 
+            if(!failed){
+                field[y][x] = WALL;
+                xs[counter] = x;
+                ys[counter] = y;
+                counter++;
+            }
         }
+
+        for(int i = 0; i < counter; i++){
+            for(int k = -1; k < 2;k++){
+                for(int l = -1; l < 2;l++){
+                    int posx = xs[i]+k;
+                    int posy = ys[i]+l;
+
+                    if(posx >= 0 && posx < 18 && posy >= 0 && posy < 32 && field[posy][posx] == EMPTY){
+                        field[posy][posx] = TAKEN;
+                    }
+                }
+            }
+        }
+
     }
 
     private void clear(){
@@ -82,12 +134,6 @@ public class PlayingRegion {
             for(int j = 0; j < 18; j++){
                 field[i][j] = EMPTY;
             }
-        }
-    }
-
-    private void resetDirections(){
-        for(int i = 0; i < 4; i++){
-            directions[i] = 0;
         }
     }
 
