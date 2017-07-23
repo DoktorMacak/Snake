@@ -3,8 +3,10 @@ package com.semblergames.snake;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.semblergames.snake.gamePackage.PlayState;
@@ -17,8 +19,8 @@ public class main extends ApplicationAdapter implements InputProcessor{
 	public static float WIDTH;
 	public static float HEIGHT;
 
-	public static float BLOCK_WIDTH = 120;
-	public static float BLOCK_HEIGHT = 120;
+	public static float BLOCK_WIDTH = 60;
+	public static float BLOCK_HEIGHT = 60;
 
 	private int prevX;
 	private int prevY;
@@ -29,6 +31,8 @@ public class main extends ApplicationAdapter implements InputProcessor{
 
 	private float alpha;
 
+	private BitmapFont font;
+	private String text;
 	private SpriteBatch batch;
 	private ShapeRenderer renderer;
 
@@ -44,11 +48,15 @@ public class main extends ApplicationAdapter implements InputProcessor{
 		BLOCK_WIDTH *= SCALEX;
 		BLOCK_HEIGHT *= SCALEY;
 
+		font = new BitmapFont();
 		batch = new SpriteBatch();
 		renderer = new ShapeRenderer();
 
+		long t = System.currentTimeMillis();
 		playState = new PlayState();
 		playState.init();
+		t = System.currentTimeMillis() - t;
+		text = Long.toString(t);
 
 		alpha = 1f;
 
@@ -61,6 +69,11 @@ public class main extends ApplicationAdapter implements InputProcessor{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		playState.render(batch, renderer, alpha);
+
+		batch.begin();
+		font.setColor(Color.BLACK);
+		font.draw(batch, text, 100,100);
+		batch.end();
 	}
 	
 	@Override
@@ -101,7 +114,7 @@ public class main extends ApplicationAdapter implements InputProcessor{
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
 		int y = (int)HEIGHT - screenY;
-		playState.touchDragged(prevX, prevX, screenX, y);
+		playState.touchDragged(prevX, prevY, screenX, y);
 
 		prevX = screenX;
 		prevY = y;

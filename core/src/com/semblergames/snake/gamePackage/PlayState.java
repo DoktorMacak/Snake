@@ -25,7 +25,7 @@ public class PlayState extends GameState {
     public void render(SpriteBatch batch, ShapeRenderer renderer, float alpha) {
         //ShapeRenderer.ShapeType.Filled
         renderer.setAutoShapeType(true);
-        renderer.begin();
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
         pl.drawRegion(renderer);
         renderer.end();
     }
