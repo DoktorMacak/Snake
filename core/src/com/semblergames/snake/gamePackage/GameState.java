@@ -2,10 +2,11 @@ package com.semblergames.snake.gamePackage;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.semblergames.snake.utilities.ChangeState;
 
 public abstract class GameState {
 
-   // protected ChangeState listener = null;
+   protected ChangeState listener;
 
   //  protected DataBundle bundle;
 
@@ -36,8 +37,8 @@ public abstract class GameState {
 
     protected abstract void disposeTextures();
 
-    //  public void setChangeListener(ChangeState listener){
-      //  this.listener = listener;
-   // }
+    public void setChangeListener(ChangeState listener){
+        this.listener = listener;
+    }
 
 }

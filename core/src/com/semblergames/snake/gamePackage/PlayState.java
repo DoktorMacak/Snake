@@ -48,14 +48,12 @@ public class PlayState extends GameState {
 
     @Override
     public void render(SpriteBatch batch, ShapeRenderer renderer, float alpha, float delta) {
-        //ShapeRenderer.ShapeType.Filled
         renderer.setAutoShapeType(true);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         time+=delta;
         snake.draw(renderer);
-        //pl.drawRegion(renderer);
         if (time > speed){
-            snake.update();
+            if(snake.update()) listener.changeState(1);
             time = 0f;
         }
         renderer.end();

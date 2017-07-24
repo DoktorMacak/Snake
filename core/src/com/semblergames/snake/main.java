@@ -7,9 +7,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.semblergames.snake.gamePackage.GameOverState;
+import com.semblergames.snake.gamePackage.GameState;
 import com.semblergames.snake.gamePackage.PlayState;
+import com.semblergames.snake.utilities.ChangeState;
 
-public class main extends ApplicationAdapter implements InputProcessor{
+public class main extends ApplicationAdapter implements InputProcessor, ChangeState{
 
 	public static float SCALEX;
 	public static float SCALEY;
@@ -24,7 +27,9 @@ public class main extends ApplicationAdapter implements InputProcessor{
 	private int prevY;
 
 
-	private PlayState playState;
+	private GameState[] states = new GameState[2];
+
+	private GameState currentState;
 
 
 	private float alpha;
@@ -47,10 +52,17 @@ public class main extends ApplicationAdapter implements InputProcessor{
 		batch = new SpriteBatch();
 		renderer = new ShapeRenderer();
 
-		playState = new PlayState();
-		playState.init();
+		states[0] = new PlayState();
+		states[0].init();
+		states[0].setChangeListener(this);
+		states[1] = new GameOverState();
+		states[1].init();
+		states[1].setChangeListener(this);
+
+		currentState = states[0];
 
 		alpha = 1f;
+
 
 		Gdx.input.setInputProcessor(this);
 	}
@@ -60,12 +72,13 @@ public class main extends ApplicationAdapter implements InputProcessor{
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		playState.render(batch, renderer, alpha, Gdx.graphics.getDeltaTime());
+		currentState.render(batch, renderer, alpha, Gdx.graphics.getDeltaTime());
 	}
 	
 	@Override
 	public void dispose () {
-		playState.dispose();
+		states[1].dispose();
+		states[2].dispose();
 		batch.dispose();
 		renderer.dispose();
 	}
@@ -96,7 +109,7 @@ public class main extends ApplicationAdapter implements InputProcessor{
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		int y = (int)HEIGHT - screenY;
-		playState.touchUp(prevX - screenX, prevY - y);
+		currentState.touchUp(prevX - screenX, prevY - y);
 		return false;
 	}
 
@@ -118,5 +131,10 @@ public class main extends ApplicationAdapter implements InputProcessor{
 	@Override
 	public boolean scrolled(int amount) {
 		return false;
+	}
+
+	@Override
+	public void changeState(int x) {
+		currentState = states[x];
 	}
 }

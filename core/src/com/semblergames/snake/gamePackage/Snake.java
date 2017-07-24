@@ -21,6 +21,10 @@ public class Snake {
      *is snake growing
      */
     private boolean grow = false;
+    /**
+     *color of the snake
+     */
+    private Color snakeColor = new Color(Color.BLUE);
 
     public Snake(int initialLength, Direction initialDirection, int initialX, int initialY){
         this.direction = initialDirection;
@@ -40,7 +44,7 @@ public class Snake {
         }
     }
 
-    public void update(){
+    public boolean update(){
         int x = segments.get(segments.size()-1).getX();
         int y = segments.get(segments.size()-1).getY();
         switch (direction){
@@ -53,9 +57,17 @@ public class Snake {
             case right: x++;
                 break;
         }
-        segments.add(new Segment(x,y));
+        for (Segment a:segments){
+            if(a.getX() == x && a.getY() == y){
+                //game over
+                snakeColor = Color.RED;
+                return true;
+            }
+        }
+        segments.add(new Segment(x, y));
         if (!grow) segments.remove(0);
         grow = false;
+        return false;
     }
 
     public void grow(){
@@ -66,8 +78,12 @@ public class Snake {
         this.direction = direction;
     }
 
+    public void seColor(Color snakeColor) {
+        this.snakeColor = snakeColor;
+    }
+
     public void draw(ShapeRenderer renderer){
-        renderer.setColor(Color.BLUE);
+        renderer.setColor(snakeColor);
         float width = main.BLOCK_WIDTH;
         float height = main.BLOCK_HEIGHT;
         for(Segment x:segments){
