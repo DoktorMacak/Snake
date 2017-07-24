@@ -134,7 +134,7 @@ public class PlayState extends GameState {
     public void touchUp(int x, int y) {
         float timeLeft = speed - time;
 
-        if (Math.abs(x) > Math.abs(y)){
+        if (Math.abs(x) > Math.abs(y) && snake.getDirection() != Direction.right && snake.getDirection() != Direction.left){
             // && (snake.getDirection() == Direction.down || snake.getDirection() == Direction.up)
             if(x > 0) {
                 snake.setDirection(Direction.left);
@@ -149,7 +149,7 @@ public class PlayState extends GameState {
 
 
             camera.setSpeedY(deltaY/timeLeft);
-        }else{
+        }else if(snake.getDirection() != Direction.up && snake.getDirection() != Direction.down){
             if(y > 0) {
                 snake.setDirection(Direction.down);
                 camera.setSpeedY(-1/timeLeft);
