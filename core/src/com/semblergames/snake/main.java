@@ -14,14 +14,18 @@ import com.semblergames.snake.utilities.ChangeState;
 
 public class main extends ApplicationAdapter implements InputProcessor, ChangeState{
 
+    public static final int PLAY_STATE = 0;
+    public static final int GAME_OVER_STATE = 1;
+
+
 	public static float SCALEX;
 	public static float SCALEY;
 
 	public static float WIDTH;
 	public static float HEIGHT;
 
-	public static float BLOCK_WIDTH = 90;
-	public static float BLOCK_HEIGHT = 90;
+	public static float BLOCK_WIDTH = 60;
+	public static float BLOCK_HEIGHT = 60;
 
 	private int prevX;
 	private int prevY;
@@ -77,8 +81,8 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	
 	@Override
 	public void dispose () {
+		states[0].dispose();
 		states[1].dispose();
-		states[2].dispose();
 		batch.dispose();
 		renderer.dispose();
 	}

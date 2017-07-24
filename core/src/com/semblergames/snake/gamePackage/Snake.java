@@ -3,6 +3,7 @@ package com.semblergames.snake.gamePackage;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.semblergames.snake.main;
+import com.semblergames.snake.utilities.Camera;
 import com.semblergames.snake.utilities.Direction;
 
 import java.util.ArrayList;
@@ -78,20 +79,36 @@ public class Snake {
         this.direction = direction;
     }
 
+    public Direction getDirection(){
+        return direction;
+    }
+
+    public Segment getHeadSegment(){
+        return segments.get(segments.size()-1);
+    }
+
     public void seColor(Color snakeColor) {
         this.snakeColor = snakeColor;
     }
 
-    public void draw(ShapeRenderer renderer){
+    public void draw(ShapeRenderer renderer, Camera camera){
         renderer.setColor(snakeColor);
         float width = main.BLOCK_WIDTH;
         float height = main.BLOCK_HEIGHT;
         for(Segment x:segments){
-            renderer.rect(x.getX() * width, x.getY() * height, width, height);
+            renderer.rect((x.getX()-camera.getX()) * width, (x.getY()-camera.getY()) * height, width, height);
         }
     }
 
     public List<Segment> getSegments() {
         return segments;
+    }
+
+    public void move(int dx, int dy) {
+
+        for (Segment a:segments){
+            a.move(dx,dy);
+        }
+
     }
 }

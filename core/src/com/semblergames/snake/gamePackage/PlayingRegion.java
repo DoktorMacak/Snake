@@ -3,6 +3,7 @@ package com.semblergames.snake.gamePackage;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.semblergames.snake.main;
+import com.semblergames.snake.utilities.Camera;
 import com.semblergames.snake.utilities.Direction;
 
 import java.util.ArrayList;
@@ -13,53 +14,51 @@ public class PlayingRegion {
     public static final int EMPTY = -1;
     public static final int WALL = 1;
 
-    private Color wallColor;
+    public static final int FILLED = 12;
 
-    private int relativeX;
-    private int relativeY;
+
+    private Color wallColor;
 
     private int [][]field;
 
-    public PlayingRegion(){
-        field = new int[32][18];
+
+
+    public PlayingRegion(int type){
+        field = new int[8][9];
         wallColor = new Color(Color.GRAY);
-        init();
+        if(type == FILLED) {
+            init();
+        }
     }
 
     public void init(){
         clear();
 
-
         Random random = new Random();
 
-        for(int i = 0; i < 4;i++){
-            for(int j = 0;j<2;j++){
-                int patID = random.nextInt(PlayState.patterns.size());
-                Pattern pattern = PlayState.patterns.get(patID);
+        int patID = random.nextInt(PlayState.patterns.size());
+        Pattern pattern = PlayState.patterns.get(patID);
 
-                int[] xs = pattern.getXs();
-                int[] ys = pattern.getYs();
+        int[] xs = pattern.getXs();
+        int[] ys = pattern.getYs();
 
-                boolean flippedX = random.nextBoolean();
-                boolean flippedY = random.nextBoolean();
+        boolean flippedX = random.nextBoolean();
+        boolean flippedY = random.nextBoolean();
 
-                for (int u = 0; u < pattern.getAmount(); u++) {
+        for (int u = 0; u < pattern.getAmount(); u++) {
 
-                    int y = ys[u];
-                    int x = xs[u];
+            int y = ys[u];
+            int x = xs[u];
 
-
-                    if (flippedX) {
-                        x = Math.abs(x - 8);
-                    }
-
-                    if (flippedY) {
-                        y = Math.abs(y - 7);
-                    }
-
-                    field[i * 8 + y][j * 9 + x] = WALL;
-                }
+            if (flippedX) {
+                x = Math.abs(x - 8);
             }
+
+            if (flippedY) {
+                y = Math.abs(y - 7);
+            }
+
+            field[y][x] = WALL;
         }
 
     }
@@ -145,34 +144,21 @@ public class PlayingRegion {
     }
 
     private void clear(){
-        for(int i = 0; i < 32; i++){
-            for(int j = 0; j < 18; j++){
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 9; j++){
                 field[i][j] = EMPTY;
             }
         }
     }
 
-    public void setRelativePos(int relativeX, int relativeY){
-        this.relativeX = relativeX;
-        this.relativeY = relativeY;
-    }
-
-    public void move(Direction direction){
-
-    }
-
-    public void setWall(int row, int column){
-        field[row][column] = WALL;
-    }
-
-    public void drawRegion(ShapeRenderer renderer){
+    public void draw(int xGrid, int yGrid, ShapeRenderer renderer, Camera camera){
         renderer.setColor(wallColor);
         float width = main.BLOCK_WIDTH;
         float height = main.BLOCK_HEIGHT;
-        for(int i = 0; i < 32; i++){
-            for(int j = 0; j < 18; j++){
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 9; j++){
                 if(field[i][j] == WALL){
-                    renderer.rect((relativeX+j)*width, (relativeY + i) * height, width, height);
+                    renderer.rect(((float)(j + xGrid*9)-camera.getX())*width, ((float)(i + yGrid*9)-camera.getY()) * height, width, height);
                 }
             }
         }
