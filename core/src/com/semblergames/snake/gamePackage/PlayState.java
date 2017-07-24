@@ -31,11 +31,11 @@ public class PlayState extends GameState {
     public void init() {
         patterns = Pattern.loadPatterns();
 
-        regions = new PlayingRegion[7][5];
-        for(int i = 0; i < 7;i++){
+        regions = new PlayingRegion[9][5];
+        for(int i = 0; i < 9;i++){
             for (int j = 0; j < 5; j++){
 
-                if(i == 3 && j == 2){
+                if(i == 4 && j == 2){
                     regions[i][j] = new PlayingRegion(PlayingRegion.EMPTY);
                 }else{
                     regions[i][j] = new PlayingRegion(PlayingRegion.FILLED);
@@ -44,11 +44,11 @@ public class PlayState extends GameState {
             }
         }
 
-        snake = new Snake(3, Direction.up, 22, 27);
+        snake = new Snake(3, Direction.up, 22, 35);
 
         speed = 0.7f;
 
-        camera = new Camera(13.5f, 11.5f);
+        camera = new Camera(13.5f, 19.5f);
 
         camera.setSpeedX(0);
         camera.setSpeedY(1/speed);
@@ -68,7 +68,7 @@ public class PlayState extends GameState {
         renderer.begin(ShapeRenderer.ShapeType.Filled);
 
 
-        for(int i = 1; i < 6;i++) {
+        for(int i = 1; i < 8;i++) {
             for (int j = 1; j < 4; j++) {
                 regions[i][j].draw(j, i, renderer, camera);
             }
@@ -105,10 +105,10 @@ public class PlayState extends GameState {
             if(snake.getHeadSegment().getX() == 17){
                 moveEverything(Direction.right);
             }
-            if(snake.getHeadSegment().getY() == 23){
+            if(snake.getHeadSegment().getY() == 31){
                 moveEverything(Direction.up);
             }
-            if(snake.getHeadSegment().getY() == 32){
+            if(snake.getHeadSegment().getY() == 40){
                 moveEverything(Direction.down);
             }
 
@@ -193,7 +193,7 @@ public class PlayState extends GameState {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for(int i = 0; i < 7; i++) {
+                        for(int i = 0; i < 9; i++) {
                             regions[i][4] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
@@ -213,7 +213,7 @@ public class PlayState extends GameState {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for(int i = 0; i < 7; i++) {
+                        for(int i = 0; i < 9; i++) {
                             regions[i][0] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
@@ -223,6 +223,8 @@ public class PlayState extends GameState {
                 snake.move(0,8);
                 camera.move(0,8);
                 for(int i = 0; i < 5;i++){
+                    regions[8][i] = regions[7][i];
+                    regions[7][i] = regions[6][i];
                     regions[6][i] = regions[5][i];
                     regions[5][i] = regions[4][i];
                     regions[4][i] = regions[3][i];
@@ -250,13 +252,15 @@ public class PlayState extends GameState {
                     regions[3][i] = regions[4][i];
                     regions[4][i] = regions[5][i];
                     regions[5][i] = regions[6][i];
+                    regions[6][i] = regions[7][i];
+                    regions[7][i] = regions[8][i];
                 }
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         for(int i = 0; i < 5; i++) {
-                            regions[6][i] = new PlayingRegion(PlayingRegion.FILLED);
+                            regions[8][i] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
                 }).start();
