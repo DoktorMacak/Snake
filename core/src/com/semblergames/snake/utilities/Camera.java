@@ -1,6 +1,7 @@
 package com.semblergames.snake.utilities;
 
 import com.semblergames.snake.gamePackage.Snake;
+import com.semblergames.snake.main;
 
 public class Camera {
 
@@ -10,9 +11,8 @@ public class Camera {
     private float speedX;
     private float speedY;
 
-    public Camera(float x, float y){
-        this.x = x;
-        this.y = y;
+    public Camera(){
+
     }
 
     public void update(float timePassed){
@@ -61,8 +61,8 @@ public class Camera {
     }
 
     public void align(Snake snake){
-        x = (float)snake.getHeadSegment().getX() - 8.5f;
-        y = (float) snake.getHeadSegment().getY() - 15.5f;
+        x = (float)snake.getHeadSegment().getX() - (main.SCREEN_WIDTH-1)/2;
+        y = (float)snake.getHeadSegment().getY() - (main.SCREEN_HEIGHT-1)/2;
     }
 
 }

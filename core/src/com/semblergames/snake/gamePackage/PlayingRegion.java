@@ -65,7 +65,7 @@ public class PlayingRegion {
     }
 
 
-    private void clear(){
+    void clear(){
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
                 field[i][j] = EMPTY;
@@ -75,12 +75,12 @@ public class PlayingRegion {
 
     public void draw(int xGrid, int yGrid, ShapeRenderer renderer, Camera camera){
         renderer.setColor(wallColor);
-        float width = main.BLOCK_WIDTH;
-        float height = main.BLOCK_HEIGHT;
+        float w = main.BLOCK_WIDTH;
+        float h = main.BLOCK_HEIGHT;
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
                 if(field[i][j] == WALL){
-                    renderer.rect(((j + xGrid*width)-camera.getX())*width, ((i + yGrid*height)-camera.getY()) * height, width, height);
+                    renderer.rect(((j + xGrid*width)-camera.getX())*w, ((i + yGrid*height)-camera.getY()) * h, w, h);
                 }
             }
         }
