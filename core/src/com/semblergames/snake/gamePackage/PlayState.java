@@ -23,10 +23,14 @@ public class PlayState extends GameState {
     private Camera camera;
 
 
-    Snake snake;
+    private Snake snake;
 
     private float speed;
     private float time;
+
+    private int xPressed;
+    private int yPressed;
+
 
     private BitmapFont font;
 
@@ -89,7 +93,11 @@ public class PlayState extends GameState {
         snake.draw(renderer, camera);
         if (time > speed){
 
-            if(snake.update()) listener.changeState(main.GAME_OVER_STATE);
+            if(snake.update() ||
+                    regions[snake.getHeadSegment().getY() / PlayingRegion.height][snake.getHeadSegment().getX() / PlayingRegion.width]
+                            .isWall(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height)){
+                listener.changeState(main.GAME_OVER_STATE);
+            }
 
             switch (snake.getDirection()){
                 case left:
@@ -126,6 +134,7 @@ public class PlayState extends GameState {
             time = 0f;
             camera.align(snake);
         }
+
         renderer.end();
 
         camera.update(delta);
@@ -142,6 +151,8 @@ public class PlayState extends GameState {
 
     @Override
     public void touchDown(int x, int y) {
+        xPressed = x;
+        yPressed = y;
     }
 
     @Override
@@ -151,11 +162,15 @@ public class PlayState extends GameState {
 
     @Override
     public void touchUp(int x, int y) {
+
+        int dx = xPressed - x;
+        int dy = yPressed - y;
+
         float timeLeft = speed - time;
 
-        if (Math.abs(x) > Math.abs(y)){
-            if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left) {
-                if (x > 0) {
+        if (Math.abs(dx) > Math.abs(dy)){
+            if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 50*main.SCALEX) {
+                if (dx > 0) {
                     snake.setDirection(Direction.left);
                     camera.setSpeedX(-1 / timeLeft);
                 } else {
@@ -168,9 +183,9 @@ public class PlayState extends GameState {
 
                 camera.setSpeedY(deltaY / timeLeft);
             }
-        }else {
-            if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down) {
-                if (y > 0) {
+        }else{
+            if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down && Math.abs(dy) > 50*main.SCALEY) {
+                if (dy > 0) {
                     snake.setDirection(Direction.down);
                     camera.setSpeedY(-1 / timeLeft);
                 } else {

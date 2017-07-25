@@ -32,9 +32,6 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
 
-	private int prevX;
-	private int prevY;
-
 
 	private GameState[] states = new GameState[2];
 
@@ -68,11 +65,12 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 
 
 		states[0] = new PlayState();
-		states[0].init();
-		states[0].setChangeListener(this);
 		states[1] = new GameOverState();
-		states[1].init();
-		states[1].setChangeListener(this);
+
+		for(GameState state:states){
+			state.init();
+			state.setChangeListener(this);
+		}
 
 		currentState = states[0];
 
@@ -92,8 +90,9 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	
 	@Override
 	public void dispose () {
-		states[0].dispose();
-		states[1].dispose();
+		for(GameState state:states){
+			state.dispose();
+		}
 		batch.dispose();
 		renderer.dispose();
 	}
@@ -115,16 +114,15 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		prevX = screenX;
 		int y = (int)HEIGHT - screenY;
-		prevY = y;
+		currentState.touchDown(screenX, y);
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
 		int y = (int)HEIGHT - screenY;
-		currentState.touchUp(prevX - screenX, prevY - y);
+		currentState.touchUp(screenX, y);
 		return false;
 	}
 

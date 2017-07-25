@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Camera;
 import com.semblergames.snake.utilities.Direction;
+import com.sun.org.apache.regexp.internal.RE;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -65,12 +66,16 @@ public class PlayingRegion {
     }
 
 
-    void clear(){
+    public void clear(){
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
                 field[i][j] = EMPTY;
             }
         }
+    }
+
+    public boolean isWall(int x, int y){
+        return field[y][x] == WALL;
     }
 
     public void draw(int xGrid, int yGrid, ShapeRenderer renderer, Camera camera){
@@ -84,6 +89,13 @@ public class PlayingRegion {
                 }
             }
         }
+    }
+
+    public void drawPaint(int xGrid, int yGrid,ShapeRenderer renderer, int x, int y, Camera camera){
+        Color color = renderer.getColor();
+        renderer.setColor(Color.RED);
+        renderer.rect(((x + xGrid*width)-camera.getX())*main.BLOCK_WIDTH, ((y + yGrid*height)-camera.getY()) * main.BLOCK_HEIGHT, main.BLOCK_WIDTH, main.BLOCK_HEIGHT);
+        renderer.setColor(color);
     }
 
 }
