@@ -13,7 +13,10 @@ import java.util.Map;
 
 public class PlayState extends GameState {
 
-    public static ArrayList <Pattern> patterns;
+
+
+    private static final int REGION_X_AMOUNT = 6;
+    private static final int REGION_Y_AMOUNT = 7;
 
     private PlayingRegion[][] regions;
     private Camera camera;
@@ -29,7 +32,7 @@ public class PlayState extends GameState {
 
     @Override
     public void init() {
-        patterns = Pattern.loadPatterns();
+        Pattern.loadPatterns();
 
         regions = new PlayingRegion[9][5];
         for(int i = 0; i < 9;i++){
