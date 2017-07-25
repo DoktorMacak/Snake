@@ -5,6 +5,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.DistanceFieldFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.semblergames.snake.gamePackage.GameOverState;
@@ -27,6 +29,9 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	public static float BLOCK_WIDTH = 60;
 	public static float BLOCK_HEIGHT = 60;
 
+	public static int SCREEN_WIDTH;
+	public static int SCREEN_HEIGHT;
+
 	private int prevX;
 	private int prevY;
 
@@ -41,6 +46,7 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	private SpriteBatch batch;
 	private ShapeRenderer renderer;
 
+
 	@Override
 	public void create () {
 
@@ -53,8 +59,13 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		BLOCK_WIDTH *= SCALEX;
 		BLOCK_HEIGHT *= SCALEY;
 
+		SCREEN_WIDTH = 18;
+		SCREEN_HEIGHT = 32;
+
 		batch = new SpriteBatch();
 		renderer = new ShapeRenderer();
+
+
 
 		states[0] = new PlayState();
 		states[0].init();

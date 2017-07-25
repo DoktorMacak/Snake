@@ -15,8 +15,8 @@ public class PlayState extends GameState {
 
 
 
-    private static final int REGION_X_AMOUNT = 6;
-    private static final int REGION_Y_AMOUNT = 7;
+    private static final int COLUMNS = 7;
+    private static final int ROWS = 9;
 
     private PlayingRegion[][] regions;
     private Camera camera;

@@ -37,8 +37,8 @@ public class PlayingRegion {
     public void init(){
         Random random = new Random();
 
-        int patID = random.nextInt(PlayState.patterns.size());
-        Pattern pattern = PlayState.patterns.get(patID);
+        int patID = random.nextInt(Pattern.getPatterns().size());
+        Pattern pattern = Pattern.getPatterns().get(patID);
 
         int[] xs = pattern.getXs();
         int[] ys = pattern.getYs();
@@ -52,11 +52,11 @@ public class PlayingRegion {
             int x = xs[u];
 
             if (flippedX) {
-                x = Math.abs(x - 8);
+                x = Math.abs(x - width + 1);
             }
 
             if (flippedY) {
-                y = Math.abs(y - 7);
+                y = Math.abs(y - height +1);
             }
 
             field[y][x] = WALL;
