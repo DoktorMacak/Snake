@@ -1,6 +1,7 @@
 package com.semblergames.snake.gamePackage;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.DataInput;
@@ -27,12 +28,16 @@ public class PlayState extends GameState {
     private float speed;
     private float time;
 
+    private BitmapFont font;
+
     public PlayState() {
     }
 
     @Override
     public void init() {
         Pattern.loadPatterns();
+
+        font = new BitmapFont();
 
         regions = new PlayingRegion[ROWS][COLUMNS];
         for(int i = 0; i < ROWS;i++){
@@ -47,7 +52,7 @@ public class PlayState extends GameState {
             }
         }
 
-        snake = new Snake(3, Direction.up, (ROWS*PlayingRegion.width /2)-1, (COLUMNS*PlayingRegion.height /2)-1);
+        snake = new Snake(3, Direction.up, (COLUMNS*PlayingRegion.width) /2, (ROWS*PlayingRegion.height) /2);
 
         speed = 0.7f;
 
@@ -104,26 +109,34 @@ public class PlayState extends GameState {
                     camera.setSpeedY(-1/speed);
                     break;
             }
-/*-
-            if(snake.getHeadSegment().getX() == 27){
+
+            if(snake.getHeadSegment().getX() == ((COLUMNS/2)+1)*PlayingRegion.width){
                 moveEverything(Direction.left);
             }
-            if(snake.getHeadSegment().getX() == 17){
+            if(snake.getHeadSegment().getX() == (COLUMNS/2)*PlayingRegion.width-1){
                 moveEverything(Direction.right);
             }
-            if(snake.getHeadSegment().getY() == 31){
-                moveEverything(Direction.up);
-            }
-            if(snake.getHeadSegment().getY() == 40){
+            if(snake.getHeadSegment().getY() == ((ROWS/2)+1)*PlayingRegion.height){
                 moveEverything(Direction.down);
             }
-*/
+            if(snake.getHeadSegment().getY() == (ROWS/2)*PlayingRegion.height-1){
+                moveEverything(Direction.up);
+            }
+
             time = 0f;
             camera.align(snake);
         }
         renderer.end();
 
         camera.update(delta);
+
+        //gluposti na ekranu
+
+        batch.begin();
+        font.draw(batch, Integer.toString(snake.getHeadSegment().getX()), 300 , 300);
+        font.draw(batch, Integer.toString(snake.getHeadSegment().getY()), 350 , 300);
+        font.draw(batch, Float.toString(main.WIDTH) + " " + Float.toString(main.HEIGHT), 400, 400);
+        batch.end();
 
     }
 
@@ -150,7 +163,7 @@ public class PlayState extends GameState {
                     camera.setSpeedX(1 / timeLeft);
                 }
 
-                float deltaY = (float) snake.getHeadSegment().getY() - (main.SCREEN_HEIGHT - 1) / 2 - camera.getY();
+                float deltaY = (float) snake.getHeadSegment().getY() - ((float)(main.SCREEN_HEIGHT - 1)) / 2 - camera.getY();
 
 
                 camera.setSpeedY(deltaY / timeLeft);
@@ -165,7 +178,7 @@ public class PlayState extends GameState {
                     camera.setSpeedY(1 / timeLeft);
                 }
 
-                float deltaX = (float) snake.getHeadSegment().getX() - (main.SCREEN_WIDTH - 1) / 2 - camera.getX();
+                float deltaX = (float) snake.getHeadSegment().getX() - ((float)(main.SCREEN_WIDTH - 1)) / 2 - camera.getX();
 
 
                 camera.setSpeedX(deltaX / timeLeft);
@@ -187,86 +200,73 @@ public class PlayState extends GameState {
 
         switch (direction){
             case left:
-                snake.move(-9,0);
-                camera.move(-9,0);
-                for(int i = 0; i < 7;i++){
-                    regions[i][0] = regions[i][1];
-                    regions[i][1] = regions[i][2];
-                    regions[i][2] = regions[i][3];
-                    regions[i][3] = regions[i][4];
+                snake.move(-PlayingRegion.width,0);
+                camera.move(-PlayingRegion.width,0);
+                for(int i = 0; i < ROWS;i++){
+                    for(int j = 0; j < COLUMNS-1;j++){
+                        regions[i][j] = regions[i][j+1];
+                    }
                 }
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for(int i = 0; i < 9; i++) {
-                            regions[i][4] = new PlayingRegion(PlayingRegion.FILLED);
+                        for(int i = 0; i < ROWS; i++) {
+                            regions[i][COLUMNS-1] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
                 }).start();
 
                 break;
             case right:
-                snake.move(9,0);
-                camera.move(9,0);
-                for(int i = 0; i < 7;i++){
-                    regions[i][4] = regions[i][3];
-                    regions[i][3] = regions[i][2];
-                    regions[i][2] = regions[i][1];
-                    regions[i][1] = regions[i][0];
+                snake.move(PlayingRegion.width,0);
+                camera.move(PlayingRegion.width,0);
+                for(int i = 0; i < ROWS;i++){
+                    for(int j = COLUMNS-1; j > 0;j--){
+                        regions[i][j] = regions[i][j-1];
+                    }
                 }
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for(int i = 0; i < 9; i++) {
+                        for(int i = 0; i < ROWS; i++) {
                             regions[i][0] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
                 }).start();
                 break;
             case up:
-                snake.move(0,8);
-                camera.move(0,8);
-                for(int i = 0; i < 5;i++){
-                    regions[8][i] = regions[7][i];
-                    regions[7][i] = regions[6][i];
-                    regions[6][i] = regions[5][i];
-                    regions[5][i] = regions[4][i];
-                    regions[4][i] = regions[3][i];
-                    regions[3][i] = regions[2][i];
-                    regions[2][i] = regions[1][i];
-                    regions[1][i] = regions[0][i];
+                snake.move(0,PlayingRegion.height);
+                camera.move(0,PlayingRegion.height);
+                for(int i = 0; i < COLUMNS;i++){
+                    for(int j = ROWS-1; j > 0;j--){
+                        regions[j][i] = regions[j-1][i];
+                    }
                 }
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for(int i = 0; i < 5; i++) {
+                        for(int i = 0; i < COLUMNS; i++) {
                             regions[0][i] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
                 }).start();
                 break;
             case down:
-                snake.move(0,-8);
-                camera.move(0,-8);
-                for(int i = 0; i < 5;i++){
-                    regions[0][i] = regions[1][i];
-                    regions[1][i] = regions[2][i];
-                    regions[2][i] = regions[3][i];
-                    regions[3][i] = regions[4][i];
-                    regions[4][i] = regions[5][i];
-                    regions[5][i] = regions[6][i];
-                    regions[6][i] = regions[7][i];
-                    regions[7][i] = regions[8][i];
+                snake.move(0,-PlayingRegion.height);
+                camera.move(0,-PlayingRegion.height);
+                for(int i = 0; i < COLUMNS;i++){
+                    for(int j = 0; j < ROWS-1;j++){
+                        regions[j][i] = regions[j+1][i];
+                    }
                 }
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        for(int i = 0; i < 5; i++) {
-                            regions[8][i] = new PlayingRegion(PlayingRegion.FILLED);
+                        for(int i = 0; i < COLUMNS; i++) {
+                            regions[ROWS-1][i] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
                 }).start();
