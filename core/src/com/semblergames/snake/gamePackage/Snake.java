@@ -26,6 +26,11 @@ public class Snake {
      *color of the snake
      */
     private Color snakeColor = new Color(Color.BLUE);
+    /**
+     *is chamge of direction available
+     */
+    private boolean changeAvailable = true;
+    private Direction nextDirection;
 
     public Snake(int initialLength, Direction initialDirection, int initialX, int initialY){
         this.direction = initialDirection;
@@ -46,6 +51,16 @@ public class Snake {
     }
 
     public boolean update(){
+        if(nextDirection != null && changeAvailable) {
+            switch (nextDirection){
+                case up: if(nextDirection != Direction.up && nextDirection != Direction.down);
+                case down: if(nextDirection != Direction.up && nextDirection != Direction.down);
+                case left: if(nextDirection != Direction.left && nextDirection != Direction.right);
+                case right: if(nextDirection != Direction.left && nextDirection != Direction.right);
+            }
+            nextDirection = null;
+        }
+        changeAvailable = true;
         int x = segments.get(segments.size()-1).getX();
         int y = segments.get(segments.size()-1).getY();
         switch (direction){
@@ -76,7 +91,12 @@ public class Snake {
     }
 
     public void setDirection(Direction direction) {
-        this.direction = direction;
+        if (changeAvailable) {
+            this.direction = direction;
+        }else if(nextDirection == null){
+            this.nextDirection = direction;
+        }
+        changeAvailable = false;
     }
 
     public Direction getDirection(){
@@ -112,3 +132,8 @@ public class Snake {
 
     }
 }
+//        changeAvailable = true;
+//                if(nextDirection != null) {
+//                setDirection(nextDirection);
+//                nextDirection = null;
+//                }
