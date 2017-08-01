@@ -61,8 +61,8 @@ public class Camera {
     }
 
     public void align(Snake snake){
-        x = (float)snake.getHeadSegment().getX() - ((float)(main.SCREEN_WIDTH-1))/2;
-        y = (float)snake.getHeadSegment().getY() - ((float)(main.SCREEN_HEIGHT-1))/2;
+        x = (float)snake.getHeadSegment().getX() - (float)(main.SCREEN_WIDTH)/2;
+        y = (float)snake.getHeadSegment().getY() - (float)(main.SCREEN_HEIGHT)/2;
     }
 
 }

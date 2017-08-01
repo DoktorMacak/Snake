@@ -29,8 +29,6 @@ public abstract class GameState {
 
     public abstract void backPressed();
 
-    public void update(float delta){}
-
     public void dispose(){
         disposeTextures();
     }

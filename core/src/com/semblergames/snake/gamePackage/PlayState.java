@@ -1,25 +1,36 @@
 package com.semblergames.snake.gamePackage;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.DataInput;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.semblergames.snake.fieldPackage.Field;
 import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Camera;
 import com.semblergames.snake.utilities.Direction;
-
-import java.util.ArrayList;
-import java.util.Map;
+import com.semblergames.snake.fieldPackage.PlayingRegion;
+import com.semblergames.snake.fieldPackage.Pattern;
 
 public class PlayState extends GameState {
 
+    public static Texture [] wallTextures;
+    public static Texture [] standardCoinTextures;
+    public static Texture [] magnetCoinTextures;
+    public static Texture [] speedCoinTexture;
+    public static Texture [] pointTexture;
 
 
-    private static final int COLUMNS = 7;
-    private static final int ROWS = 9;
+    private static final int COLUMNS = 5;
+    private static final int ROWS = 7;
 
     private PlayingRegion[][] regions;
+
     private Camera camera;
 
 
@@ -34,11 +45,13 @@ public class PlayState extends GameState {
 
     private BitmapFont font;
 
+
     public PlayState() {
     }
 
     @Override
     public void init() {
+        initTextures();
         Pattern.loadPatterns();
 
         font = new BitmapFont();
@@ -56,7 +69,7 @@ public class PlayState extends GameState {
             }
         }
 
-        snake = new Snake(3, Direction.up, (COLUMNS*PlayingRegion.width) /2, (ROWS*PlayingRegion.height) /2);
+        snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2);
 
         speed = 0.7f;
 
@@ -68,26 +81,67 @@ public class PlayState extends GameState {
         camera.setSpeedX(0);
         camera.setSpeedY(1/speed);
 
-
-
     }
 
     @Override
     protected void initTextures() {
+        wallTextures = new Texture[6];
+        wallTextures[0] = new Texture("field/wall.png");
+        for(int i = 1; i < 6;i++){
+            wallTextures[i] = new Texture("field/walld"+i+".png");
+        }
 
+        magnetCoinTextures = new Texture[6];
+        magnetCoinTextures[0] = new Texture("field/mcoin.png");
+        for(int i = 1; i < 6;i++){
+            magnetCoinTextures[i] = new Texture("field/mcoind"+i+".png");
+        }
+
+        speedCoinTexture = new Texture[6];
+        speedCoinTexture[0] = new Texture("field/scoin.png");
+        for(int i = 1; i < 6;i++){
+            speedCoinTexture[i] = new Texture("field/scoind"+i+".png");
+        }
+
+        standardCoinTextures = new Texture[6];
+        standardCoinTextures[0] = new Texture("field/coin.png");
+        for(int i = 1; i < 6;i++){
+            standardCoinTextures[i] = new Texture("field/coind"+i+".png");
+        }
+
+        pointTexture = new Texture[6];
+        pointTexture[0] = new Texture("field/point.png");
+        for(int i = 1; i < 6;i++){
+            pointTexture[i] = new Texture("field/pointd"+i+".png");
+        }
     }
 
     @Override
     public void render(SpriteBatch batch, ShapeRenderer renderer, float alpha, float delta) {
+
+        camera.update(delta);
+
+        batch.begin();
+        for(int i = 0; i < ROWS;i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                regions[i][j].draw(j, i, batch, camera, delta);
+            }
+        }
+        font.draw(batch, Integer.toString(snake.getHeadSegment().getX()), 300 , 300);
+        font.draw(batch, Integer.toString(snake.getHeadSegment().getY()), 350 , 300);
+        font.draw(batch, Float.toString(main.WIDTH) + " " + Float.toString(main.HEIGHT), 400, 400);
+        font.draw(batch, Float.toString(delta), 500,500);
+        batch.end();
+
         renderer.setAutoShapeType(true);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
 
+        renderer.setColor(Color.BLACK);
 
-        for(int i = 1; i < ROWS-1;i++) {
-            for (int j = 1; j < COLUMNS-1; j++) {
-                regions[i][j].draw(j, i, renderer, camera);
-            }
-        }
+        renderer.rect(main.WIDTH/2 - main.BLOCK_WIDTH/2, main.HEIGHT/2 - main.BLOCK_HEIGHT/2, main.BLOCK_WIDTH, main.BLOCK_HEIGHT);
+
+
+
 
         time+=delta;
         snake.draw(renderer, camera);
@@ -95,7 +149,7 @@ public class PlayState extends GameState {
 
             if(snake.update() ||
                     regions[snake.getHeadSegment().getY() / PlayingRegion.height][snake.getHeadSegment().getX() / PlayingRegion.width]
-                            .isWall(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height)){
+                            .getField(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height).getType() == Field.WALL){
                 listener.changeState(main.GAME_OVER_STATE);
             }
 
@@ -118,16 +172,16 @@ public class PlayState extends GameState {
                     break;
             }
 
-            if(snake.getHeadSegment().getX() == ((COLUMNS/2)+1)*PlayingRegion.width){
+            if(snake.getHeadSegment().getX() == ((COLUMNS/2)+1)* PlayingRegion.width){
                 moveEverything(Direction.left);
             }
-            if(snake.getHeadSegment().getX() == (COLUMNS/2)*PlayingRegion.width-1){
+            if(snake.getHeadSegment().getX() == (COLUMNS/2)* PlayingRegion.width-1){
                 moveEverything(Direction.right);
             }
-            if(snake.getHeadSegment().getY() == ((ROWS/2)+1)*PlayingRegion.height){
+            if(snake.getHeadSegment().getY() == ((ROWS/2)+1)* PlayingRegion.height){
                 moveEverything(Direction.down);
             }
-            if(snake.getHeadSegment().getY() == (ROWS/2)*PlayingRegion.height-1){
+            if(snake.getHeadSegment().getY() == (ROWS/2)* PlayingRegion.height-1){
                 moveEverything(Direction.up);
             }
 
@@ -137,15 +191,10 @@ public class PlayState extends GameState {
 
         renderer.end();
 
-        camera.update(delta);
+
 
         //gluposti na ekranu
 
-        batch.begin();
-        font.draw(batch, Integer.toString(snake.getHeadSegment().getX()), 300 , 300);
-        font.draw(batch, Integer.toString(snake.getHeadSegment().getY()), 350 , 300);
-        font.draw(batch, Float.toString(main.WIDTH) + " " + Float.toString(main.HEIGHT), 400, 400);
-        batch.end();
 
     }
 
@@ -153,6 +202,7 @@ public class PlayState extends GameState {
     public void touchDown(int x, int y) {
         xPressed = x;
         yPressed = y;
+
     }
 
     @Override
@@ -178,7 +228,7 @@ public class PlayState extends GameState {
                     camera.setSpeedX(1 / timeLeft);
                 }
 
-                float deltaY = (float) snake.getHeadSegment().getY() - ((float)(main.SCREEN_HEIGHT - 1)) / 2 - camera.getY();
+                float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
 
 
                 camera.setSpeedY(deltaY / timeLeft);
@@ -193,7 +243,7 @@ public class PlayState extends GameState {
                     camera.setSpeedY(1 / timeLeft);
                 }
 
-                float deltaX = (float) snake.getHeadSegment().getX() - ((float)(main.SCREEN_WIDTH - 1)) / 2 - camera.getX();
+                float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
 
 
                 camera.setSpeedX(deltaX / timeLeft);
@@ -208,15 +258,29 @@ public class PlayState extends GameState {
 
     @Override
     protected void disposeTextures() {
-
+        for(Texture texture:wallTextures){
+            texture.dispose();
+        }
+        for(Texture texture:standardCoinTextures){
+            texture.dispose();
+        }
+        for(Texture texture:pointTexture){
+            texture.dispose();
+        }
+        for(Texture texture:magnetCoinTextures){
+            texture.dispose();
+        }
+        for(Texture texture:speedCoinTexture){
+            texture.dispose();
+        }
     }
 
     private void moveEverything(Direction direction){
 
         switch (direction){
             case left:
-                snake.move(-PlayingRegion.width,0);
-                camera.move(-PlayingRegion.width,0);
+                snake.move(-com.semblergames.snake.fieldPackage.PlayingRegion.width,0);
+                camera.move(-com.semblergames.snake.fieldPackage.PlayingRegion.width,0);
                 for(int i = 0; i < ROWS;i++){
                     for(int j = 0; j < COLUMNS-1;j++){
                         regions[i][j] = regions[i][j+1];
@@ -227,15 +291,15 @@ public class PlayState extends GameState {
                     @Override
                     public void run() {
                         for(int i = 0; i < ROWS; i++) {
-                            regions[i][COLUMNS-1] = new PlayingRegion(PlayingRegion.FILLED);
+                            regions[i][COLUMNS-1] = new com.semblergames.snake.fieldPackage.PlayingRegion(com.semblergames.snake.fieldPackage.PlayingRegion.FILLED);
                         }
                     }
                 }).start();
 
                 break;
             case right:
-                snake.move(PlayingRegion.width,0);
-                camera.move(PlayingRegion.width,0);
+                snake.move(com.semblergames.snake.fieldPackage.PlayingRegion.width,0);
+                camera.move(com.semblergames.snake.fieldPackage.PlayingRegion.width,0);
                 for(int i = 0; i < ROWS;i++){
                     for(int j = COLUMNS-1; j > 0;j--){
                         regions[i][j] = regions[i][j-1];
@@ -246,14 +310,14 @@ public class PlayState extends GameState {
                     @Override
                     public void run() {
                         for(int i = 0; i < ROWS; i++) {
-                            regions[i][0] = new PlayingRegion(PlayingRegion.FILLED);
+                            regions[i][0] = new com.semblergames.snake.fieldPackage.PlayingRegion(com.semblergames.snake.fieldPackage.PlayingRegion.FILLED);
                         }
                     }
                 }).start();
                 break;
             case up:
-                snake.move(0,PlayingRegion.height);
-                camera.move(0,PlayingRegion.height);
+                snake.move(0, com.semblergames.snake.fieldPackage.PlayingRegion.height);
+                camera.move(0, com.semblergames.snake.fieldPackage.PlayingRegion.height);
                 for(int i = 0; i < COLUMNS;i++){
                     for(int j = ROWS-1; j > 0;j--){
                         regions[j][i] = regions[j-1][i];
@@ -264,14 +328,14 @@ public class PlayState extends GameState {
                     @Override
                     public void run() {
                         for(int i = 0; i < COLUMNS; i++) {
-                            regions[0][i] = new PlayingRegion(PlayingRegion.FILLED);
+                            regions[0][i] = new com.semblergames.snake.fieldPackage.PlayingRegion(com.semblergames.snake.fieldPackage.PlayingRegion.FILLED);
                         }
                     }
                 }).start();
                 break;
             case down:
-                snake.move(0,-PlayingRegion.height);
-                camera.move(0,-PlayingRegion.height);
+                snake.move(0,-com.semblergames.snake.fieldPackage.PlayingRegion.height);
+                camera.move(0,-com.semblergames.snake.fieldPackage.PlayingRegion.height);
                 for(int i = 0; i < COLUMNS;i++){
                     for(int j = 0; j < ROWS-1;j++){
                         regions[j][i] = regions[j+1][i];
@@ -281,7 +345,7 @@ public class PlayState extends GameState {
                     @Override
                     public void run() {
                         for(int i = 0; i < COLUMNS; i++) {
-                            regions[ROWS-1][i] = new PlayingRegion(PlayingRegion.FILLED);
+                            regions[ROWS-1][i] = new com.semblergames.snake.fieldPackage.PlayingRegion(com.semblergames.snake.fieldPackage.PlayingRegion.FILLED);
                         }
                     }
                 }).start();

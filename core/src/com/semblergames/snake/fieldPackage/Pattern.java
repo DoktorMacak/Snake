@@ -1,8 +1,6 @@
-package com.semblergames.snake.gamePackage;
+package com.semblergames.snake.fieldPackage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Pattern {
 
