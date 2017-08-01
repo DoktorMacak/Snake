@@ -156,20 +156,16 @@ public class PlayState extends GameState {
 
             switch (snake.getDirection()){
                 case left:
-                    camera.setSpeedX(-1/speed);
-                    camera.setSpeedY(0);
+                    camera.setSpeed(-1/speed,0);
                     break;
                 case right:
-                    camera.setSpeedX(1/speed);
-                    camera.setSpeedY(0);
+                    camera.setSpeed(1/speed,0);
                     break;
                 case up:
-                    camera.setSpeedX(0);
-                    camera.setSpeedY(1/speed);
+                    camera.setSpeed(0,1/speed);
                     break;
                 case down:
-                    camera.setSpeedX(0);
-                    camera.setSpeedY(-1/speed);
+                    camera.setSpeed(0,-1/speed);
                     break;
             }
 
@@ -221,39 +217,34 @@ public class PlayState extends GameState {
 
         if (Math.abs(dx) > Math.abs(dy)){
             if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 50*main.SCALEX) {
+
+                float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
+
                 if (dx > 0) {
-                    if(snake.setDirection(Direction.left)){
+                    snake.setDirection(Direction.left);
 
-                        float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
+                    camera.setSpeed(-1 / timeLeft, deltaY / timeLeft);
 
-                        camera.setSpeed(-1 / timeLeft, deltaY / timeLeft);
-                    }
                 } else {
-                    if(snake.setDirection(Direction.right)){
+                    snake.setDirection(Direction.right);
 
-                        float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
-
-                        camera.setSpeed(1 / timeLeft, deltaY / timeLeft);
-                    }
+                    camera.setSpeed(1 / timeLeft, deltaY / timeLeft);
                 }
             }
         }else{
             if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down && Math.abs(dy) > 50*main.SCALEY) {
+
+                float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
+
                 if (dy > 0) {
-                    if(snake.setDirection(Direction.down)){
+                    snake.setDirection(Direction.down);
 
-                        float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
+                    camera.setSpeed(deltaX / timeLeft,-1 / timeLeft);
 
-                        camera.setSpeed(-1 / timeLeft, deltaX / timeLeft);
-                    }
-                    camera.setSpeedY(-1 / timeLeft);
                 } else {
-                    if(snake.setDirection(Direction.up)){
+                    snake.setDirection(Direction.up);
 
-                        float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
-
-                        camera.setSpeed(-1 / timeLeft, deltaX / timeLeft);
-                    }
+                    camera.setSpeed(deltaX / timeLeft, 1 / timeLeft);
                 }
             }
         }

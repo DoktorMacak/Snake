@@ -52,11 +52,19 @@ public class Snake {
 
     public boolean update(){
         if(nextDirection != null && changeAvailable) {
-            switch (nextDirection){
-                case up: if(nextDirection != Direction.up && nextDirection != Direction.down);
-                case down: if(nextDirection != Direction.up && nextDirection != Direction.down);
-                case left: if(nextDirection != Direction.left && nextDirection != Direction.right);
-                case right: if(nextDirection != Direction.left && nextDirection != Direction.right);
+            switch (direction){
+                case up: if(nextDirection != Direction.up && nextDirection != Direction.down)
+                    setDirection(nextDirection);
+                    break;
+                case down: if(nextDirection != Direction.up && nextDirection != Direction.down)
+                    setDirection(nextDirection);
+                    break;
+                case left: if(nextDirection != Direction.left && nextDirection != Direction.right)
+                    setDirection(nextDirection);
+                    break;
+                case right: if(nextDirection != Direction.left && nextDirection != Direction.right)
+                    setDirection(nextDirection);
+                    break;
             }
             nextDirection = null;
         }
@@ -90,16 +98,14 @@ public class Snake {
         grow = true;
     }
 
-    public boolean setDirection(Direction direction) {
+    public void setDirection(Direction direction) {
         if (changeAvailable) {
             this.direction = direction;
-            changeAvailable = false;
-            return true;
         }else if(nextDirection == null){
             this.nextDirection = direction;
-            changeAvailable = false;
+
         }
-        return false;
+        changeAvailable = false;
     }
 
     public Direction getDirection(){
