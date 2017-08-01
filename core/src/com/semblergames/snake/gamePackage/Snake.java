@@ -53,18 +53,10 @@ public class Snake {
     public boolean update(){
         if(nextDirection != null && changeAvailable) {
             switch (direction){
-                case up: if(nextDirection != Direction.up && nextDirection != Direction.down)
-                    setDirection(nextDirection);
-                    break;
-                case down: if(nextDirection != Direction.up && nextDirection != Direction.down)
-                    setDirection(nextDirection);
-                    break;
-                case left: if(nextDirection != Direction.left && nextDirection != Direction.right)
-                    setDirection(nextDirection);
-                    break;
-                case right: if(nextDirection != Direction.left && nextDirection != Direction.right)
-                    setDirection(nextDirection);
-                    break;
+                case up: if(nextDirection != Direction.up && nextDirection != Direction.down) setDirection(nextDirection);
+                case down: if(nextDirection != Direction.up && nextDirection != Direction.down) setDirection(nextDirection);
+                case left: if(nextDirection != Direction.left && nextDirection != Direction.right) setDirection(nextDirection);
+                case right: if(nextDirection != Direction.left && nextDirection != Direction.right) setDirection(nextDirection);
             }
             nextDirection = null;
         }
@@ -103,7 +95,6 @@ public class Snake {
             this.direction = direction;
         }else if(nextDirection == null){
             this.nextDirection = direction;
-
         }
         changeAvailable = false;
     }
@@ -125,7 +116,7 @@ public class Snake {
         float width = main.BLOCK_WIDTH;
         float height = main.BLOCK_HEIGHT;
         for(Segment x:segments){
-            renderer.rect((x.getX()-camera.getX()-0.5f) * width, (x.getY()-camera.getY()-0.5f) * height, width, height);
+            renderer.rect((x.getX()-camera.getX()) * width, (x.getY()-camera.getY()) * height, width, height);
         }
     }
 
