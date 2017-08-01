@@ -90,13 +90,16 @@ public class Snake {
         grow = true;
     }
 
-    public void setDirection(Direction direction) {
+    public boolean setDirection(Direction direction) {
         if (changeAvailable) {
             this.direction = direction;
+            changeAvailable = false;
+            return true;
         }else if(nextDirection == null){
             this.nextDirection = direction;
+            changeAvailable = false;
         }
-        changeAvailable = false;
+        return false;
     }
 
     public Direction getDirection(){

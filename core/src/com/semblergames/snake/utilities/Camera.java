@@ -60,6 +60,11 @@ public class Camera {
         this.speedY = speedY;
     }
 
+    public void setSpeed(float speedX, float speedY){
+        this.setSpeedX(speedX);
+        this.setSpeedY(speedY);
+    }
+
     public void align(Snake snake){
         x = (float)snake.getHeadSegment().getX() - (float)(main.SCREEN_WIDTH)/2;
         y = (float)snake.getHeadSegment().getY() - (float)(main.SCREEN_HEIGHT)/2;

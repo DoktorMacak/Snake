@@ -11,11 +11,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.semblergames.snake.fieldPackage.Field;
+import com.semblergames.snake.fieldPackage.Pattern;
+import com.semblergames.snake.fieldPackage.PlayingRegion;
 import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Camera;
 import com.semblergames.snake.utilities.Direction;
-import com.semblergames.snake.fieldPackage.PlayingRegion;
-import com.semblergames.snake.fieldPackage.Pattern;
+
 
 public class PlayState extends GameState {
 
@@ -221,32 +222,39 @@ public class PlayState extends GameState {
         if (Math.abs(dx) > Math.abs(dy)){
             if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 50*main.SCALEX) {
                 if (dx > 0) {
-                    snake.setDirection(Direction.left);
-                    camera.setSpeedX(-1 / timeLeft);
+                    if(snake.setDirection(Direction.left)){
+
+                        float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
+
+                        camera.setSpeed(-1 / timeLeft, deltaY / timeLeft);
+                    }
                 } else {
-                    snake.setDirection(Direction.right);
-                    camera.setSpeedX(1 / timeLeft);
+                    if(snake.setDirection(Direction.right)){
+
+                        float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
+
+                        camera.setSpeed(1 / timeLeft, deltaY / timeLeft);
+                    }
                 }
-
-                float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
-
-
-                camera.setSpeedY(deltaY / timeLeft);
             }
         }else{
             if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down && Math.abs(dy) > 50*main.SCALEY) {
                 if (dy > 0) {
-                    snake.setDirection(Direction.down);
+                    if(snake.setDirection(Direction.down)){
+
+                        float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
+
+                        camera.setSpeed(-1 / timeLeft, deltaX / timeLeft);
+                    }
                     camera.setSpeedY(-1 / timeLeft);
                 } else {
-                    snake.setDirection(Direction.up);
-                    camera.setSpeedY(1 / timeLeft);
+                    if(snake.setDirection(Direction.up)){
+
+                        float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
+
+                        camera.setSpeed(-1 / timeLeft, deltaX / timeLeft);
+                    }
                 }
-
-                float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
-
-
-                camera.setSpeedX(deltaX / timeLeft);
             }
         }
     }
@@ -279,8 +287,8 @@ public class PlayState extends GameState {
 
         switch (direction){
             case left:
-                snake.move(-com.semblergames.snake.fieldPackage.PlayingRegion.width,0);
-                camera.move(-com.semblergames.snake.fieldPackage.PlayingRegion.width,0);
+                snake.move(-PlayingRegion.width,0);
+                camera.move(-PlayingRegion.width,0);
                 for(int i = 0; i < ROWS;i++){
                     for(int j = 0; j < COLUMNS-1;j++){
                         regions[i][j] = regions[i][j+1];
@@ -291,15 +299,15 @@ public class PlayState extends GameState {
                     @Override
                     public void run() {
                         for(int i = 0; i < ROWS; i++) {
-                            regions[i][COLUMNS-1] = new com.semblergames.snake.fieldPackage.PlayingRegion(com.semblergames.snake.fieldPackage.PlayingRegion.FILLED);
+                            regions[i][COLUMNS-1] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
                 }).start();
 
                 break;
             case right:
-                snake.move(com.semblergames.snake.fieldPackage.PlayingRegion.width,0);
-                camera.move(com.semblergames.snake.fieldPackage.PlayingRegion.width,0);
+                snake.move(PlayingRegion.width,0);
+                camera.move(PlayingRegion.width,0);
                 for(int i = 0; i < ROWS;i++){
                     for(int j = COLUMNS-1; j > 0;j--){
                         regions[i][j] = regions[i][j-1];
@@ -310,14 +318,14 @@ public class PlayState extends GameState {
                     @Override
                     public void run() {
                         for(int i = 0; i < ROWS; i++) {
-                            regions[i][0] = new com.semblergames.snake.fieldPackage.PlayingRegion(com.semblergames.snake.fieldPackage.PlayingRegion.FILLED);
+                            regions[i][0] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
                 }).start();
                 break;
             case up:
-                snake.move(0, com.semblergames.snake.fieldPackage.PlayingRegion.height);
-                camera.move(0, com.semblergames.snake.fieldPackage.PlayingRegion.height);
+                snake.move(0, PlayingRegion.height);
+                camera.move(0, PlayingRegion.height);
                 for(int i = 0; i < COLUMNS;i++){
                     for(int j = ROWS-1; j > 0;j--){
                         regions[j][i] = regions[j-1][i];
@@ -328,14 +336,14 @@ public class PlayState extends GameState {
                     @Override
                     public void run() {
                         for(int i = 0; i < COLUMNS; i++) {
-                            regions[0][i] = new com.semblergames.snake.fieldPackage.PlayingRegion(com.semblergames.snake.fieldPackage.PlayingRegion.FILLED);
+                            regions[0][i] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
                 }).start();
                 break;
             case down:
-                snake.move(0,-com.semblergames.snake.fieldPackage.PlayingRegion.height);
-                camera.move(0,-com.semblergames.snake.fieldPackage.PlayingRegion.height);
+                snake.move(0,-PlayingRegion.height);
+                camera.move(0,-PlayingRegion.height);
                 for(int i = 0; i < COLUMNS;i++){
                     for(int j = 0; j < ROWS-1;j++){
                         regions[j][i] = regions[j+1][i];
@@ -345,7 +353,7 @@ public class PlayState extends GameState {
                     @Override
                     public void run() {
                         for(int i = 0; i < COLUMNS; i++) {
-                            regions[ROWS-1][i] = new com.semblergames.snake.fieldPackage.PlayingRegion(com.semblergames.snake.fieldPackage.PlayingRegion.FILLED);
+                            regions[ROWS-1][i] = new PlayingRegion(PlayingRegion.FILLED);
                         }
                     }
                 }).start();
