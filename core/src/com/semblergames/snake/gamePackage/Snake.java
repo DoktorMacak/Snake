@@ -116,7 +116,7 @@ public class Snake {
         float width = main.BLOCK_WIDTH;
         float height = main.BLOCK_HEIGHT;
         for(Segment x:segments){
-            renderer.rect((x.getX()-camera.getX()) * width, (x.getY()-camera.getY()) * height, width, height);
+            renderer.rect((x.getX()-camera.getX()) * width - width/2, (x.getY()-camera.getY()) * height - height/2, width, height);
         }
     }
 
@@ -132,8 +132,3 @@ public class Snake {
 
     }
 }
-//        changeAvailable = true;
-//                if(nextDirection != null) {
-//                setDirection(nextDirection);
-//                nextDirection = null;
-//                }
