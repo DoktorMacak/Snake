@@ -1,6 +1,7 @@
 package com.semblergames.snake.gamePackage;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.DistanceFieldFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Camera;
@@ -90,13 +91,20 @@ public class Snake {
         grow = true;
     }
 
-    public void setDirection(Direction direction) {
+    public boolean setDirection(Direction direction) {
         if (changeAvailable) {
             this.direction = direction;
+            changeAvailable = false;
+            return true;
         }else if(nextDirection == null){
             this.nextDirection = direction;
         }
         changeAvailable = false;
+        return false;
+    }
+
+    public Direction getNextDirection(){
+        return nextDirection;
     }
 
     public Direction getDirection(){

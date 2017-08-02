@@ -154,20 +154,28 @@ public class PlayState extends GameState {
                 listener.changeState(main.GAME_OVER_STATE);
             }
 
-            switch (snake.getDirection()){
+            Direction direction = snake.getNextDirection();
+            if(direction == null){
+                direction = snake.getDirection();
+            }
+
+
+
+            switch (direction) {
                 case left:
-                    camera.setSpeed(-1/speed,0);
+                    camera.setSpeed(-1 / speed, 0);
                     break;
                 case right:
-                    camera.setSpeed(1/speed,0);
+                    camera.setSpeed(1 / speed, 0);
                     break;
                 case up:
-                    camera.setSpeed(0,1/speed);
+                    camera.setSpeed(0, 1 / speed);
                     break;
                 case down:
-                    camera.setSpeed(0,-1/speed);
+                    camera.setSpeed(0, -1 / speed);
                     break;
             }
+
 
             if(snake.getHeadSegment().getX() == ((COLUMNS/2)+1)* PlayingRegion.width){
                 moveEverything(Direction.left);
@@ -221,12 +229,12 @@ public class PlayState extends GameState {
                 float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
 
                 if (dx > 0) {
-                    snake.setDirection(Direction.left);
+                    if(snake.setDirection(Direction.left))
 
                     camera.setSpeed(-1 / timeLeft, deltaY / timeLeft);
 
                 } else {
-                    snake.setDirection(Direction.right);
+                    if(snake.setDirection(Direction.right))
 
                     camera.setSpeed(1 / timeLeft, deltaY / timeLeft);
                 }
@@ -237,12 +245,12 @@ public class PlayState extends GameState {
                 float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
 
                 if (dy > 0) {
-                    snake.setDirection(Direction.down);
+                    if(snake.setDirection(Direction.down))
 
                     camera.setSpeed(deltaX / timeLeft,-1 / timeLeft);
 
                 } else {
-                    snake.setDirection(Direction.up);
+                    if(snake.setDirection(Direction.up))
 
                     camera.setSpeed(deltaX / timeLeft, 1 / timeLeft);
                 }
