@@ -45,10 +45,10 @@ public class PlayingRegion {
         }
         if(type == FILLED) {
 
-            for (int u = 0; u < pattern.getAmount(); u++) {
+            for (int i = 0; i < pattern.getAmount(); i++) {
 
-                int y = ys[u];
-                int x = xs[u];
+                int y = ys[i];
+                int x = xs[i];
 
                 if (flippedX) {
                     x = Math.abs(x - width + 1);
@@ -60,6 +60,84 @@ public class PlayingRegion {
 
                 field[y][x].setType(Field.WALL);
             }
+            //standard
+            int amount = random.nextInt(2)+1;
+
+            for(int i =0; i < amount;i++){
+
+                int counter = 0;
+
+                int x = random.nextInt(width);
+                int y = random.nextInt(height);
+
+                while(field[y][x].getType() != Field.EMPTY && counter < 5){
+                    counter++;
+                    x = random.nextInt(width);
+                    y = random.nextInt(height);
+                }
+
+                field[y][x].setType(Field.STANDARD_COIN);
+
+            }
+            //magnet
+            amount = random.nextInt(3);
+
+            for(int i =0; i < amount;i++){
+
+                int counter = 0;
+
+                int x = random.nextInt(width);
+                int y = random.nextInt(height);
+
+                while(field[y][x].getType() != Field.EMPTY && counter < 5){
+                    counter++;
+                    x = random.nextInt(width);
+                    y = random.nextInt(height);
+                }
+
+                field[y][x].setType(Field.MAGNET_COIN);
+
+            }
+            //speed
+            amount = random.nextInt(3);
+
+            for(int i =0; i < amount;i++){
+
+                int counter = 0;
+
+                int x = random.nextInt(width);
+                int y = random.nextInt(height);
+
+                while(field[y][x].getType() != Field.EMPTY && counter < 5){
+                    counter++;
+                    x = random.nextInt(width);
+                    y = random.nextInt(height);
+                }
+
+                field[y][x].setType(Field.SPEED_COIN);
+
+            }
+
+            //point
+            amount = random.nextInt(2);
+
+            for(int i =0; i < amount;i++){
+
+                int counter = 0;
+
+                int x = random.nextInt(width);
+                int y = random.nextInt(height);
+
+                while(field[y][x].getType() != Field.EMPTY && counter < 5){
+                    counter++;
+                    x = random.nextInt(width);
+                    y = random.nextInt(height);
+                }
+
+                field[y][x].setType(Field.POINT_STAR);
+
+            }
+
         }
 
     }
@@ -68,13 +146,12 @@ public class PlayingRegion {
         return field[y][x];
     }
 
-    public void draw(int xGrid, int yGrid, SpriteBatch batch, Camera camera, float delta){
+    public void processFields(int xGrid, int yGrid, Camera camera, FieldRenderer fieldRenderer, float delta){
         float xPos = xGrid*width - camera.getX();
         float yPos = yGrid*height - camera.getY();
         for(int i = 0; i < height; i++){
             for(int j = 0; j < width; j++){
-                field[i][j].update(delta);
-                field[i][j].draw(batch, (xPos+j)*main.BLOCK_WIDTH, (yPos+i)*main.BLOCK_HEIGHT);
+                fieldRenderer.process(field[i][j],delta, (xPos + j) * main.BLOCK_WIDTH,(yPos + i) * main.BLOCK_HEIGHT);
             }
         }
     }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.semblergames.snake.fieldPackage.Field;
+import com.semblergames.snake.fieldPackage.FieldRenderer;
 import com.semblergames.snake.fieldPackage.Pattern;
 import com.semblergames.snake.fieldPackage.PlayingRegion;
 import com.semblergames.snake.main;
@@ -32,6 +33,8 @@ public class PlayState extends GameState {
 
     private PlayingRegion[][] regions;
 
+    private FieldRenderer fieldRenderer;
+
     private Camera camera;
 
 
@@ -46,6 +49,8 @@ public class PlayState extends GameState {
 
     private BitmapFont font;
 
+
+    private int score;
 
     public PlayState() {
     }
@@ -70,6 +75,8 @@ public class PlayState extends GameState {
             }
         }
 
+        fieldRenderer = new FieldRenderer();
+
         snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2);
 
         speed = 0.7f;
@@ -81,6 +88,8 @@ public class PlayState extends GameState {
 
         camera.setSpeedX(0);
         camera.setSpeedY(1/speed);
+
+        score = 0;
 
     }
 
@@ -122,24 +131,14 @@ public class PlayState extends GameState {
 
         camera.update(delta);
 
-        batch.begin();
-        for(int i = 0; i < ROWS;i++) {
-            for (int j = 0; j < COLUMNS; j++) {
-                regions[i][j].draw(j, i, batch, camera, delta);
-            }
-        }
-        font.draw(batch, Integer.toString(snake.getHeadSegment().getX()), 300 , 300);
-        font.draw(batch, Integer.toString(snake.getHeadSegment().getY()), 350 , 300);
-        font.draw(batch, Float.toString(main.WIDTH) + " " + Float.toString(main.HEIGHT), 400, 400);
-        font.draw(batch, Float.toString(delta), 500,500);
-        batch.end();
+
 
         renderer.setAutoShapeType(true);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
 
         renderer.setColor(Color.BLACK);
 
-        renderer.rect(main.WIDTH/2 - main.BLOCK_WIDTH/2, main.HEIGHT/2 - main.BLOCK_HEIGHT/2, main.BLOCK_WIDTH, main.BLOCK_HEIGHT);
+       // renderer.rect(main.WIDTH/2 - main.BLOCK_WIDTH/2, main.HEIGHT/2 - main.BLOCK_HEIGHT/2, main.BLOCK_WIDTH, main.BLOCK_HEIGHT);
 
 
 
@@ -148,11 +147,43 @@ public class PlayState extends GameState {
         snake.draw(renderer, camera);
         if (time > speed){
 
-            if(snake.update() ||
-                    regions[snake.getHeadSegment().getY() / PlayingRegion.height][snake.getHeadSegment().getX() / PlayingRegion.width]
-                            .getField(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height).getType() == Field.WALL){
+            if(snake.update()){
                 listener.changeState(main.GAME_OVER_STATE);
             }
+
+            float x = snake.getHeadSegment().getX();
+            float y = snake.getHeadSegment().getY();
+
+            Field field = regions[snake.getHeadSegment().getY() / PlayingRegion.height][snake.getHeadSegment().getX() / PlayingRegion.width]
+                    .getField(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height);
+
+            switch (field.getType()){
+                case Field.WALL:{
+                    listener.changeState(main.GAME_OVER_STATE);
+                    break;
+                }
+                case Field.MAGNET_COIN:{
+                    field.getAnimation().play();
+                    break;
+                }
+                case Field.STANDARD_COIN:{
+                    field.getAnimation().play();
+                    score++;
+                    if(score % 5 == 0){
+                        snake.grow();
+                    }
+                    break;
+                }
+                case Field.SPEED_COIN:{
+                    field.getAnimation().play();
+                    break;
+                }
+                case Field.POINT_STAR:{
+                    field.getAnimation().play();
+                    break;
+                }
+            }
+
 
             Direction direction = snake.getNextDirection();
             if(direction == null){
@@ -195,6 +226,23 @@ public class PlayState extends GameState {
         }
 
         renderer.end();
+
+
+        for(int i = 0; i < ROWS;i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                regions[i][j].processFields(j,i,camera,fieldRenderer,delta);
+            }
+        }
+
+        batch.begin();
+
+        fieldRenderer.render(batch);
+
+        font.draw(batch, Integer.toString(snake.getHeadSegment().getX()), 300 , 300);
+        font.draw(batch, Integer.toString(snake.getHeadSegment().getY()), 350 , 300);
+        font.draw(batch, Float.toString(main.WIDTH) + " " + Float.toString(main.HEIGHT), 400, 400);
+        font.draw(batch, Float.toString(delta), 500,500);
+        batch.end();
 
 
 

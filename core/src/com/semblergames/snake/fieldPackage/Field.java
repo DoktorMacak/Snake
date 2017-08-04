@@ -25,11 +25,17 @@ public class Field {
 
     private int type;
 
+    private float x;
+    private float y;
+
     private Animation animation;
 
 
     public Field(int type){
         this.type = type;
+
+        x = 0;
+        y = 0;
 
         animation = new Animation(LENGTH, DURATION);
         animation.pause();
@@ -47,8 +53,13 @@ public class Field {
         this.type = type;
     }
 
+    public void setPosition(float x, float y){
+        this.x = x;
+        this.y = y;
+    }
 
-    public void draw(SpriteBatch batch, float x, float y){
+
+    public void draw(SpriteBatch batch){
 
         Texture texture = null;
 
@@ -77,14 +88,17 @@ public class Field {
 
         if(texture != null) {
 
+            float width = (float)texture.getWidth()*main.SCALEX;
+            float height = (float)texture.getHeight()*main.SCALEY;
+
             batch.draw(
                     texture,
-                    x-texture.getWidth()*main.SCALEX/2,
-                    y-texture.getHeight()*main.SCALEY/2,
+                    x-width/2,
+                    y-height/2,
                     x,
                     y,
-                    texture.getWidth()*main.SCALEX,
-                    texture.getHeight()*main.SCALEY,
+                    width,
+                    height,
                     1,
                     1,
                     0,
