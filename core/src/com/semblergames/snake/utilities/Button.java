@@ -14,6 +14,8 @@ public class Button {
     private float width;
     private float height;
 
+    private boolean flipped;
+
     private float scale;
 
     private static final float MIN_SCALE = 0.8f;
@@ -31,12 +33,18 @@ public class Button {
 
         pressed = false;
 
+        flipped = false;
+
         scale = 1;
     }
 
     public void setPosition(float x, float y){
         this.x = x;
         this.y = y;
+    }
+
+    public void setFlipped(boolean flipped){
+        this.flipped = flipped;
     }
 
     public void update(float delta){
@@ -95,8 +103,9 @@ public class Button {
                 0,
                 texture.getWidth(),
                 texture.getHeight(),
-                false,false
+                false,flipped
         );
+
     }
 
 }

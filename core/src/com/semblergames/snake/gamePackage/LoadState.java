@@ -36,23 +36,7 @@ public class LoadState extends GameState{
 
         Texture texture = logoTexture[animation.getCurrentFrame()];
 
-        batch.draw(
-                texture,
-                0,
-                0,
-                main.WIDTH/2,
-                main.HEIGHT/2,
-                (float)texture.getWidth()* main.SCALEX,
-                (float)texture.getHeight()*main.SCALEY,
-                1,
-                1,
-                0,
-                0,
-                0,
-                texture.getWidth(),
-                texture.getHeight(),
-                false,false
-        );
+        drawTexture(batch, main.WIDTH/2, main.HEIGHT/2, texture);
 
         animation.update(delta);
 

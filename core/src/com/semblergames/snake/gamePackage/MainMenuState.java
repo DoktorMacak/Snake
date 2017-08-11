@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -36,6 +37,7 @@ public class MainMenuState extends GameState{
     private Button quitButton;
 
     private BitmapFont font;
+    private GlyphLayout glyphLayout;
 
     private int nextAction;
 
@@ -47,16 +49,16 @@ public class MainMenuState extends GameState{
     @Override
     public void init() {
         playButton = new Button(playTexture);
-        playButton.setPosition(main.WIDTH/2, 960*main.SCALEY);
+        playButton.setPosition(main.WIDTH/2, 800*main.SCALEY);
 
         settingsButton = new Button(settingsTexture);
-        settingsButton.setPosition(main.WIDTH/2, 780*main.SCALEY);
+        settingsButton.setPosition(main.WIDTH/2, 620*main.SCALEY);
 
         shopButton = new Button(shopTexture);
-        shopButton.setPosition(main.WIDTH/2, 600*main.SCALEY);
+        shopButton.setPosition(main.WIDTH/2, 440*main.SCALEY);
 
         quitButton = new Button(quitTexture);
-        quitButton.setPosition(main.WIDTH/2, 420*main.SCALEY);
+        quitButton.setPosition(main.WIDTH/2, 260*main.SCALEY);
 
         tSnakeAnimation = new Animation();
         for(int i = 0; i < 36;i++){
@@ -64,13 +66,18 @@ public class MainMenuState extends GameState{
         }
         tSnakeAnimation.playOnce();
 
+
+
         ready = true;
 
         nextAction = NEXT_NULL;
 
-        hsX = main.WIDTH/2 - 180*main.SCALEX;
+        glyphLayout = new GlyphLayout(font, "HIGH SCORE: "+ GameData.HIGH_SCORE);
 
-        hsY = 1150*main.SCALEY;
+
+        hsX = main.WIDTH/2 - glyphLayout.width/2;
+
+        hsY = 990*main.SCALEY;
 
     }
 
@@ -80,23 +87,7 @@ public class MainMenuState extends GameState{
 
         Texture texture = tSnakeTexture[tSnakeAnimation.getCurrentFrame()];
 
-        batch.draw(
-                texture,
-                0,
-                0,
-                main.WIDTH/2,
-                main.HEIGHT/2,
-                (float)texture.getWidth()* main.SCALEX,
-                (float)texture.getHeight()*main.SCALEY,
-                1,
-                1,
-                0,
-                0,
-                0,
-                texture.getWidth(),
-                texture.getHeight(),
-                false,false
-        );
+        drawTexture(batch, main.WIDTH/2, main.HEIGHT/2, texture);
 
         tSnakeAnimation.update(delta);
 
@@ -133,7 +124,8 @@ public class MainMenuState extends GameState{
 
         font.getColor().a = alpha;
 
-        font.draw(batch, "HIGH SCORE: "+ GameData.HIGH_SCORE, hsX,hsY);
+        font.draw(batch, glyphLayout, hsX, hsY);
+
         batch.end();
     }
 
