@@ -2,22 +2,30 @@ package com.semblergames.snake;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.DistanceFieldFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.semblergames.snake.gamePackage.GameOverState;
 import com.semblergames.snake.gamePackage.GameState;
+import com.semblergames.snake.gamePackage.LoadState;
+import com.semblergames.snake.gamePackage.MainMenuState;
 import com.semblergames.snake.gamePackage.PlayState;
+import com.semblergames.snake.gamePackage.SettingsState;
 import com.semblergames.snake.utilities.ChangeState;
 
 public class main extends ApplicationAdapter implements InputProcessor, ChangeState{
 
-    public static final int PLAY_STATE = 0;
-    public static final int GAME_OVER_STATE = 1;
+    public static final int LOAD_STATE = 0;
+	public static final int MAIN_MENU_STATE = 1;
+	public static final int PLAY_STATE = 2;
+    public static final int SETTINGS_STATE = 3;
 
 
 	public static float SCALEX;
@@ -26,22 +34,34 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	public static float WIDTH;
 	public static float HEIGHT;
 
-	public static float BLOCK_WIDTH = 60;
-	public static float BLOCK_HEIGHT = 60;
+	public static float BLOCK_WIDTH;
+	public static float BLOCK_HEIGHT;
 
 	public static int SCREEN_WIDTH;
 	public static int SCREEN_HEIGHT;
 
 
-	private GameState[] states = new GameState[2];
 
-	private GameState currentState;
+	private final float alphaRatio = 2.3f;
+
+
+	private GameState[] states;
+
+	private int nextIndex;
+	private int currentIndex;
+	private boolean ready;
 
 
 	private float alpha;
 
+
+	/**
+	 Sve za renderovanje
+	 */
+
 	private SpriteBatch batch;
 	private ShapeRenderer renderer;
+	private FreeTypeFontGenerator fontGenerator;
 
 
 	@Override
@@ -50,34 +70,49 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		WIDTH = Gdx.graphics.getWidth();
 		HEIGHT = Gdx.graphics.getHeight();
 
-		SCALEX = WIDTH / (float)1080;
-		SCALEY = HEIGHT / (float)1920;
+		SCALEX = WIDTH / 1080f;
+		SCALEY = HEIGHT / 1920f;
 
-		BLOCK_WIDTH *= SCALEX;
-		BLOCK_HEIGHT *= SCALEY;
+		BLOCK_WIDTH = 60f * SCALEX;
+		BLOCK_HEIGHT = 60f * SCALEY;
 
 		SCREEN_WIDTH = 18;
 		SCREEN_HEIGHT = 32;
 
 		batch = new SpriteBatch();
 		renderer = new ShapeRenderer();
+		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/MAHAWA.TTF"));
+
+		states = new GameState[4];
+
+		states[LOAD_STATE] = new LoadState();
+		states[LOAD_STATE].initTexturesAndFonts(fontGenerator);
+		states[LOAD_STATE].setChangeListener(this);
+		states[LOAD_STATE].init();
+
+		states[MAIN_MENU_STATE] = new MainMenuState();
+		states[MAIN_MENU_STATE].initTexturesAndFonts(fontGenerator);
+		states[MAIN_MENU_STATE].setChangeListener(this);
 
 
+		states[PLAY_STATE] = new PlayState();
+		states[PLAY_STATE].initTexturesAndFonts(fontGenerator);
+		states[PLAY_STATE].setChangeListener(this);
 
-		states[0] = new PlayState();
-		states[1] = new GameOverState();
+		states[SETTINGS_STATE] = new SettingsState();
+		states[SETTINGS_STATE].initTexturesAndFonts(fontGenerator);
+		states[SETTINGS_STATE].setChangeListener(this);
 
-		for(GameState state:states){
-			state.init();
-			state.setChangeListener(this);
-		}
 
-		currentState = states[0];
+		currentIndex = LOAD_STATE;
+		nextIndex = LOAD_STATE;
+		ready = true;
 
 		alpha = 1f;
 
-
 		Gdx.input.setInputProcessor(this);
+
+		Gdx.input.setCatchBackKey(true);
 	}
 
 	@Override
@@ -85,7 +120,30 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		currentState.render(batch, renderer, alpha, Gdx.graphics.getDeltaTime());
+		float delta = Gdx.graphics.getDeltaTime();
+
+		if(nextIndex != currentIndex && alpha > 0){
+			alpha -= delta*alphaRatio;
+			if(alpha < 0){
+				alpha = 0;
+			}
+			if(alpha == 0 && ready){
+				currentIndex = nextIndex;
+			}
+		}
+
+		if(nextIndex == currentIndex && alpha < 1){
+			alpha += delta*alphaRatio;
+			if(alpha > 1){
+				alpha = 1f;
+			}
+		}
+
+		Color color = batch.getColor();
+
+		batch.setColor(color.r, color.g, color.b, alpha);
+
+		states[currentIndex].render(batch, renderer, alpha, delta);
 	}
 	
 	@Override
@@ -93,12 +151,16 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		for(GameState state:states){
 			state.dispose();
 		}
+		fontGenerator.dispose();
 		batch.dispose();
 		renderer.dispose();
 	}
 
 	@Override
 	public boolean keyDown(int keycode) {
+		if(keycode == Input.Keys.BACK){
+			states[currentIndex].backPressed();
+		}
 		return false;
 	}
 
@@ -114,25 +176,19 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-		int y = (int)HEIGHT - screenY;
-		currentState.touchDown(screenX, y);
+		states[currentIndex].touchDown(screenX, (int)HEIGHT - screenY);
 		return false;
 	}
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-		int y = (int)HEIGHT - screenY;
-		currentState.touchUp(screenX, y);
+		states[currentIndex].touchUp(screenX, (int)HEIGHT - screenY);
 		return false;
 	}
 
 	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer) {
-//		int y = (int)HEIGHT - screenY;
-//		playState.touchDragged(prevX, prevX, screenX, y);
-//
-//		prevX = screenX;
-//		prevY = y;
+		states[currentIndex].touchDragged(screenX, (int)HEIGHT - screenY);
 		return false;
 	}
 
@@ -148,6 +204,16 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 
 	@Override
 	public void changeState(int x) {
-		currentState = states[x];
+
+		nextIndex = x;
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ready = false;
+				states[nextIndex].init();
+				ready = true;
+			}
+		}).start();
 	}
 }

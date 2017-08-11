@@ -1,18 +1,15 @@
 package com.semblergames.snake.utilities;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.semblergames.snake.main;
+public class FieldAnimation {
 
-import java.util.ArrayList;
-
-public class Animation {
 
     public final static int LAST_SCENE = -1;
 
-    private ArrayList<Float> durations;
-
     private int index;
+
+    private int length;
+
+    private float duration;
 
     private float movieTime;
 
@@ -22,23 +19,21 @@ public class Animation {
 
     private boolean playingOnce;
 
-    public Animation(){
+    public FieldAnimation(int length, float duration){
         movieTime = 0;
+        this.length = length;
+        this.duration = duration;
         index = 0;
-        playing = true;
+        playing = false;
         finished = false;
         playingOnce = false;
-
-        durations = new ArrayList<Float>();
 
     }
 
 
     public void playOnce(){
         playing = true;
-        index = 0;
         playingOnce = true;
-        finished = false;
     }
 
     public void play(){
@@ -68,16 +63,16 @@ public class Animation {
         if(playing){
             movieTime += delta;
 
-            while(movieTime > durations.get(index)){
-                movieTime-= durations.get(index);
+            while(movieTime > duration){
+                movieTime-= duration;
                 index++;
-                if(index == durations.size()){
+                if(index == length){
                     index = 0;
                     finished = true;
                     if(playingOnce){
+                        playingOnce = false;
                         playing = false;
                         movieTime = 0;
-                        index = durations.size()-1;
                     }
                 }
             }
@@ -97,32 +92,10 @@ public class Animation {
         return playingOnce;
     }
 
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
-    }
-
-    public void setFinished(boolean finished) {
-        this.finished = finished;
-    }
-
-    public void setPlayingOnce(boolean playingOnce) {
-        this.playingOnce = playingOnce;
-    }
-
-    public void setCurrentFrame(int index){
-        if(index == LAST_SCENE){
-            this.index = durations.size()-1;
-        }else {
-            this.index = index;
-        }
-    }
-
     public int getCurrentFrame(){
         return index;
     }
 
-    public void addFrame(float duration){
-        durations.add(duration);
-    }
+
 
 }

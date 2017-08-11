@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.semblergames.snake.gamePackage.PlayState;
 import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Animation;
+import com.semblergames.snake.utilities.FieldAnimation;
 
 public class Field {
 
@@ -28,7 +29,7 @@ public class Field {
     private float x;
     private float y;
 
-    private Animation animation;
+    private FieldAnimation animation;
 
 
     public Field(int type){
@@ -37,11 +38,10 @@ public class Field {
         x = 0;
         y = 0;
 
-        animation = new Animation(LENGTH, DURATION);
-        animation.pause();
+        animation = new FieldAnimation(LENGTH, DURATION);
     }
 
-    public Animation getAnimation() {
+    public FieldAnimation getAnimation() {
         return animation;
     }
 

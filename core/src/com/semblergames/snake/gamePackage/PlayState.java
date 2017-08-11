@@ -1,11 +1,14 @@
 package com.semblergames.snake.gamePackage;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.DistanceFieldFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -47,9 +50,6 @@ public class PlayState extends GameState {
     private int yPressed;
 
 
-    private BitmapFont font;
-
-
     private int score;
 
     public PlayState() {
@@ -57,10 +57,7 @@ public class PlayState extends GameState {
 
     @Override
     public void init() {
-        initTextures();
-        Pattern.loadPatterns();
 
-        font = new BitmapFont();
 
         regions = new PlayingRegion[ROWS][COLUMNS];
         for(int i = 0; i < ROWS;i++){
@@ -79,7 +76,7 @@ public class PlayState extends GameState {
 
         snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2);
 
-        speed = 0.7f;
+        speed = 0.4f;
 
         time = 0f;
 
@@ -93,38 +90,7 @@ public class PlayState extends GameState {
 
     }
 
-    @Override
-    protected void initTextures() {
-        wallTextures = new Texture[6];
-        wallTextures[0] = new Texture("field/wall.png");
-        for(int i = 1; i < 6;i++){
-            wallTextures[i] = new Texture("field/walld"+i+".png");
-        }
 
-        magnetCoinTextures = new Texture[6];
-        magnetCoinTextures[0] = new Texture("field/mcoin.png");
-        for(int i = 1; i < 6;i++){
-            magnetCoinTextures[i] = new Texture("field/mcoind"+i+".png");
-        }
-
-        speedCoinTexture = new Texture[6];
-        speedCoinTexture[0] = new Texture("field/scoin.png");
-        for(int i = 1; i < 6;i++){
-            speedCoinTexture[i] = new Texture("field/scoind"+i+".png");
-        }
-
-        standardCoinTextures = new Texture[6];
-        standardCoinTextures[0] = new Texture("field/coin.png");
-        for(int i = 1; i < 6;i++){
-            standardCoinTextures[i] = new Texture("field/coind"+i+".png");
-        }
-
-        pointTexture = new Texture[6];
-        pointTexture[0] = new Texture("field/point.png");
-        for(int i = 1; i < 6;i++){
-            pointTexture[i] = new Texture("field/pointd"+i+".png");
-        }
-    }
 
     @Override
     public void render(SpriteBatch batch, ShapeRenderer renderer, float alpha, float delta) {
@@ -148,18 +114,15 @@ public class PlayState extends GameState {
         if (time > speed){
 
             if(snake.update()){
-                listener.changeState(main.GAME_OVER_STATE);
+                listener.changeState(main.MAIN_MENU_STATE);
             }
-
-            float x = snake.getHeadSegment().getX();
-            float y = snake.getHeadSegment().getY();
 
             Field field = regions[snake.getHeadSegment().getY() / PlayingRegion.height][snake.getHeadSegment().getX() / PlayingRegion.width]
                     .getField(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height);
 
             switch (field.getType()){
                 case Field.WALL:{
-                    listener.changeState(main.GAME_OVER_STATE);
+                    listener.changeState(main.MAIN_MENU_STATE);
                     break;
                 }
                 case Field.MAGNET_COIN:{
@@ -234,14 +197,18 @@ public class PlayState extends GameState {
             }
         }
 
+       /* Color color = batch.getColor();
+
+        batch.setColor(color.r, color.g, color.b, alpha);*/
+
         batch.begin();
 
         fieldRenderer.render(batch);
 
-        font.draw(batch, Integer.toString(snake.getHeadSegment().getX()), 300 , 300);
+       /* font.draw(batch, Integer.toString(snake.getHeadSegment().getX()), 300 , 300);
         font.draw(batch, Integer.toString(snake.getHeadSegment().getY()), 350 , 300);
         font.draw(batch, Float.toString(main.WIDTH) + " " + Float.toString(main.HEIGHT), 400, 400);
-        font.draw(batch, Float.toString(delta), 500,500);
+        font.draw(batch, Float.toString(delta), 500,500);*/
         batch.end();
 
 
@@ -259,7 +226,7 @@ public class PlayState extends GameState {
     }
 
     @Override
-    public void touchDragged(int prevX, int prevY, int x, int y){
+    public void touchDragged(int x, int y){
 
     }
 
@@ -308,11 +275,47 @@ public class PlayState extends GameState {
 
     @Override
     public void backPressed() {
-
+        listener.changeState(main.MAIN_MENU_STATE);
     }
 
     @Override
-    protected void disposeTextures() {
+    public void initTexturesAndFonts(FreeTypeFontGenerator generator) {
+
+        Pattern.loadPatterns();
+
+        wallTextures = new Texture[6];
+        wallTextures[0] = new Texture("field/wall.png");
+        for(int i = 1; i < 6;i++){
+            wallTextures[i] = new Texture("field/walld"+i+".png");
+        }
+
+        magnetCoinTextures = new Texture[6];
+        magnetCoinTextures[0] = new Texture("field/mcoin.png");
+        for(int i = 1; i < 6;i++){
+            magnetCoinTextures[i] = new Texture("field/mcoind"+i+".png");
+        }
+
+        speedCoinTexture = new Texture[6];
+        speedCoinTexture[0] = new Texture("field/scoin.png");
+        for(int i = 1; i < 6;i++){
+            speedCoinTexture[i] = new Texture("field/scoind"+i+".png");
+        }
+
+        standardCoinTextures = new Texture[6];
+        standardCoinTextures[0] = new Texture("field/coin.png");
+        for(int i = 1; i < 6;i++){
+            standardCoinTextures[i] = new Texture("field/coind"+i+".png");
+        }
+
+        pointTexture = new Texture[6];
+        pointTexture[0] = new Texture("field/point.png");
+        for(int i = 1; i < 6;i++){
+            pointTexture[i] = new Texture("field/pointd"+i+".png");
+        }
+    }
+
+    @Override
+    protected void disposeTexturesAndFonts() {
         for(Texture texture:wallTextures){
             texture.dispose();
         }

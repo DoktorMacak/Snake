@@ -1,7 +1,9 @@
 package com.semblergames.snake.gamePackage;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.semblergames.snake.main;
 
@@ -16,7 +18,7 @@ public class GameOverState extends GameState {
     }
 
     @Override
-    protected void initTextures() {
+    public void initTexturesAndFonts(FreeTypeFontGenerator generator) {
 
     }
 
@@ -35,7 +37,7 @@ public class GameOverState extends GameState {
     }
 
     @Override
-    public void touchDragged(int prevX, int prevY, int x, int y) {
+    public void touchDragged(int x, int y) {
 
     }
 
@@ -50,7 +52,7 @@ public class GameOverState extends GameState {
     }
 
     @Override
-    protected void disposeTextures() {
+    protected void disposeTexturesAndFonts() {
 
     }
 }
