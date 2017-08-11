@@ -87,7 +87,7 @@ public class MainMenuState extends GameState{
 
         Texture texture = tSnakeTexture[tSnakeAnimation.getCurrentFrame()];
 
-        drawTexture(batch, main.WIDTH/2, main.HEIGHT/2, texture);
+        drawTexture(batch, main.WIDTH/2, 1400*main.SCALEY, texture);
 
         tSnakeAnimation.update(delta);
 
@@ -122,7 +122,9 @@ public class MainMenuState extends GameState{
         quitButton.update(delta);
         quitButton.draw(batch);
 
-        font.getColor().a = alpha;
+        Color fontColor = font.getColor();
+
+        font.setColor(fontColor.r, fontColor.g, fontColor.b, alpha);
 
         font.draw(batch, glyphLayout, hsX, hsY);
 

@@ -34,6 +34,7 @@ public class AndroidLauncher extends AndroidApplication {
 	@Override
 	protected void onStop() {
 		super.onStop();
+		saveData();
 	}
 
 	private void loadData(){
