@@ -19,6 +19,9 @@ public class AndroidLauncher extends AndroidApplication {
 	private static final String HIGH_SCORE_PASS = "highScore";
 	private static final String SHOW_TUTORIAL_PASS = "showTutorial";
 	private static final String SNAKE_SPEED_PASS = "snakeSpeed";
+	private static final String SKIN_POINTER_PASS = "snakePointer";
+
+	private static final int SKIN_AMOUNT = 18;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -46,6 +49,26 @@ public class AndroidLauncher extends AndroidApplication {
 			GameData.POINT_STARS = file.getInt(POINT_STARTS_PASS, 0);
 			GameData.SHOW_TUTORIAL = file.getBoolean(SHOW_TUTORIAL_PASS, true);
 			GameData.SNAKE_SPEED = file.getInt(SNAKE_SPEED_PASS, 1);
+			GameData.SKIN_POINTER = file.getInt(SKIN_POINTER_PASS, 0);
+
+			GameData.SKINS = new boolean[SKIN_AMOUNT];
+
+			for(int i = 0; i < SKIN_AMOUNT; i++){
+				if(i == 0){
+					GameData.SKINS[i] = file.getBoolean("skin"+(i+1), true);
+				}else {
+					GameData.SKINS[i] = file.getBoolean("skin"+(i+1), false);
+				}
+			}
+
+			GameData.SKIN_PRICES = new int[SKIN_AMOUNT];
+
+			GameData.SKIN_PRICES[0] = 0;
+
+			for(int i = 1; i < SKIN_AMOUNT; i++){
+				GameData.SKIN_PRICES[i] = 10;
+			}
+
 
 		}catch(Exception e){
 			GameData.HIGH_SCORE = 0;
@@ -54,6 +77,27 @@ public class AndroidLauncher extends AndroidApplication {
 			GameData.POINT_STARS = 0;
 			GameData.SHOW_TUTORIAL = true;
 			GameData.SNAKE_SPEED = 1;
+			GameData.SKIN_POINTER = 0;
+
+			GameData.SKINS = new boolean[SKIN_AMOUNT];
+
+			for(int i = 0; i < SKIN_AMOUNT; i++){
+				if(i == 0){
+					GameData.SKINS[i] = true;
+				}else {
+					GameData.SKINS[i] = false;
+				}
+			}
+
+			GameData.SKIN_PRICES = new int[SKIN_AMOUNT];
+
+			GameData.SKIN_PRICES[0] = 0;
+
+			for(int i = 1; i < SKIN_AMOUNT; i++){
+				GameData.SKIN_PRICES[i] = 10;
+			}
+
+
 		}
 	}
 
@@ -74,6 +118,12 @@ public class AndroidLauncher extends AndroidApplication {
 			editor.putInt(POINT_STARTS_PASS, GameData.POINT_STARS);
 			editor.putBoolean(SHOW_TUTORIAL_PASS, GameData.SHOW_TUTORIAL);
 			editor.putInt(SNAKE_SPEED_PASS, GameData.SNAKE_SPEED);
+			editor.putInt(SKIN_POINTER_PASS, GameData.SKIN_POINTER);
+
+			for(int i = 0; i < SKIN_AMOUNT; i++){
+				editor.putBoolean("skin"+(i+1), GameData.SKINS[i]);
+			}
+
 
 			editor.apply();
 

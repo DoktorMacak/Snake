@@ -103,7 +103,7 @@ public class Button {
                 0,
                 texture.getWidth(),
                 texture.getHeight(),
-                false,flipped
+                flipped,false
         );
 
     }

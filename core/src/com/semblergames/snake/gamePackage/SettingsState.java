@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Button;
 import com.semblergames.snake.utilities.CheckBox;
@@ -43,7 +44,12 @@ public class SettingsState extends GameState {
         playSound.setPosition(main.WIDTH/2, 1020*main.SCALEY);
         playSound.setChecked(GameData.PLAY_SOUNDS);
 
+        incButton = new Button(incTexture);
+        incButton.setPosition(main.WIDTH/2 + 150*main.SCALEX,660*main.SCALEY);
 
+        decButton = new Button(incTexture);
+        decButton.setPosition(main.WIDTH/2 - 150*main.SCALEX,660*main.SCALEY);
+        decButton.setFlipped(true);
     }
 
     @Override
@@ -61,6 +67,16 @@ public class SettingsState extends GameState {
 
         drawTexture(batch, main.WIDTH/2, 840*main.SCALEY, snakeSpeedTexture);
 
+        drawTexture(batch, main.WIDTH/2, 660*main.SCALEY, numberTextures[GameData.SNAKE_SPEED]);
+
+        incButton.draw(batch);
+        incButton.update(delta);
+
+        decButton.draw(batch);
+        decButton.update(delta);
+
+        drawTexture(batch, main.WIDTH/2, 400*main.SCALEY, noteTexture);
+
         batch.end();
     }
 
@@ -69,6 +85,8 @@ public class SettingsState extends GameState {
         backButton.handleDown(x,y);
         playMusic.handleDown(x,y);
         playSound.handleDown(x,y);
+        incButton.handleDown(x,y);
+        decButton.handleDown(x,y);
     }
 
     @Override
@@ -76,6 +94,8 @@ public class SettingsState extends GameState {
         backButton.handleDown(x,y);
         playMusic.handleDown(x,y);
         playSound.handleDown(x,y);
+        incButton.handleDown(x,y);
+        decButton.handleDown(x,y);
     }
 
     @Override
@@ -88,6 +108,16 @@ public class SettingsState extends GameState {
         }
         if(playSound.handleUp(x,y)){
             GameData.PLAY_SOUNDS = playSound.isChecked();
+        }
+        if(incButton.handleUp(x,y)){
+            if(GameData.SNAKE_SPEED < 5){
+                GameData.SNAKE_SPEED++;
+            }
+        }
+        if(decButton.handleUp(x,y)){
+            if(GameData.SNAKE_SPEED > 1){
+                GameData.SNAKE_SPEED--;
+            }
         }
     }
 
@@ -105,6 +135,13 @@ public class SettingsState extends GameState {
 
         snakeSpeedTexture = new Texture("buttons/speed.png");
 
+        numberTextures = new Texture[10];
+
+        for(int i = 0; i < 10;i++){
+            numberTextures[i] = new Texture("buttons/numbers/"+i+".png");
+        }
+
+        incTexture = new Texture("buttons/arrow.png");
 
         noteTexture = new Texture("buttons/note.png");
 
@@ -124,6 +161,12 @@ public class SettingsState extends GameState {
         }
 
         snakeSpeedTexture.dispose();
+
+        for(Texture texture:numberTextures){
+            texture.dispose();
+        }
+
+        incTexture.dispose();
 
         noteTexture.dispose();
 

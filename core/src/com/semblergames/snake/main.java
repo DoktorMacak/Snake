@@ -18,6 +18,8 @@ import com.semblergames.snake.gamePackage.LoadState;
 import com.semblergames.snake.gamePackage.MainMenuState;
 import com.semblergames.snake.gamePackage.PlayState;
 import com.semblergames.snake.gamePackage.SettingsState;
+import com.semblergames.snake.gamePackage.ShopState;
+import com.semblergames.snake.gamePackage.TutorialState;
 import com.semblergames.snake.utilities.ChangeState;
 
 public class main extends ApplicationAdapter implements InputProcessor, ChangeState{
@@ -26,6 +28,8 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	public static final int MAIN_MENU_STATE = 1;
 	public static final int PLAY_STATE = 2;
     public static final int SETTINGS_STATE = 3;
+	public static final int SHOP_STATE = 4;
+	public static final int TUTORIAL_STATE = 5;
 
 
 	public static float SCALEX;
@@ -83,7 +87,7 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		renderer = new ShapeRenderer();
 		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/MAHAWA.TTF"));
 
-		states = new GameState[4];
+		states = new GameState[6];
 
 		states[LOAD_STATE] = new LoadState();
 		states[LOAD_STATE].initTexturesAndFonts(fontGenerator);
@@ -94,7 +98,6 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		states[MAIN_MENU_STATE].initTexturesAndFonts(fontGenerator);
 		states[MAIN_MENU_STATE].setChangeListener(this);
 
-
 		states[PLAY_STATE] = new PlayState();
 		states[PLAY_STATE].initTexturesAndFonts(fontGenerator);
 		states[PLAY_STATE].setChangeListener(this);
@@ -103,6 +106,13 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		states[SETTINGS_STATE].initTexturesAndFonts(fontGenerator);
 		states[SETTINGS_STATE].setChangeListener(this);
 
+		states[SHOP_STATE] = new ShopState();
+		states[SHOP_STATE].initTexturesAndFonts(fontGenerator);
+		states[SHOP_STATE].setChangeListener(this);
+
+		states[TUTORIAL_STATE] = new TutorialState();
+		states[TUTORIAL_STATE].initTexturesAndFonts(fontGenerator);
+		states[TUTORIAL_STATE].setChangeListener(this);
 
 		currentIndex = LOAD_STATE;
 		nextIndex = LOAD_STATE;

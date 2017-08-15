@@ -100,11 +100,21 @@ public class MainMenuState extends GameState{
             tSnakeAnimation.setFinished(false);
             switch (nextAction){
                 case NEXT_PLAY:{
-                    listener.changeState(main.PLAY_STATE);
+                    if(GameData.SHOW_TUTORIAL){
+                        listener.changeState(main.TUTORIAL_STATE);
+                    }else{
+                        listener.changeState(main.PLAY_STATE);
+                        GameData.SHOW_TUTORIAL = false;
+                    }
+
                     break;
                 }
                 case NEXT_SETTINGS:{
                     listener.changeState(main.SETTINGS_STATE);
+                    break;
+                }
+                case NEXT_SHOP:{
+                    listener.changeState(main.SHOP_STATE);
                     break;
                 }
             }
@@ -122,11 +132,9 @@ public class MainMenuState extends GameState{
         quitButton.update(delta);
         quitButton.draw(batch);
 
-        Color fontColor = font.getColor();
+        font.getColor().a = alpha;
 
-        font.setColor(fontColor.r, fontColor.g, fontColor.b, alpha);
-
-        font.draw(batch, glyphLayout, hsX, hsY);
+        font.draw(batch, "HIGH SCORE: "+ GameData.HIGH_SCORE, hsX, hsY);
 
         batch.end();
     }
@@ -206,6 +214,6 @@ public class MainMenuState extends GameState{
 
     @Override
     public void backPressed() {
-
+        Gdx.app.exit();
     }
 }
