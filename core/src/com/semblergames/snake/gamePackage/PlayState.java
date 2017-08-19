@@ -20,6 +20,7 @@ import com.semblergames.snake.fieldPackage.PlayingRegion;
 import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Camera;
 import com.semblergames.snake.utilities.Direction;
+import com.semblergames.snake.utilities.GameData;
 
 
 public class PlayState extends GameState {
@@ -46,9 +47,20 @@ public class PlayState extends GameState {
     private float speed;
     private float time;
 
+
+
+
+    private boolean unstoppable;
+    private float unstoppableTime;
+
+
     private int xPressed;
     private int yPressed;
 
+    private float touchDownTime;
+
+
+    private int speedCoins;
 
     private int score;
 
@@ -76,9 +88,13 @@ public class PlayState extends GameState {
 
         snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2);
 
-        speed = 0.4f;
+        speed = 0.7f;
 
         time = 0f;
+
+        unstoppable = false;
+
+        unstoppableTime = 0;
 
         camera = new Camera();
         camera.align(snake);
@@ -87,6 +103,10 @@ public class PlayState extends GameState {
         camera.setSpeedY(1/speed);
 
         score = 0;
+
+        speedCoins = 0;
+
+        touchDownTime = 1;
 
     }
 
@@ -106,7 +126,22 @@ public class PlayState extends GameState {
 
        // renderer.rect(main.WIDTH/2 - main.BLOCK_WIDTH/2, main.HEIGHT/2 - main.BLOCK_HEIGHT/2, main.BLOCK_WIDTH, main.BLOCK_HEIGHT);
 
+        /**
+         * novo
+         */
 
+        if(touchDownTime < 1) {
+            touchDownTime += delta;
+        }
+
+        if(unstoppable){
+            unstoppableTime += delta;
+            if(unstoppableTime > 4){
+                unstoppable = false;
+                speed = speed*2;
+                unstoppableTime = 0;
+            }
+        }
 
 
         time+=delta;
@@ -122,7 +157,11 @@ public class PlayState extends GameState {
 
             switch (field.getType()){
                 case Field.WALL:{
-                    listener.changeState(main.MAIN_MENU_STATE);
+                    if(unstoppable){
+                        field.getAnimation().play();
+                    }else {
+                        listener.changeState(main.MAIN_MENU_STATE);
+                    }
                     break;
                 }
                 case Field.MAGNET_COIN:{
@@ -139,10 +178,12 @@ public class PlayState extends GameState {
                 }
                 case Field.SPEED_COIN:{
                     field.getAnimation().play();
+                    speedCoins++;
                     break;
                 }
                 case Field.POINT_STAR:{
                     field.getAnimation().play();
+                    GameData.POINT_STARS++;
                     break;
                 }
             }
@@ -222,6 +263,14 @@ public class PlayState extends GameState {
     public void touchDown(int x, int y) {
         xPressed = x;
         yPressed = y;
+
+        if(touchDownTime < 0.3f && speedCoins > 5 && !unstoppable){
+            unstoppable = true;
+            speedCoins = 0;
+            speed = speed/2;
+        }
+
+        touchDownTime = 0;
 
     }
 

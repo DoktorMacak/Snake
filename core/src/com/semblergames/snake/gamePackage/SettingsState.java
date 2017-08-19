@@ -34,7 +34,7 @@ public class SettingsState extends GameState {
     public void init() {
 
         backButton = new Button(backTexture);
-        backButton.setPosition(100*main.SCALEX, main.HEIGHT - 100*main.SCALEY);
+        backButton.setPosition(100*main.SCALEX, main.HEIGHT - 90*main.SCALEY);
 
         playMusic = new CheckBox(playMusicTextures[1], playMusicTextures[0]);
         playMusic.setPosition(main.WIDTH/2, 1200*main.SCALEY);

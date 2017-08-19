@@ -17,7 +17,7 @@ public class TutorialState extends GameState {
     @Override
     public void init() {
         gotItButton = new Button(gotItTexture);
-        gotItButton.setPosition(main.WIDTH/2, 100*main.SCALEY);
+        gotItButton.setPosition(main.WIDTH/2, 200*main.SCALEY);
     }
 
     @Override

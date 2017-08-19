@@ -104,7 +104,7 @@ public class MainMenuState extends GameState{
                         listener.changeState(main.TUTORIAL_STATE);
                     }else{
                         listener.changeState(main.PLAY_STATE);
-                        GameData.SHOW_TUTORIAL = false;
+                        //GameData.SHOW_TUTORIAL = false;
                     }
 
                     break;
