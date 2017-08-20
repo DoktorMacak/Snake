@@ -6,7 +6,7 @@ import com.semblergames.snake.main;
 
 public class ScrollItem {
 
-    private static final float STAR_TO_CENTRE_OFFSET_X = 60 * main.SCALEX;
+
     private static final float STAR_TO_CENTRE_OFFSET_Y = 135 * main.SCALEY;
 
     private static final float IMAGE_TO_CENTRE_OFFSET_Y = 45*main.SCALEY;
@@ -15,27 +15,36 @@ public class ScrollItem {
     private static final float TOTAL_WIDTH = 240*main.SCALEX;
 
     private static final float TEXT_TO_CENTRE_BOTTOM_OFFSET = 105 * main.SCALEY;
-    private static final float TEXT_TO_CENTRE_RIGHT_OFFSET = 13*main.SCALEX;
+
+
+    public static final float OFFSET_BETWEEN = 17*main.SCALEX;
 
     public static final float OFFSET_TO_NEXT = 60*main.SCALEY;
 
-    private float textWidth;
+    private float priceWidth;
 
     private float centerX;
     private float centerY;
 
     public ScrollItem(int pos, float y, BitmapFont font){
 
-        int xPos = (pos % 3)+1;
+        int xPos = (pos % 3);
         int yPos = (pos/ScrollView.COLUMNS);
 
         GlyphLayout layout = new  GlyphLayout(font, Integer.toString(GameData.SKIN_PRICES[pos]));
 
-        textWidth = layout.width;
+        priceWidth = layout.width + OFFSET_BETWEEN + OFFSET_TO_NEXT;
 
         float diff = OFFSET_TO_NEXT + TOTAL_HEIGHT;
 
-        centerX = (main.WIDTH / (float)(ScrollView.COLUMNS +1))* (float)xPos;
+
+        centerX = main.WIDTH / 2;
+        if(xPos == 0){
+            centerX -= 300*main.SCALEX;
+        }else if(xPos == 2){
+            centerX += 300*main.SCALEX;
+        }
+
         centerY = (y - TOTAL_HEIGHT/2) - diff*yPos;
     }
 
@@ -52,7 +61,7 @@ public class ScrollItem {
     }
 
     public float getStarX(){
-        return centerX + STAR_TO_CENTRE_OFFSET_X;
+        return centerX + priceWidth/2 - OFFSET_TO_NEXT/2;
     }
 
     public float getStarY(){
@@ -60,7 +69,7 @@ public class ScrollItem {
     }
 
     public float getTextX(){
-        return centerX + TEXT_TO_CENTRE_RIGHT_OFFSET - textWidth;
+        return centerX - priceWidth/2;
     }
 
     public float getTextY(){

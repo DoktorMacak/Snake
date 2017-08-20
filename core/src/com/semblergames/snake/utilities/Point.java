@@ -1,9 +1,5 @@
 package com.semblergames.snake.utilities;
 
-/**
- * Created by Dejan on 19-Aug-17.
- */
-
 public class Point {
 
     private float x;

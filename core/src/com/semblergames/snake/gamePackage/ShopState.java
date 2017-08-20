@@ -49,7 +49,7 @@ public class ShopState extends GameState {
     @Override
     public void init() {
         backButton = new Button(menuTexture);
-        backButton.setPosition(100*main.SCALEX, main.HEIGHT - 90*main.SCALEY);
+        backButton.setPosition(120*main.SCALEX, main.HEIGHT - 90*main.SCALEY);
 
         scrollView = new ScrollView(skins.length, font, main.HEIGHT - 200*main.SCALEY);
 
@@ -111,7 +111,7 @@ public class ShopState extends GameState {
 
         drawTexture(batch, starX, starY, starTexture);
 
-        font.draw(batch, Float.toString(delta), 400, main.HEIGHT - 100);
+       // font.draw(batch, Float.toString(delta), 400, main.HEIGHT - 100);
 
         batch.end();
     }
