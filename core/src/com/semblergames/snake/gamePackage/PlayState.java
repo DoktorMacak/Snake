@@ -160,7 +160,8 @@ public class PlayState extends GameState {
                     if(unstoppable){
                         field.getAnimation().play();
                     }else {
-                        listener.changeState(main.MAIN_MENU_STATE);
+                        GameData.CURRENT_SCORE = score;
+                        listener.changeState(main.GAME_OVER_STATE);
                     }
                     break;
                 }

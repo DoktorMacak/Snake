@@ -111,7 +111,6 @@ public class ShopState extends GameState {
 
         drawTexture(batch, starX, starY, starTexture);
 
-       // font.draw(batch, Float.toString(delta), 400, main.HEIGHT - 100);
 
         batch.end();
     }

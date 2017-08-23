@@ -37,18 +37,18 @@ public class SettingsState extends GameState {
         backButton.setPosition(120*main.SCALEX, main.HEIGHT - 90*main.SCALEY);
 
         playMusic = new CheckBox(playMusicTextures[1], playMusicTextures[0]);
-        playMusic.setPosition(main.WIDTH/2, 1200*main.SCALEY);
+        playMusic.setPosition(main.WIDTH/2, 1400*main.SCALEY);
         playMusic.setChecked(GameData.PLAY_MUSIC);
 
         playSound = new CheckBox(playSoundTextures[1], playSoundTextures[0]);
-        playSound.setPosition(main.WIDTH/2, 1020*main.SCALEY);
+        playSound.setPosition(main.WIDTH/2, 1220*main.SCALEY);
         playSound.setChecked(GameData.PLAY_SOUNDS);
 
         incButton = new Button(incTexture);
-        incButton.setPosition(main.WIDTH/2 + 150*main.SCALEX,660*main.SCALEY);
+        incButton.setPosition(main.WIDTH/2 + 150*main.SCALEX,860*main.SCALEY);
 
         decButton = new Button(incTexture);
-        decButton.setPosition(main.WIDTH/2 - 150*main.SCALEX,660*main.SCALEY);
+        decButton.setPosition(main.WIDTH/2 - 150*main.SCALEX,860*main.SCALEY);
         decButton.setFlipped(true);
     }
 
@@ -65,9 +65,9 @@ public class SettingsState extends GameState {
         playSound.draw(batch);
         playSound.update(delta);
 
-        drawTexture(batch, main.WIDTH/2, 840*main.SCALEY, snakeSpeedTexture);
+        drawTexture(batch, main.WIDTH/2, 1040*main.SCALEY, snakeSpeedTexture);
 
-        drawTexture(batch, main.WIDTH/2, 660*main.SCALEY, numberTextures[GameData.SNAKE_SPEED]);
+        drawTexture(batch, main.WIDTH/2, 860*main.SCALEY, numberTextures[GameData.SNAKE_SPEED]);
 
         incButton.draw(batch);
         incButton.update(delta);
@@ -75,7 +75,7 @@ public class SettingsState extends GameState {
         decButton.draw(batch);
         decButton.update(delta);
 
-        drawTexture(batch, main.WIDTH/2, 400*main.SCALEY, noteTexture);
+        drawTexture(batch, main.WIDTH/2, 600*main.SCALEY, noteTexture);
 
         batch.end();
     }

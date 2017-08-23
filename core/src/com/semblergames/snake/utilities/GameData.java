@@ -14,4 +14,6 @@ public class GameData {
 
     public static int [] SKIN_PRICES;
 
+    public static int CURRENT_SCORE;
+
 }

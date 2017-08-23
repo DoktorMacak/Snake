@@ -15,7 +15,7 @@ import com.semblergames.snake.utilities.GameData;
 
 public class MainMenuState extends GameState{
 
-    private static final float FONT_SIZE = 30;
+    private static final float FONT_SIZE = 60;
 
     private static final int NEXT_PLAY = 1;
     private static final int NEXT_SETTINGS = 2;
@@ -77,7 +77,7 @@ public class MainMenuState extends GameState{
 
         hsX = main.WIDTH/2 - glyphLayout.width/2;
 
-        hsY = 990*main.SCALEY;
+        hsY = 1000*main.SCALEY;
 
     }
 
@@ -188,7 +188,7 @@ public class MainMenuState extends GameState{
         playTexture = new Texture("buttons/play.png");
         settingsTexture = new Texture("buttons/settings.png");
         shopTexture = new Texture("buttons/shop.png");
-        quitTexture = new Texture("buttons/quit.png");
+        quitTexture = new Texture("buttons/exit.png");
 
         tSnakeTexture = new Texture[36];
 

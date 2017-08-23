@@ -30,6 +30,7 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
     public static final int SETTINGS_STATE = 3;
 	public static final int SHOP_STATE = 4;
 	public static final int TUTORIAL_STATE = 5;
+	public static final int GAME_OVER_STATE = 6;
 
 
 	public static float SCALEX;
@@ -87,7 +88,7 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		renderer = new ShapeRenderer();
 		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("font/MAHAWA.TTF"));
 
-		states = new GameState[6];
+		states = new GameState[7];
 
 		states[LOAD_STATE] = new LoadState();
 		states[LOAD_STATE].initTexturesAndFonts(fontGenerator);
@@ -113,6 +114,10 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		states[TUTORIAL_STATE] = new TutorialState();
 		states[TUTORIAL_STATE].initTexturesAndFonts(fontGenerator);
 		states[TUTORIAL_STATE].setChangeListener(this);
+
+		states[GAME_OVER_STATE] = new GameOverState();
+		states[GAME_OVER_STATE].initTexturesAndFonts(fontGenerator);
+		states[GAME_OVER_STATE].setChangeListener(this);
 
 		currentIndex = LOAD_STATE;
 		nextIndex = LOAD_STATE;
