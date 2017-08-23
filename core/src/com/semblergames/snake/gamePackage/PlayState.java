@@ -62,6 +62,8 @@ public class PlayState extends GameState {
 
     private int speedCoins;
 
+    private int magnetCoins;
+
     private int score;
 
     public PlayState() {
@@ -104,6 +106,8 @@ public class PlayState extends GameState {
 
         score = 0;
 
+        magnetCoins = 0;
+
         speedCoins = 0;
 
         touchDownTime = 1;
@@ -124,13 +128,9 @@ public class PlayState extends GameState {
 
         renderer.setColor(Color.BLACK);
 
-       // renderer.rect(main.WIDTH/2 - main.BLOCK_WIDTH/2, main.HEIGHT/2 - main.BLOCK_HEIGHT/2, main.BLOCK_WIDTH, main.BLOCK_HEIGHT);
 
-        /**
-         * novo
-         */
 
-        if(touchDownTime < 1) {
+        if(touchDownTime < 3) {
             touchDownTime += delta;
         }
 
@@ -320,6 +320,10 @@ public class PlayState extends GameState {
                     camera.setSpeed(deltaX / timeLeft, 1 / timeLeft);
                 }
             }
+        }
+
+        if(touchDownTime > 2 && Math.abs(dx) < 20*main.SCALEX && Math.abs(dy) < 20*main.SCALEY){
+
         }
     }
 
