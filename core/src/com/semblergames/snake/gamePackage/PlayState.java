@@ -18,6 +18,7 @@ import com.semblergames.snake.fieldPackage.FieldRenderer;
 import com.semblergames.snake.fieldPackage.Pattern;
 import com.semblergames.snake.fieldPackage.PlayingRegion;
 import com.semblergames.snake.main;
+import com.semblergames.snake.utilities.Button;
 import com.semblergames.snake.utilities.Camera;
 import com.semblergames.snake.utilities.Direction;
 import com.semblergames.snake.utilities.GameData;
@@ -25,15 +26,25 @@ import com.semblergames.snake.utilities.GameData;
 
 public class PlayState extends GameState {
 
+    private static final int COLUMNS = 5;
+    private static final int ROWS = 7;
+
     public static Texture [] wallTextures;
     public static Texture [] standardCoinTextures;
     public static Texture [] magnetCoinTextures;
     public static Texture [] speedCoinTexture;
     public static Texture [] pointTexture;
 
+    private Texture scoreTexture;
+    private Texture whiteTexture;
+    private Texture lineTexture;
+    private Texture [] magnetTextures;
+    private Texture [] speedTextures;
+    private Texture menuTexture;
 
-    private static final int COLUMNS = 5;
-    private static final int ROWS = 7;
+    private BitmapFont font;
+
+    private Button backButton;
 
     private PlayingRegion[][] regions;
 
@@ -86,6 +97,9 @@ public class PlayState extends GameState {
             }
         }
 
+        backButton = new Button(menuTexture);
+        backButton.setPosition(120*main.SCALEX, main.HEIGHT - 90*main.SCALEY);
+
         fieldRenderer = new FieldRenderer();
 
         snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2);
@@ -126,7 +140,6 @@ public class PlayState extends GameState {
         renderer.setAutoShapeType(true);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        renderer.setColor(Color.BLACK);
 
 
 
@@ -239,23 +252,16 @@ public class PlayState extends GameState {
             }
         }
 
-       /* Color color = batch.getColor();
-
-        batch.setColor(color.r, color.g, color.b, alpha);*/
 
         batch.begin();
 
         fieldRenderer.render(batch);
 
-       /* font.draw(batch, Integer.toString(snake.getHeadSegment().getX()), 300 , 300);
-        font.draw(batch, Integer.toString(snake.getHeadSegment().getY()), 350 , 300);
-        font.draw(batch, Float.toString(main.WIDTH) + " " + Float.toString(main.HEIGHT), 400, 400);
-        font.draw(batch, Float.toString(delta), 500,500);*/
+
+
+
         batch.end();
 
-
-
-        //gluposti na ekranu
 
 
     }
@@ -366,6 +372,28 @@ public class PlayState extends GameState {
         for(int i = 1; i < 6;i++){
             pointTexture[i] = new Texture("field/pointd"+i+".png");
         }
+
+        scoreTexture = new Texture("play_gui/score.png");
+        whiteTexture = new Texture("play_gui/white.png");
+        lineTexture = new Texture("play_gui/lineg.png");
+
+        magnetTextures = new Texture[3];
+        magnetTextures[0] = new Texture("play_gui/magnet2.png");
+        magnetTextures[1] = new Texture("play_gui/magnet1.png");
+        magnetTextures[2] = new Texture("play_gui/magneticon.png");
+
+        speedTextures = new Texture[3];
+        speedTextures[0] = new Texture("play_gui/speed2.png");
+        speedTextures[1] = new Texture("play_gui/speed1.png");
+        speedTextures[2] = new Texture("play_gui/speedicon.png");
+
+        menuTexture = new Texture("buttons/menu.png");
+
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = (int)(80*main.SCALEX);
+        parameter.color = new Color(0.929f, 0.78f, 0255f, 1f);
+
+        font = generator.generateFont(parameter);
     }
 
     @Override
@@ -385,6 +413,21 @@ public class PlayState extends GameState {
         for(Texture texture:speedCoinTexture){
             texture.dispose();
         }
+
+        scoreTexture.dispose();
+        whiteTexture.dispose();
+        lineTexture.dispose();
+
+        for(Texture texture:magnetTextures){
+            texture.dispose();
+        }
+        for(Texture texture:speedTextures){
+            texture.dispose();
+        }
+
+        menuTexture.dispose();
+
+        font.dispose();
     }
 
     private void moveEverything(Direction direction){

@@ -46,6 +46,8 @@ public class ShopState extends GameState {
     private ArrayList<Point> starPoints;
     private ScrollView scrollView;
 
+    private GlyphLayout layout;
+
     @Override
     public void init() {
         backButton = new Button(menuTexture);
@@ -61,8 +63,9 @@ public class ShopState extends GameState {
 
         textY = main.HEIGHT - 60*main.SCALEY;
 
+        layout = new GlyphLayout(font, Integer.toString(GameData.POINT_STARS));
 
-        float twid = (new GlyphLayout(font,Integer.toString(GameData.POINT_STARS))).width;
+        float twid = layout.width;
 
         textX = main.WIDTH - 143*main.SCALEX - twid;
     }
@@ -106,6 +109,13 @@ public class ShopState extends GameState {
 
         backButton.draw(batch);
         backButton.update(delta);
+
+        layout.setText(font, Integer.toString(GameData.POINT_STARS));
+
+        float twid = layout.width;
+        textX = main.WIDTH - 143*main.SCALEX - twid;
+
+        font.getColor().a = alpha;
 
         font.draw(batch, Integer.toString(GameData.POINT_STARS), textX, textY);
 

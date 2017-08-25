@@ -103,7 +103,7 @@ public class GameOverState extends GameState {
 
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-        parameter.color = new Color(0.1647f, 0.1647f, 0.1647f, 1.0f);
+        parameter.color = new Color(0.329f,0.667f,0.863f, 1);
         parameter.size = (int)(60*main.SCALEX);
 
         font = generator.generateFont(parameter);
