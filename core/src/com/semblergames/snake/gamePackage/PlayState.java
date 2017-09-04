@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g3d.utils.AnimationController;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.semblergames.snake.fieldPackage.Field;
 import com.semblergames.snake.fieldPackage.FieldRenderer;
@@ -22,6 +21,9 @@ import com.semblergames.snake.utilities.Button;
 import com.semblergames.snake.utilities.Camera;
 import com.semblergames.snake.utilities.Direction;
 import com.semblergames.snake.utilities.GameData;
+import com.semblergames.snake.utilities.Image;
+import com.semblergames.snake.utilities.ImageShow;
+import com.semblergames.snake.utilities.PowerupHandler;
 
 
 public class PlayState extends GameState {
@@ -45,6 +47,12 @@ public class PlayState extends GameState {
     private BitmapFont font;
 
     private Button backButton;
+    private Image whiteImage;
+    private Image scoreImage;
+
+    private PowerupHandler speedPowerup;
+    private PowerupHandler magnetPowerup;
+
 
     private PlayingRegion[][] regions;
 
@@ -60,20 +68,10 @@ public class PlayState extends GameState {
 
 
 
-
-    private boolean unstoppable;
-    private float unstoppableTime;
-
-
     private int xPressed;
     private int yPressed;
 
-    private float touchDownTime;
 
-
-    private int speedCoins;
-
-    private int magnetCoins;
 
     private int score;
 
@@ -108,9 +106,15 @@ public class PlayState extends GameState {
 
         time = 0f;
 
-        unstoppable = false;
 
-        unstoppableTime = 0;
+        magnetPowerup = new PowerupHandler(magnetTextures, Direction.right);
+        speedPowerup = new PowerupHandler(speedTextures, Direction.left);
+
+        whiteImage = new Image(whiteTexture);
+        whiteImage.setCentre(main.WIDTH/2, main.HEIGHT - main.SCALEY * lineTexture.getHeight()/2);
+
+        scoreImage = new Image(scoreTexture);
+        scoreImage.setCentre(main.WIDTH/2, main.HEIGHT - 90*main.SCALEY);
 
         camera = new Camera();
         camera.align(snake);
@@ -120,11 +124,6 @@ public class PlayState extends GameState {
 
         score = 0;
 
-        magnetCoins = 0;
-
-        speedCoins = 0;
-
-        touchDownTime = 1;
 
     }
 
@@ -140,21 +139,9 @@ public class PlayState extends GameState {
         renderer.setAutoShapeType(true);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
 
+        speedPowerup.update(delta);
 
-
-
-        if(touchDownTime < 3) {
-            touchDownTime += delta;
-        }
-
-        if(unstoppable){
-            unstoppableTime += delta;
-            if(unstoppableTime > 4){
-                unstoppable = false;
-                speed = speed*2;
-                unstoppableTime = 0;
-            }
-        }
+        magnetPowerup.update(delta);
 
 
         time+=delta;
@@ -170,7 +157,7 @@ public class PlayState extends GameState {
 
             switch (field.getType()){
                 case Field.WALL:{
-                    if(unstoppable){
+                    if(speedPowerup.isActive()){
                         field.getAnimation().play();
                     }else {
                         GameData.CURRENT_SCORE = score;
@@ -184,15 +171,13 @@ public class PlayState extends GameState {
                 }
                 case Field.STANDARD_COIN:{
                     field.getAnimation().play();
-                    score++;
-                    if(score % 5 == 0){
-                        snake.grow();
-                    }
+                    score+=GameData.SNAKE_SPEED;
+                    snake.grow();
                     break;
                 }
                 case Field.SPEED_COIN:{
                     field.getAnimation().play();
-                    speedCoins++;
+                    speedPowerup.activate();
                     break;
                 }
                 case Field.POINT_STAR:{
@@ -257,8 +242,15 @@ public class PlayState extends GameState {
 
         fieldRenderer.render(batch);
 
+        whiteImage.draw(batch);
+        scoreImage.draw(batch);
 
 
+        backButton.update(delta);
+        backButton.draw(batch);
+
+        magnetPowerup.draw(batch);
+        speedPowerup.draw(batch);
 
         batch.end();
 
@@ -271,13 +263,6 @@ public class PlayState extends GameState {
         xPressed = x;
         yPressed = y;
 
-        if(touchDownTime < 0.3f && speedCoins > 5 && !unstoppable){
-            unstoppable = true;
-            speedCoins = 0;
-            speed = speed/2;
-        }
-
-        touchDownTime = 0;
 
     }
 
@@ -293,6 +278,8 @@ public class PlayState extends GameState {
         int dy = yPressed - y;
 
         float timeLeft = speed - time;
+
+
 
         if (Math.abs(dx) > Math.abs(dy)){
             if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 50*main.SCALEX) {
@@ -326,10 +313,6 @@ public class PlayState extends GameState {
                     camera.setSpeed(deltaX / timeLeft, 1 / timeLeft);
                 }
             }
-        }
-
-        if(touchDownTime > 2 && Math.abs(dx) < 20*main.SCALEX && Math.abs(dy) < 20*main.SCALEY){
-
         }
     }
 

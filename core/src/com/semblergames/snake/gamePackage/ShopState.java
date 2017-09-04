@@ -143,7 +143,12 @@ public class ShopState extends GameState {
             listener.changeState(main.MAIN_MENU_STATE);
         }
 
-        int pointer = scrollView.handleUp(x,y);
+        int pointer = -1;
+
+        if(y < main.HEIGHT - 186*main.SCALEY) {
+
+            pointer = scrollView.handleUp(x, y);
+        }
 
         if(pointer!= -1){
 
