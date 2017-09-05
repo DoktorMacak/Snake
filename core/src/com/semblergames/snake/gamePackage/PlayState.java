@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.DistanceFieldFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -23,6 +24,7 @@ import com.semblergames.snake.utilities.Direction;
 import com.semblergames.snake.utilities.GameData;
 import com.semblergames.snake.utilities.Image;
 import com.semblergames.snake.utilities.ImageShow;
+import com.semblergames.snake.utilities.Point;
 import com.semblergames.snake.utilities.PowerupHandler;
 
 
@@ -54,6 +56,8 @@ public class PlayState extends GameState {
     private PowerupHandler magnetPowerup;
 
 
+    private boolean countDown;
+
     private PlayingRegion[][] regions;
 
     private FieldRenderer fieldRenderer;
@@ -71,6 +75,11 @@ public class PlayState extends GameState {
     private int xPressed;
     private int yPressed;
 
+
+    private GlyphLayout scoreTextLayout;
+
+    private float scoreX;
+    private float scoreY;
 
 
     private int score;
@@ -111,7 +120,7 @@ public class PlayState extends GameState {
         speedPowerup = new PowerupHandler(speedTextures, Direction.left);
 
         whiteImage = new Image(whiteTexture);
-        whiteImage.setCentre(main.WIDTH/2, main.HEIGHT - main.SCALEY * lineTexture.getHeight()/2);
+        whiteImage.setCentre(main.WIDTH/2, main.HEIGHT - main.SCALEY * whiteTexture.getHeight()/2);
 
         scoreImage = new Image(scoreTexture);
         scoreImage.setCentre(main.WIDTH/2, main.HEIGHT - 90*main.SCALEY);
@@ -123,7 +132,13 @@ public class PlayState extends GameState {
         camera.setSpeedY(1/speed);
 
         score = 0;
+        scoreTextLayout = new GlyphLayout(font, "0");
 
+
+        scoreY = main.HEIGHT - 146*main.SCALEY;
+        scoreX = main.WIDTH /2 - main.SCALEX * scoreTextLayout.width /2;
+
+        countDown = true;
 
     }
 
@@ -136,16 +151,20 @@ public class PlayState extends GameState {
 
 
 
-        renderer.setAutoShapeType(true);
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
+
 
         speedPowerup.update(delta);
+        if(speedPowerup.isFinished()){
+            speed *=2;
+        }
 
         magnetPowerup.update(delta);
 
+        backButton.update(delta);
+
 
         time+=delta;
-        snake.draw(renderer, camera);
+
         if (time > speed){
 
             if(snake.update()){
@@ -167,17 +186,21 @@ public class PlayState extends GameState {
                 }
                 case Field.MAGNET_COIN:{
                     field.getAnimation().play();
+                    magnetPowerup.activate();
                     break;
                 }
                 case Field.STANDARD_COIN:{
                     field.getAnimation().play();
                     score+=GameData.SNAKE_SPEED;
+                    scoreTextLayout.setText(font, Integer.toString(score));
+                    scoreX = main.WIDTH /2 - main.SCALEX * scoreTextLayout.width /2;
                     snake.grow();
                     break;
                 }
                 case Field.SPEED_COIN:{
                     field.getAnimation().play();
                     speedPowerup.activate();
+                    speed /= 2;
                     break;
                 }
                 case Field.POINT_STAR:{
@@ -228,7 +251,6 @@ public class PlayState extends GameState {
             camera.align(snake);
         }
 
-        renderer.end();
 
 
         for(int i = 0; i < ROWS;i++) {
@@ -236,6 +258,15 @@ public class PlayState extends GameState {
                 regions[i][j].processFields(j,i,camera,fieldRenderer,delta);
             }
         }
+
+
+
+
+        renderer.setAutoShapeType(true);
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        snake.draw(renderer, camera);
+        renderer.end();
+
 
 
         batch.begin();
@@ -246,11 +277,14 @@ public class PlayState extends GameState {
         scoreImage.draw(batch);
 
 
-        backButton.update(delta);
         backButton.draw(batch);
 
         magnetPowerup.draw(batch);
         speedPowerup.draw(batch);
+
+        font.getColor().a = alpha;
+
+        font.draw(batch, Integer.toString(score), scoreX, scoreY);
 
         batch.end();
 
@@ -374,7 +408,7 @@ public class PlayState extends GameState {
 
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int)(80*main.SCALEX);
-        parameter.color = new Color(0.929f, 0.78f, 0255f, 1f);
+        parameter.color = new Color(0.929f, 0.78f, 0.255f, 1f);
 
         font = generator.generateFont(parameter);
     }

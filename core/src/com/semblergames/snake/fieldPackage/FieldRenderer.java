@@ -94,4 +94,8 @@ public class FieldRenderer {
         }
 
     }
+
+    public ArrayList <Field> getStandardCoins(){
+        return standardCoins;
+    }
 }

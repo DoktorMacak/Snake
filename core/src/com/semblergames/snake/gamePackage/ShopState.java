@@ -128,13 +128,18 @@ public class ShopState extends GameState {
     @Override
     public void touchDown(int x, int y) {
         backButton.handleDown(x,y);
-        scrollView.handleDown(x,y);
+        if(y < main.HEIGHT - 186*main.SCALEY) {
+            scrollView.handleDown(x,y);
+        }
+
     }
 
     @Override
     public void touchDragged(int x, int y) {
         backButton.handleDown(x,y);
-        scrollView.handleDown(x,y);
+        if(y < main.HEIGHT - 186*main.SCALEY) {
+            scrollView.handleDown(x,y);
+        }
     }
 
     @Override

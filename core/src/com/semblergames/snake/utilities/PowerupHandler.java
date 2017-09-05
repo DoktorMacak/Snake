@@ -14,8 +14,10 @@ public class PowerupHandler {
 
     private float duration;
 
-    private boolean rising;
-    private float activeAlpha;
+    private boolean finished;
+
+    private float activeTime;
+    private boolean activeVisible;
 
     private Texture activeTexture;
 
@@ -31,8 +33,9 @@ public class PowerupHandler {
         active = false;
         timeLapsed = 0;
         duration = 8;
-        activeAlpha = 0;
-        rising = false;
+        activeTime = 0;
+        activeVisible = true;
+        finished = false;
         switch (direction){
             case left:{
                 imageShow.setCentre(main.WIDTH - 210*main.SCALEX, main.HEIGHT - 90*main.SCALEY);
@@ -52,9 +55,10 @@ public class PowerupHandler {
 
     public void activate(){
         timeLapsed = 0;
-        activeAlpha = 1;
-        rising = false;
+        activeTime = 0;
         active = true;
+        activeVisible = true;
+        finished = false;
         imageShow.setCurrent(1);
     }
 
@@ -63,28 +67,30 @@ public class PowerupHandler {
             timeLapsed += delta;
             if(timeLapsed > duration){
                 active = false;
+                finished = true;
                 imageShow.setCurrent(0);
             }
             if(timeLapsed > 5){
-                if(rising){
-                    activeAlpha += delta*2.3f;
-                    if(activeAlpha > 1){
-                        activeAlpha = 1;
-                        rising = false;
-                    }
-                }else{
-                    activeAlpha -= delta*2.3f;
-                    if(activeAlpha < 0){
-                        activeAlpha = 0;
-                        rising = true;
-                    }
+                activeTime+= delta;
+                if(activeTime > 0.3f){
+                    activeTime = 0;
+                    activeVisible = !activeVisible;
                 }
             }
         }
     }
 
+    public boolean isFinished(){
+        if(finished){
+            finished = false;
+            return true;
+        }
+        return false;
+    }
+
     public void draw(SpriteBatch batch){
-        if(active){
+        if(active && activeVisible){
+
             batch.draw(
                     activeTexture,
                     activeX,
