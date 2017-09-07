@@ -20,6 +20,7 @@ import com.semblergames.snake.fieldPackage.PlayingRegion;
 import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Button;
 import com.semblergames.snake.utilities.Camera;
+import com.semblergames.snake.utilities.CountDownView;
 import com.semblergames.snake.utilities.Direction;
 import com.semblergames.snake.utilities.GameData;
 import com.semblergames.snake.utilities.Image;
@@ -33,56 +34,102 @@ public class PlayState extends GameState {
     private static final int COLUMNS = 5;
     private static final int ROWS = 7;
 
+
+    //pozicija misa
+    private int xPressed;
+    private int yPressed;
+
+
+    // texture za teren
+
     public static Texture [] wallTextures;
     public static Texture [] standardCoinTextures;
     public static Texture [] magnetCoinTextures;
     public static Texture [] speedCoinTexture;
     public static Texture [] pointTexture;
 
+
+
+    //teksture za okruzenje
+
     private Texture scoreTexture;
     private Texture whiteTexture;
     private Texture lineTexture;
     private Texture [] magnetTextures;
     private Texture [] speedTextures;
-    private Texture menuTexture;
+    private Texture [] numbers;
+    private Texture fadeTexture;
+    private Texture pauseTexture;
+
+
+    //texture za tastere
+
+    private Texture backTexture;
+    private Texture resumeTexture;
+    private Texture quitTexture;
+
+
+    //texture za zmiju
+
+    //font
 
     private BitmapFont font;
 
-    private Button backButton;
-    private Image whiteImage;
-    private Image scoreImage;
 
-    private PowerupHandler speedPowerup;
-    private PowerupHandler magnetPowerup;
-
-
-    private boolean countDown;
+    // elementi terena
 
     private PlayingRegion[][] regions;
 
     private FieldRenderer fieldRenderer;
 
+    //elementi okruzenja
+
+
+    private Button backButton;
+    private Button resumeButton;
+    private Button quitButton;
+
+    private Image fadeImage;
+    private Image pauseImage;
+    private Image whiteImage;
+    private Image scoreImage;
+    private Image lineL;
+    private Image lineR;
+
+    private PowerupHandler speedPowerup;
+    private PowerupHandler magnetPowerup;
+
+    private CountDownView countDownView;
+
+
+    //indikatori faza
+
+    private boolean countDown;
+    private boolean playing;
+    private boolean paused;
+    private boolean dead;
+
+    //kamera
+
     private Camera camera;
 
+    //zmija
 
     private Snake snake;
-
     private float speed;
     private float time;
 
-
-
-    private int xPressed;
-    private int yPressed;
-
+    //skor
 
     private GlyphLayout scoreTextLayout;
 
     private float scoreX;
     private float scoreY;
 
-
     private int score;
+
+    //vreme mrtvog;
+    private float deadTime;
 
     public PlayState() {
     }
@@ -90,6 +137,7 @@ public class PlayState extends GameState {
     @Override
     public void init() {
 
+        //inicijalizacija terena
 
         regions = new PlayingRegion[ROWS][COLUMNS];
         for(int i = 0; i < ROWS;i++){
@@ -103,21 +151,24 @@ public class PlayState extends GameState {
 
             }
         }
-
-        backButton = new Button(menuTexture);
-        backButton.setPosition(120*main.SCALEX, main.HEIGHT - 90*main.SCALEY);
-
         fieldRenderer = new FieldRenderer();
 
-        snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2);
+        //inicijalizacija okruzenja
 
-        speed = 0.7f;
+        backButton = new Button(backTexture);
+        backButton.setPosition(120*main.SCALEX, main.HEIGHT - 90*main.SCALEY);
 
-        time = 0f;
+        resumeButton = new Button(resumeTexture);
+        resumeButton.setPosition(main.WIDTH /2, 1040*main.SCALEY);
 
+        quitButton = new Button(quitTexture);
+        quitButton.setPosition(main.WIDTH/2, 860*main.SCALEY);
 
-        magnetPowerup = new PowerupHandler(magnetTextures, Direction.right);
-        speedPowerup = new PowerupHandler(speedTextures, Direction.left);
+        fadeImage = new Image(fadeTexture);
+        fadeImage.setPosition(0,0);
+
+        pauseImage = new Image(pauseTexture);
+        pauseImage.setPosition(0,0);
 
         whiteImage = new Image(whiteTexture);
         whiteImage.setCentre(main.WIDTH/2, main.HEIGHT - main.SCALEY * whiteTexture.getHeight()/2);
@@ -125,20 +176,78 @@ public class PlayState extends GameState {
         scoreImage = new Image(scoreTexture);
         scoreImage.setCentre(main.WIDTH/2, main.HEIGHT - 90*main.SCALEY);
 
+        magnetPowerup = new PowerupHandler(magnetTextures, Direction.right);
+        speedPowerup = new PowerupHandler(speedTextures, Direction.left);
+
+        countDownView = new CountDownView(numbers);
+        countDownView.setPosition(main.WIDTH/2, main.HEIGHT/2 -90*main.SCALEY);
+
+        // postavljanje skora
+
+        score = 0;
+        scoreTextLayout = new GlyphLayout(font, "0");
+        scoreY = main.HEIGHT - 145*main.SCALEY;
+        scoreX = main.WIDTH /2 - scoreTextLayout.width /2;
+
+        //postavljanje linija
+
+        float lineWidth = (main.WIDTH - (80*main.SCALEX + scoreTextLayout.width))/2;
+
+        lineL = new Image(lineTexture);
+        lineR = new Image(lineTexture);
+
+        lineL.setPosition(lineWidth - lineTexture.getWidth()*main.SCALEX, main.HEIGHT - 197*main.SCALEY);
+        lineR.setPosition(main.WIDTH - lineWidth, main.HEIGHT - 197*main.SCALEY);
+
+
+        //postavljanje faze
+
+        countDown = true;
+        playing = false;
+        dead = false;
+        paused = false;
+
+        //postavljanje zmije
+
+        snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2);
+
+        switch(GameData.SNAKE_SPEED){
+            case 1:{
+                speed = 0.95f;
+                break;
+            }
+            case 2:{
+                speed = 0.8f;
+                break;
+            }
+            case 3:{
+                speed = 0.65f;
+                break;
+            }
+            case 4:{
+                speed = 0.5f;
+                break;
+            }
+            case 5:{
+                speed = 0.35f;
+                break;
+            }
+        }
+
+        time = 0f;
+
+
+        //postavljanje kamere
+
         camera = new Camera();
         camera.align(snake);
+        camera.setMaxSpeed(2/speed);
 
         camera.setSpeedX(0);
         camera.setSpeedY(1/speed);
 
-        score = 0;
-        scoreTextLayout = new GlyphLayout(font, "0");
-
-
-        scoreY = main.HEIGHT - 146*main.SCALEY;
-        scoreX = main.WIDTH /2 - main.SCALEX * scoreTextLayout.width /2;
-
-        countDown = true;
+        //vreme mrtvog
+        deadTime = 0;
 
     }
 
@@ -147,111 +256,161 @@ public class PlayState extends GameState {
     @Override
     public void render(SpriteBatch batch, ShapeRenderer renderer, float alpha, float delta) {
 
-        camera.update(delta);
+        //
+        //
+        //update
+        //
+        //
 
 
+        //dok se igra
 
+        if(playing){
 
+            // update powerupova
 
-        speedPowerup.update(delta);
-        if(speedPowerup.isFinished()){
-            speed *=2;
-        }
-
-        magnetPowerup.update(delta);
-
-        backButton.update(delta);
-
-
-        time+=delta;
-
-        if (time > speed){
-
-            if(snake.update()){
-                listener.changeState(main.MAIN_MENU_STATE);
+            speedPowerup.update(delta);
+            if(speedPowerup.isFinished()){
+                speed *=2;
             }
 
-            Field field = regions[snake.getHeadSegment().getY() / PlayingRegion.height][snake.getHeadSegment().getX() / PlayingRegion.width]
-                    .getField(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height);
+            magnetPowerup.update(delta);
 
-            switch (field.getType()){
-                case Field.WALL:{
-                    if(speedPowerup.isActive()){
+            //taster za meni
+            backButton.update(delta);
+
+            //kamera
+            camera.update(delta);
+
+            //zmija
+
+            time+=delta;
+
+            if (time > speed) {
+
+                if (snake.update()) {
+                    dead = true;
+                    playing = false;
+                }
+
+                Field field = regions[snake.getHeadSegment().getY() / PlayingRegion.height][snake.getHeadSegment().getX() / PlayingRegion.width]
+                        .getField(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height);
+
+                switch (field.getType()) {
+                    case Field.WALL: {
                         field.getAnimation().play();
-                    }else {
-                        GameData.CURRENT_SCORE = score;
-                        listener.changeState(main.GAME_OVER_STATE);
+                        if (!speedPowerup.isActive()) {
+                            dead = true;
+                            playing = false;
+                        }
+                        break;
                     }
-                    break;
+                    case Field.MAGNET_COIN: {
+                        field.getAnimation().play();
+                        magnetPowerup.activate();
+                        break;
+                    }
+                    case Field.STANDARD_COIN: {
+                        field.getAnimation().play();
+                        score += GameData.SNAKE_SPEED;
+                        scoreTextLayout.setText(font, Integer.toString(score));
+                        scoreX = main.WIDTH / 2 - scoreTextLayout.width / 2;
+
+                        float lineWidth = (main.WIDTH - (80 * main.SCALEX + scoreTextLayout.width)) / 2;
+
+                        lineL.setX(lineWidth - lineTexture.getWidth() * main.SCALEX);
+
+                        lineR.setX(main.WIDTH - lineWidth);
+
+                        snake.grow();
+                        break;
+                    }
+                    case Field.SPEED_COIN: {
+                        field.getAnimation().play();
+                        if (!speedPowerup.isActive()) {
+                            speed /= 2;
+                        }
+                        speedPowerup.activate();
+                        break;
+                    }
+                    case Field.POINT_STAR: {
+                        field.getAnimation().play();
+                        GameData.POINT_STARS++;
+                        break;
+                    }
                 }
-                case Field.MAGNET_COIN:{
-                    field.getAnimation().play();
-                    magnetPowerup.activate();
-                    break;
+
+
+                Direction direction = snake.getNextDirection();
+                if (direction == null) {
+                    direction = snake.getDirection();
                 }
-                case Field.STANDARD_COIN:{
-                    field.getAnimation().play();
-                    score+=GameData.SNAKE_SPEED;
-                    scoreTextLayout.setText(font, Integer.toString(score));
-                    scoreX = main.WIDTH /2 - main.SCALEX * scoreTextLayout.width /2;
-                    snake.grow();
-                    break;
+
+
+                switch (direction) {
+                    case left:
+                        camera.setSpeed(-1 / speed, 0);
+                        break;
+                    case right:
+                        camera.setSpeed(1 / speed, 0);
+                        break;
+                    case up:
+                        camera.setSpeed(0, 1 / speed);
+                        break;
+                    case down:
+                        camera.setSpeed(0, -1 / speed);
+                        break;
                 }
-                case Field.SPEED_COIN:{
-                    field.getAnimation().play();
-                    speedPowerup.activate();
-                    speed /= 2;
-                    break;
+
+
+                if (snake.getHeadSegment().getX() == ((COLUMNS / 2) + 1) * PlayingRegion.width) {
+                    moveEverything(Direction.left);
                 }
-                case Field.POINT_STAR:{
-                    field.getAnimation().play();
-                    GameData.POINT_STARS++;
-                    break;
+                if (snake.getHeadSegment().getX() == (COLUMNS / 2) * PlayingRegion.width - 1) {
+                    moveEverything(Direction.right);
                 }
+                if (snake.getHeadSegment().getY() == ((ROWS / 2) + 1) * PlayingRegion.height) {
+                    moveEverything(Direction.down);
+                }
+                if (snake.getHeadSegment().getY() == (ROWS / 2) * PlayingRegion.height - 1) {
+                    moveEverything(Direction.up);
+                }
+
+                time = 0f;
+                camera.align(snake);
             }
 
+        }else if(countDown){
 
-            Direction direction = snake.getNextDirection();
-            if(direction == null){
-                direction = snake.getDirection();
+            countDownView.update(delta);
+            if(countDownView.isFinished()){
+                countDown = false;
+                playing = true;
             }
 
+        }else if(paused){
 
+            resumeButton.update(delta);
+            quitButton.update(delta);
 
-            switch (direction) {
-                case left:
-                    camera.setSpeed(-1 / speed, 0);
-                    break;
-                case right:
-                    camera.setSpeed(1 / speed, 0);
-                    break;
-                case up:
-                    camera.setSpeed(0, 1 / speed);
-                    break;
-                case down:
-                    camera.setSpeed(0, -1 / speed);
-                    break;
+        }else if(dead){
+
+            //promena vremena i prelazak na ekran kraja
+
+            deadTime+= delta;
+
+            if(deadTime > 1.5f){
+                deadTime = -1;
+                GameData.CURRENT_SCORE = score;
+                if(score > GameData.HIGH_SCORE){
+                    GameData.HIGH_SCORE = score;
+                }
+                listener.changeState(main.GAME_OVER_STATE);
             }
 
-
-            if(snake.getHeadSegment().getX() == ((COLUMNS/2)+1)* PlayingRegion.width){
-                moveEverything(Direction.left);
-            }
-            if(snake.getHeadSegment().getX() == (COLUMNS/2)* PlayingRegion.width-1){
-                moveEverything(Direction.right);
-            }
-            if(snake.getHeadSegment().getY() == ((ROWS/2)+1)* PlayingRegion.height){
-                moveEverything(Direction.down);
-            }
-            if(snake.getHeadSegment().getY() == (ROWS/2)* PlayingRegion.height-1){
-                moveEverything(Direction.up);
-            }
-
-            time = 0f;
-            camera.align(snake);
         }
 
-
+        //update terena
 
         for(int i = 0; i < ROWS;i++) {
             for (int j = 0; j < COLUMNS; j++) {
@@ -262,97 +421,174 @@ public class PlayState extends GameState {
 
 
 
+
+        //
+        //
+        //render
+        //
+        //
+
+
+        //render zmije
+
         renderer.setAutoShapeType(true);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
         snake.draw(renderer, camera);
         renderer.end();
 
-
-
         batch.begin();
 
+        //render terena
         fieldRenderer.render(batch);
 
+        //render okruzenja
         whiteImage.draw(batch);
-        scoreImage.draw(batch);
 
+        scoreImage.draw(batch);
 
         backButton.draw(batch);
 
         magnetPowerup.draw(batch);
         speedPowerup.draw(batch);
 
+        lineL.draw(batch);
+        lineR.draw(batch);
+
         font.getColor().a = alpha;
 
         font.draw(batch, Integer.toString(score), scoreX, scoreY);
 
+
+        if(countDown){
+
+            fadeImage.draw(batch);
+            countDownView.draw(batch);
+
+        }else if(paused){
+
+            fadeImage.draw(batch);
+            pauseImage.draw(batch);
+
+            resumeButton.draw(batch);
+            quitButton.draw(batch);
+
+        }
+
         batch.end();
-
-
 
     }
 
     @Override
     public void touchDown(int x, int y) {
-        xPressed = x;
-        yPressed = y;
 
+        if(playing){
+
+            xPressed = x;
+            yPressed = y;
+
+            backButton.handleDown(x,y);
+        }else if(paused){
+
+            resumeButton.handleDown(x,y);
+            quitButton.handleDown(x,y);
+
+        }
 
     }
 
     @Override
-    public void touchDragged(int x, int y){
+    public void touchDragged(int x, int y) {
+
+        if(playing){
+            backButton.handleDown(x,y);
+        }else if(paused){
+            resumeButton.handleDown(x,y);
+            quitButton.handleDown(x,y);
+        }
 
     }
 
     @Override
     public void touchUp(int x, int y) {
 
-        int dx = xPressed - x;
-        int dy = yPressed - y;
+        if(playing){
 
-        float timeLeft = speed - time;
+            int dx = xPressed - x;
+            int dy = yPressed - y;
+
+            float timeLeft = speed - time;
 
 
+            if (Math.abs(dx) > Math.abs(dy)){
+                if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 50*main.SCALEX) {
 
-        if (Math.abs(dx) > Math.abs(dy)){
-            if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 50*main.SCALEX) {
+                    float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
 
-                float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
+                    if (dx > 0) {
+                        if(snake.setDirection(Direction.left))
 
-                if (dx > 0) {
-                    if(snake.setDirection(Direction.left))
+                            camera.setSpeed(-1 / timeLeft, deltaY / timeLeft);
 
-                    camera.setSpeed(-1 / timeLeft, deltaY / timeLeft);
+                    } else {
+                        if(snake.setDirection(Direction.right))
 
-                } else {
-                    if(snake.setDirection(Direction.right))
+                            camera.setSpeed(1 / timeLeft, deltaY / timeLeft);
+                    }
+                }
+            }else{
+                if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down && Math.abs(dy) > 50*main.SCALEY) {
 
-                    camera.setSpeed(1 / timeLeft, deltaY / timeLeft);
+                    float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
+
+                    if (dy > 0) {
+                        if(snake.setDirection(Direction.down))
+
+                            camera.setSpeed(deltaX / timeLeft,-1 / timeLeft);
+
+                    } else {
+                        if(snake.setDirection(Direction.up))
+
+                            camera.setSpeed(deltaX / timeLeft, 1 / timeLeft);
+                    }
                 }
             }
-        }else{
-            if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down && Math.abs(dy) > 50*main.SCALEY) {
 
-                float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
-
-                if (dy > 0) {
-                    if(snake.setDirection(Direction.down))
-
-                    camera.setSpeed(deltaX / timeLeft,-1 / timeLeft);
-
-                } else {
-                    if(snake.setDirection(Direction.up))
-
-                    camera.setSpeed(deltaX / timeLeft, 1 / timeLeft);
-                }
+            if(backButton.handleUp(x,y)){
+                playing = false;
+                paused = true;
             }
+
+        }else if(paused){
+
+            if(resumeButton.handleUp(x,y)){
+                paused = false;
+                countDown = true;
+                countDownView.restart();
+
+            }
+
+            if(quitButton.handleUp(x,y)){
+                listener.changeState(main.MAIN_MENU_STATE);
+            }
+
         }
+
     }
 
     @Override
     public void backPressed() {
-        listener.changeState(main.MAIN_MENU_STATE);
+
+        if(playing){
+            playing = false;
+            paused = true;
+        }else if(countDown){
+            countDown = false;
+            paused = true;
+        }else if(paused){
+            paused = false;
+            countDown = true;
+            countDownView.restart();
+        }
     }
 
     @Override
@@ -404,7 +640,18 @@ public class PlayState extends GameState {
         speedTextures[1] = new Texture("play_gui/speed1.png");
         speedTextures[2] = new Texture("play_gui/speedicon.png");
 
-        menuTexture = new Texture("buttons/menu.png");
+        backTexture = new Texture("buttons/menu.png");
+        resumeTexture = new Texture("buttons/resume.png");
+        quitTexture = new Texture("buttons/quit.png");
+        fadeTexture = new Texture("buttons/fade.png");
+        pauseTexture = new Texture("buttons/pause.png");
+
+
+
+        numbers = new Texture[3];
+        for(int i = 0;i < 3;i++){
+            numbers[i] = new Texture("buttons/numbers/"+(i+1)+"w.png");
+        }
 
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = (int)(80*main.SCALEX);
@@ -442,7 +689,11 @@ public class PlayState extends GameState {
             texture.dispose();
         }
 
-        menuTexture.dispose();
+        backTexture.dispose();
+        resumeTexture.dispose();
+        quitTexture.dispose();
+        fadeTexture.dispose();
+        pauseTexture.dispose();
 
         font.dispose();
     }

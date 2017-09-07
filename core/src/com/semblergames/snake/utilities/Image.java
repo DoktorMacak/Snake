@@ -25,6 +25,14 @@ public class Image {
         this.y = y - (float)texture.getHeight()* main.SCALEY /2;
     }
 
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
     public void draw(SpriteBatch batch){
         batch.draw(
                 texture,

@@ -11,6 +11,8 @@ public class Camera {
     private float speedX;
     private float speedY;
 
+    private float maxSpeed;
+
     public Camera(){
 
     }
@@ -27,6 +29,13 @@ public class Camera {
         y += dy;
     }
 
+    public void setSpeedToSnake(Snake snake, float timeLeft){
+
+    }
+
+    public void setMaxSpeed(float maxSpeed){
+        this.maxSpeed = maxSpeed;
+    }
 
     public float getX() {
         return x;
