@@ -45,6 +45,14 @@ public class Field {
         return animation;
     }
 
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
     public int getType(){
         return type;
     }

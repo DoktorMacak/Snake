@@ -25,6 +25,8 @@ import com.semblergames.snake.utilities.Direction;
 import com.semblergames.snake.utilities.GameData;
 import com.semblergames.snake.utilities.Image;
 import com.semblergames.snake.utilities.ImageShow;
+import com.semblergames.snake.utilities.MagnetedCoin;
+import com.semblergames.snake.utilities.MagnetedCoinGroup;
 import com.semblergames.snake.utilities.Point;
 import com.semblergames.snake.utilities.PowerupHandler;
 
@@ -47,8 +49,6 @@ public class PlayState extends GameState {
     public static Texture [] magnetCoinTextures;
     public static Texture [] speedCoinTexture;
     public static Texture [] pointTexture;
-
-
 
     //teksture za okruzenje
 
@@ -81,6 +81,8 @@ public class PlayState extends GameState {
     private PlayingRegion[][] regions;
 
     private FieldRenderer fieldRenderer;
+
+    private MagnetedCoinGroup magnetedCoinGroup;
 
     //elementi okruzenja
 
@@ -152,6 +154,8 @@ public class PlayState extends GameState {
             }
         }
         fieldRenderer = new FieldRenderer();
+
+        magnetedCoinGroup = new MagnetedCoinGroup();
 
         //inicijalizacija okruzenja
 
@@ -262,6 +266,9 @@ public class PlayState extends GameState {
         //
         //
 
+        //promena zmije
+        boolean snakeChanged = false;
+
 
         //dok se igra
 
@@ -276,6 +283,9 @@ public class PlayState extends GameState {
 
             magnetPowerup.update(delta);
 
+            //update magnetizovanih
+            magnetedCoinGroup.update(delta);
+
             //taster za meni
             backButton.update(delta);
 
@@ -287,13 +297,22 @@ public class PlayState extends GameState {
             time+=delta;
 
             if (time > speed) {
+                //ciscenje magnetnih novcica
+                magnetedCoinGroup.clear();
+
+                snakeChanged = true;
+
 
                 if (snake.update()) {
                     dead = true;
                     playing = false;
                 }
 
-                Field field = regions[snake.getHeadSegment().getY() / PlayingRegion.height][snake.getHeadSegment().getX() / PlayingRegion.width]
+                int regionRow = snake.getHeadSegment().getY() / PlayingRegion.height;
+                int regionColumn = snake.getHeadSegment().getX() / PlayingRegion.width;
+
+
+                Field field = regions[regionRow][regionColumn]
                         .getField(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height);
 
                 switch (field.getType()) {
@@ -378,6 +397,8 @@ public class PlayState extends GameState {
 
                 time = 0f;
                 camera.align(snake);
+
+
             }
 
         }else if(countDown){
@@ -410,6 +431,7 @@ public class PlayState extends GameState {
 
         }
 
+
         //update terena
 
         for(int i = 0; i < ROWS;i++) {
@@ -418,7 +440,31 @@ public class PlayState extends GameState {
             }
         }
 
+        if(snakeChanged && magnetPowerup.isActive()){
+            float headX = (snake.getHeadSegment().getX()-camera.getX()) * main.BLOCK_WIDTH;
+            float headY = (snake.getHeadSegment().getY() - camera.getY()) * main.BLOCK_HEIGHT;
 
+            for(Field field:fieldRenderer.getStandardCoins()){
+                if(magnetedCoinGroup.processField(field, headX, headY,speed)){
+                    field.setType(Field.EMPTY);
+
+                    score += GameData.SNAKE_SPEED;
+                    scoreTextLayout.setText(font, Integer.toString(score));
+                    scoreX = main.WIDTH / 2 - scoreTextLayout.width / 2;
+
+                    float lineWidth = (main.WIDTH - (80 * main.SCALEX + scoreTextLayout.width)) / 2;
+
+                    lineL.setX(lineWidth - lineTexture.getWidth() * main.SCALEX);
+
+                    lineR.setX(main.WIDTH - lineWidth);
+
+                    snake.grow();
+
+                }
+
+            }
+
+        }
 
 
 
@@ -440,6 +486,9 @@ public class PlayState extends GameState {
 
         //render terena
         fieldRenderer.render(batch);
+
+        //render magnetizovanih
+        magnetedCoinGroup.draw(batch);
 
         //render okruzenja
         whiteImage.draw(batch);
