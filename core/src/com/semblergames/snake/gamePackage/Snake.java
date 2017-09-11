@@ -115,6 +115,10 @@ public class Snake {
         return segments.get(segments.size()-1);
     }
 
+    public Segment getSegmentForCamera(){
+        return segments.get(segments.size()-2);
+    }
+
     public void seColor(Color snakeColor) {
         this.snakeColor = snakeColor;
     }

@@ -29,8 +29,12 @@ public class Camera {
         y += dy;
     }
 
-    public void setSpeedToSnake(Snake snake, float timeLeft){
+    public void setSpeedToSnake(Snake snake, float speed){
+        float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - y;
+        float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - x;
 
+        speedX = deltaX/speed;
+        speedY = deltaY/speed;
     }
 
     public void setMaxSpeed(float maxSpeed){
@@ -75,8 +79,8 @@ public class Camera {
     }
 
     public void align(Snake snake){
-        x = (float)snake.getHeadSegment().getX() - (float)(main.SCREEN_WIDTH)/2;
-        y = (float)snake.getHeadSegment().getY() - (float)(main.SCREEN_HEIGHT)/2;
+        x = (float)snake.getSegmentForCamera().getX() - (float)(main.SCREEN_WIDTH)/2;
+        y = (float)snake.getSegmentForCamera().getY() - (float)(main.SCREEN_HEIGHT)/2;
     }
 
 }

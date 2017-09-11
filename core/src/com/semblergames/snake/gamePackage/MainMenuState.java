@@ -91,7 +91,7 @@ public class MainMenuState extends GameState{
 
         tSnakeAnimation.update(delta);
 
-        if(tSnakeAnimation.getCurrentFrame() == 19 && ready){
+        if(tSnakeAnimation.getCurrentFrame() == 19 && ready && nextAction == NEXT_NULL){
             tSnakeAnimation.pause();
             ready = false;
         }
