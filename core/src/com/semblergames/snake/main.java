@@ -175,8 +175,6 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 
 		states[currentIndex].render(batch, renderer, alpha, delta);
 
-		batch.getColor().a = 1f;
-
 		playlist.update(delta);
 		batch.begin();
 		playlist.draw(batch);

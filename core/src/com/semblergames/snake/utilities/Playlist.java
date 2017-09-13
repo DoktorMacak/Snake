@@ -10,8 +10,10 @@ import java.util.Random;
 
 public class Playlist {
 
-    private static final float MAX_Y = 50*main.SCALEY;
-    private static final float MIN_Y = -30*main.SCALEY;
+    private static final float MAX_Y = 60*main.SCALEY;
+    private static final float MIN_Y = -60*main.SCALEY;
+    
+    private static final float SPEED = 60*main.SCALEY;
 
     private Music[] songs;
 
@@ -45,10 +47,10 @@ public class Playlist {
         playing = false;
 
 
-        x = main.WIDTH / 2;
+        x = 60*main.SCALEX;
         y = MIN_Y;
 
-        vy = 40;
+        vy = SPEED;
 
         time = 0;
 
@@ -73,7 +75,7 @@ public class Playlist {
         currentSong = songs[current];
         currentSong.play();
         y = MIN_Y;
-        vy = 40;
+        vy = SPEED;
         phase = 0;
         time = 0;
     }
@@ -97,7 +99,7 @@ public class Playlist {
                     if(time > 10){
                         phase = 2;
                         time = 0;
-                        vy = -40;
+                        vy = -SPEED;
                     }
                     break;
                 }
@@ -118,7 +120,7 @@ public class Playlist {
                 currentSong = songs[current];
                 currentSong.play();
                 y = MIN_Y;
-                vy = 40;
+                vy = SPEED;
                 phase = 0;
                 time = 0;
             }
@@ -134,10 +136,10 @@ public class Playlist {
 
             batch.draw(
                     texture,
-                    x - width / 2,
-                    y - height / 2,
                     x,
                     y,
+                    x+width/2,
+                    y+height/2,
                     width,
                     height,
                     1,
