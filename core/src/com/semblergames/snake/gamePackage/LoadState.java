@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Animation;
+import com.semblergames.snake.utilities.GameData;
 
 public class LoadState extends GameState{
 
@@ -43,6 +44,9 @@ public class LoadState extends GameState{
         if(animation.isFinished()){
             animation.setFinished(false);
             listener.changeState(main.MAIN_MENU_STATE);
+            if(GameData.PLAY_MUSIC){
+                listener.playMusic();
+            }
         }
 
         batch.end();

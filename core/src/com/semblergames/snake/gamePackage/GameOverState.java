@@ -42,7 +42,7 @@ public class GameOverState extends GameState {
 
         textX = main.WIDTH/2 - layout.width/2;
 
-        textY = 690*main.SCALEY;
+        textY = 790*main.SCALEY;
 
     }
 
@@ -82,9 +82,11 @@ public class GameOverState extends GameState {
     public void touchUp(int x, int y) {
         if(playAgain.handleUp(x,y)){
             listener.changeState(main.PLAY_STATE);
+            listener.playClicked();
         }
         if(quit.handleUp(x,y)){
             listener.changeState(main.MAIN_MENU_STATE);
+            listener.playClicked();
         }
     }
 

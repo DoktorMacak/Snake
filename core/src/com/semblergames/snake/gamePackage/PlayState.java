@@ -1,6 +1,7 @@
 package com.semblergames.snake.gamePackage;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -136,6 +137,12 @@ public class PlayState extends GameState {
     //vreme mrtvog;
     private float deadTime;
 
+    //zvuk
+    private Sound boostSound;
+    private Sound coinSound;
+    private Sound dieSound;
+    private Sound hitSound;
+
     public PlayState() {
     }
 
@@ -249,7 +256,6 @@ public class PlayState extends GameState {
 
         camera = new Camera();
         camera.align(snake);
-        camera.setMaxSpeed(2/speed);
 
         camera.setSpeedX(0);
         camera.setSpeedY(1/speed);
@@ -311,6 +317,9 @@ public class PlayState extends GameState {
                 if (snake.update()) {
                     dead = true;
                     playing = false;
+                    if(GameData.PLAY_SOUNDS) {
+                        dieSound.play();
+                    }
                 }
 
                 int regionRow = snake.getHeadSegment().getY() / PlayingRegion.height;
@@ -326,12 +335,22 @@ public class PlayState extends GameState {
                         if (!speedPowerup.isActive()) {
                             dead = true;
                             playing = false;
+                            if(GameData.PLAY_SOUNDS) {
+                                dieSound.play();
+                            }
+                        }else{
+                            if(GameData.PLAY_SOUNDS) {
+                                hitSound.play();
+                            }
                         }
                         break;
                     }
                     case Field.MAGNET_COIN: {
                         field.getAnimation().play();
                         magnetPowerup.activate();
+                        if(GameData.PLAY_SOUNDS) {
+                            boostSound.play();
+                        }
                         break;
                     }
                     case Field.STANDARD_COIN: {
@@ -347,6 +366,9 @@ public class PlayState extends GameState {
                         lineR.setX(main.WIDTH - lineWidth);
 
                         snake.grow();
+                        if(GameData.PLAY_SOUNDS) {
+                            coinSound.play();
+                        }
                         break;
                     }
                     case Field.SPEED_COIN: {
@@ -355,36 +377,20 @@ public class PlayState extends GameState {
                             speed /= 2;
                         }
                         speedPowerup.activate();
+                        if(GameData.PLAY_SOUNDS) {
+                            boostSound.play();
+                        }
                         break;
                     }
                     case Field.POINT_STAR: {
                         field.getAnimation().play();
                         GameData.POINT_STARS++;
+                        if(GameData.PLAY_SOUNDS) {
+                            coinSound.play();
+                        }
                         break;
                     }
                 }
-
-    /*
-                Direction direction = snake.getNextDirection();
-                if (direction == null) {
-                    direction = snake.getDirection();
-                }
-
-
-                switch (direction) {
-                    case left:
-                        camera.setSpeed(-1 / speed, 0);
-                        break;
-                    case right:
-                        camera.setSpeed(1 / speed, 0);
-                        break;
-                    case up:
-                        camera.setSpeed(0, 1 / speed);
-                        break;
-                    case down:
-                        camera.setSpeed(0, -1 / speed);
-                        break;
-                }*/
 
 
                 if (snake.getHeadSegment().getX() == ((COLUMNS / 2) + 1) * PlayingRegion.width) {
@@ -401,7 +407,6 @@ public class PlayState extends GameState {
                 }
 
                 time = 0f;
-               // camera.align(snake);
                 camera.setSpeedToSnake(snake,speed);
 
 
@@ -450,6 +455,8 @@ public class PlayState extends GameState {
             float headX = (snake.getHeadSegment().getX()-camera.getX()) * main.BLOCK_WIDTH;
             float headY = (snake.getHeadSegment().getY() - camera.getY()) * main.BLOCK_HEIGHT;
 
+            boolean coinPicked = false;
+
             for(Field field:fieldRenderer.getStandardCoins()){
                 if(magnetedCoinGroup.processField(field, headX, headY,speed)){
                     field.setType(Field.EMPTY);
@@ -466,8 +473,15 @@ public class PlayState extends GameState {
 
                     snake.grow();
 
+                    coinPicked = true;
                 }
 
+            }
+
+            if(coinPicked) {
+                if(GameData.PLAY_SOUNDS) {
+                    coinSound.play();
+                }
             }
 
         }
@@ -571,46 +585,39 @@ public class PlayState extends GameState {
             int dx = xPressed - x;
             int dy = yPressed - y;
 
-            float timeLeft = speed - time;
-
 
             if (Math.abs(dx) > Math.abs(dy)){
                 if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 50*main.SCALEX) {
 
-                    float deltaY = (float) snake.getHeadSegment().getY() - (float)main.SCREEN_HEIGHT / 2 - camera.getY();
 
                     if (dx > 0) {
                         if(snake.setDirection(Direction.left)){}
 
-                          //  camera.setSpeed(-1 / timeLeft, deltaY / timeLeft);
 
                     } else {
                         if(snake.setDirection(Direction.right)){}
 
-                       //     camera.setSpeed(1 / timeLeft, deltaY / timeLeft);
                     }
                 }
             }else{
                 if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down && Math.abs(dy) > 50*main.SCALEY) {
 
-                    float deltaX = (float) snake.getHeadSegment().getX() - (float)main.SCREEN_WIDTH / 2 - camera.getX();
 
                     if (dy > 0) {
                         if(snake.setDirection(Direction.down)){}
 
-                          //  camera.setSpeed(deltaX / timeLeft,-1 / timeLeft);
-
                     } else {
                         if(snake.setDirection(Direction.up)){}
 
-                         //   camera.setSpeed(deltaX / timeLeft, 1 / timeLeft);
                     }
                 }
             }
 
             if(backButton.handleUp(x,y)){
+
                 playing = false;
                 paused = true;
+                listener.playClicked();
             }
 
         }else if(paused){
@@ -619,11 +626,12 @@ public class PlayState extends GameState {
                 paused = false;
                 countDown = true;
                 countDownView.restart();
-
+                listener.playClicked();
             }
 
             if(quitButton.handleUp(x,y)){
                 listener.changeState(main.MAIN_MENU_STATE);
+                listener.playClicked();
             }
 
         }
@@ -715,10 +723,19 @@ public class PlayState extends GameState {
         parameter.color = new Color(0.929f, 0.78f, 0.255f, 1f);
 
         font = generator.generateFont(parameter);
+
+        //zvuci
+        boostSound = Gdx.audio.newSound(Gdx.files.internal("sounds/boost.wav"));
+        coinSound = Gdx.audio.newSound(Gdx.files.internal("sounds/coin.wav"));
+        dieSound = Gdx.audio.newSound(Gdx.files.internal("sounds/die.wav"));
+        hitSound = Gdx.audio.newSound(Gdx.files.internal("sounds/hit.wav"));
     }
 
     @Override
     protected void disposeTexturesAndFonts() {
+
+        skin.dispose();
+
         for(Texture texture:wallTextures){
             texture.dispose();
         }
@@ -753,6 +770,11 @@ public class PlayState extends GameState {
         pauseTexture.dispose();
 
         font.dispose();
+
+        boostSound.dispose();
+        coinSound.dispose();
+        dieSound.dispose();
+        hitSound.dispose();
     }
 
     private void moveEverything(Direction direction){

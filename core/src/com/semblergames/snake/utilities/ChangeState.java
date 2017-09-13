@@ -6,4 +6,10 @@ package com.semblergames.snake.utilities;
 
 public interface ChangeState {
     public void changeState(int x);
+
+    public void playMusic();
+
+    public void stopMusic();
+
+    public void playClicked();
 }

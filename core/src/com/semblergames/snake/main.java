@@ -4,8 +4,11 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -18,6 +21,9 @@ import com.semblergames.snake.gamePackage.SettingsState;
 import com.semblergames.snake.gamePackage.ShopState;
 import com.semblergames.snake.gamePackage.TutorialState;
 import com.semblergames.snake.utilities.ChangeState;
+import com.semblergames.snake.utilities.GameData;
+import com.semblergames.snake.utilities.Image;
+import com.semblergames.snake.utilities.Playlist;
 import com.semblergames.snake.utilities.Skin;
 
 public class main extends ApplicationAdapter implements InputProcessor, ChangeState{
@@ -57,6 +63,13 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 
 	private float alpha;
 
+	/**
+	 * muzika
+	 */
+
+	private Playlist playlist;
+
+	private Sound click;
 
 	/**
 	 Sve za renderovanje
@@ -123,6 +136,10 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 
 		alpha = 1f;
 
+		playlist = new Playlist();
+
+		click = Gdx.audio.newSound(Gdx.files.internal("sounds/click.wav"));
+
 		Gdx.input.setInputProcessor(this);
 
 		Gdx.input.setCatchBackKey(true);
@@ -157,6 +174,14 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		batch.setColor(color.r, color.g, color.b, alpha);
 
 		states[currentIndex].render(batch, renderer, alpha, delta);
+
+		batch.getColor().a = 1f;
+
+		playlist.update(delta);
+		batch.begin();
+		playlist.draw(batch);
+		batch.end();
+
 	}
 	
 	@Override
@@ -167,6 +192,8 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		fontGenerator.dispose();
 		batch.dispose();
 		renderer.dispose();
+		playlist.dispose();
+		click.dispose();
 	}
 
 	@Override
@@ -228,5 +255,21 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 				ready = true;
 			}
 		}).start();
+	}
+
+	@Override
+	public void playMusic() {
+		playlist.play();
+	}
+
+	@Override
+	public void stopMusic() {
+		playlist.pause();
+	}
+
+	@Override
+	public void playClicked() {
+		if(GameData.PLAY_SOUNDS)
+		click.play();
 	}
 }

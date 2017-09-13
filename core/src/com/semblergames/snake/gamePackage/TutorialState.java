@@ -46,6 +46,7 @@ public class TutorialState extends GameState {
     public void touchUp(int x, int y) {
         if(gotItButton.handleUp(x,y)){
             listener.changeState(main.PLAY_STATE);
+            listener.playClicked();
         }
     }
 

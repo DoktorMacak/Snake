@@ -146,6 +146,7 @@ public class ShopState extends GameState {
     public void touchUp(int x, int y) {
         if(backButton.handleUp(x,y)){
             listener.changeState(main.MAIN_MENU_STATE);
+            listener.playClicked();
         }
 
         int pointer = -1;
@@ -164,6 +165,8 @@ public class ShopState extends GameState {
                 GameData.SKINS[pointer] = true;
                 GameData.POINT_STARS -= GameData.SKIN_PRICES[pointer];
             }
+
+            listener.playClicked();
 
         }
     }

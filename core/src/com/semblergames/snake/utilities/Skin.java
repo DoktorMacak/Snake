@@ -36,4 +36,10 @@ public class Skin {
     public Texture getHead() {
         return head;
     }
+
+    public void dispose(){
+        head.dispose();
+        body.dispose();
+        if(corner != null) corner.dispose();
+    }
 }

@@ -102,22 +102,32 @@ public class SettingsState extends GameState {
     public void touchUp(int x, int y) {
         if(backButton.handleUp(x,y)){
             listener.changeState(main.MAIN_MENU_STATE);
+            listener.playClicked();
         }
         if(playMusic.handleUp(x,y)){
             GameData.PLAY_MUSIC = playMusic.isChecked();
+            if(GameData.PLAY_MUSIC){
+                listener.playMusic();
+            }else{
+                listener.stopMusic();
+            }
+            listener.playClicked();
         }
         if(playSound.handleUp(x,y)){
             GameData.PLAY_SOUNDS = playSound.isChecked();
+            listener.playClicked();
         }
         if(incButton.handleUp(x,y)){
             if(GameData.SNAKE_SPEED < 5){
                 GameData.SNAKE_SPEED++;
             }
+            listener.playClicked();
         }
         if(decButton.handleUp(x,y)){
             if(GameData.SNAKE_SPEED > 1){
                 GameData.SNAKE_SPEED--;
             }
+            listener.playClicked();
         }
     }
 

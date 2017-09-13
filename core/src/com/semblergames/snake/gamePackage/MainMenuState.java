@@ -160,14 +160,17 @@ public class MainMenuState extends GameState{
         if(playButton.handleUp(x,y)){
             tSnakeAnimation.play();
             nextAction = NEXT_PLAY;
+            listener.playClicked();
         }
         if(settingsButton.handleUp(x,y)){
             tSnakeAnimation.play();
             nextAction = NEXT_SETTINGS;
+            listener.playClicked();
         }
         if(shopButton.handleUp(x,y)){
             tSnakeAnimation.play();
             nextAction = NEXT_SHOP;
+            listener.playClicked();
         }
         if(quitButton.handleUp(x,y)){
             Gdx.app.exit();

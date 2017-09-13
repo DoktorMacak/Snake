@@ -11,8 +11,6 @@ public class Camera {
     private float speedX;
     private float speedY;
 
-    private float maxSpeed;
-
     public Camera(){
 
     }
@@ -35,10 +33,6 @@ public class Camera {
 
         speedX = deltaX/speed;
         speedY = deltaY/speed;
-    }
-
-    public void setMaxSpeed(float maxSpeed){
-        this.maxSpeed = maxSpeed;
     }
 
     public float getX() {
