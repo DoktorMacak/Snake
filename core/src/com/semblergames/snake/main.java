@@ -18,6 +18,7 @@ import com.semblergames.snake.gamePackage.SettingsState;
 import com.semblergames.snake.gamePackage.ShopState;
 import com.semblergames.snake.gamePackage.TutorialState;
 import com.semblergames.snake.utilities.ChangeState;
+import com.semblergames.snake.utilities.Skin;
 
 public class main extends ApplicationAdapter implements InputProcessor, ChangeState{
 

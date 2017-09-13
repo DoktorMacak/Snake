@@ -1,6 +1,7 @@
 package com.semblergames.snake.gamePackage;
 
 
+import com.semblergames.snake.utilities.Direction;
 
 public class Segment {
     /**
@@ -8,10 +9,12 @@ public class Segment {
      */
     private int x;
     private int y;
+    private Direction orientation;
 
-    public Segment (int x, int y){
+    public Segment (int x, int y, Direction orientation){
         this.x = x;
         this.y = y;
+        this.orientation = orientation;
     }
 
     public int getX() {
@@ -27,5 +30,9 @@ public class Segment {
         x+=dx;
         y+=dy;
 
+    }
+
+    public Direction getOrientation() {
+        return orientation;
     }
 }

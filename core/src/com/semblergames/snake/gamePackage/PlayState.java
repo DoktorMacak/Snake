@@ -29,6 +29,7 @@ import com.semblergames.snake.utilities.MagnetedCoin;
 import com.semblergames.snake.utilities.MagnetedCoinGroup;
 import com.semblergames.snake.utilities.Point;
 import com.semblergames.snake.utilities.PowerupHandler;
+import com.semblergames.snake.utilities.Skin;
 
 
 public class PlayState extends GameState {
@@ -120,6 +121,7 @@ public class PlayState extends GameState {
     private Snake snake;
     private float speed;
     private float time;
+    private Skin skin;
 
 
     //skor
@@ -214,7 +216,8 @@ public class PlayState extends GameState {
 
         //postavljanje zmije
 
-        snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2 - 3);
+
+        snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2 - 3, skin);
 
         switch(GameData.SNAKE_SPEED){
             case 1:{
@@ -482,10 +485,10 @@ public class PlayState extends GameState {
 
         renderer.setAutoShapeType(true);
         renderer.begin(ShapeRenderer.ShapeType.Filled);
-        snake.draw(renderer, camera);
         renderer.end();
 
         batch.begin();
+        snake.draw(batch, camera);
 
         //render terena
         fieldRenderer.render(batch);
@@ -647,6 +650,8 @@ public class PlayState extends GameState {
     public void initTexturesAndFonts(FreeTypeFontGenerator generator) {
 
         Pattern.loadPatterns();
+
+        skin = new Skin(GameData.SKIN_POINTER+1);
 
         wallTextures = new Texture[6];
         wallTextures[0] = new Texture("field/wall.png");
