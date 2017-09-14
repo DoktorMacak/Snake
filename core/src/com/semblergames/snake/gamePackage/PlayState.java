@@ -122,7 +122,7 @@ public class PlayState extends GameState {
     private Snake snake;
     private float speed;
     private float time;
-    private Skin skin;
+    private Skin[] skins;
 
 
     //skor
@@ -224,27 +224,27 @@ public class PlayState extends GameState {
         //postavljanje zmije
 
 
-        snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2 - 3, skin);
+        snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2 - 3, skins[GameData.SKIN_POINTER]);
 
         switch(GameData.SNAKE_SPEED){
             case 1:{
-                speed = 0.95f;
+                speed = 0.85f;
                 break;
             }
             case 2:{
-                speed = 0.8f;
+                speed = 0.7f;
                 break;
             }
             case 3:{
-                speed = 0.65f;
+                speed = 0.55f;
                 break;
             }
             case 4:{
-                speed = 0.5f;
+                speed = 0.4f;
                 break;
             }
             case 5:{
-                speed = 0.35f;
+                speed = 0.25f;
                 break;
             }
         }
@@ -334,6 +334,7 @@ public class PlayState extends GameState {
                         field.getAnimation().play();
                         if (!speedPowerup.isActive()) {
                             dead = true;
+                            snake.died();
                             playing = false;
                             if(GameData.PLAY_SOUNDS) {
                                 dieSound.play();
@@ -659,7 +660,10 @@ public class PlayState extends GameState {
 
         Pattern.loadPatterns();
 
-        skin = new Skin(10);
+        skins = new Skin[18];
+        for (int i = 0;i<18;i++){
+            skins[i] = new Skin(i+1);
+        }
 
         wallTextures = new Texture[6];
         wallTextures[0] = new Texture("field/wall.png");
@@ -734,7 +738,9 @@ public class PlayState extends GameState {
     @Override
     protected void disposeTexturesAndFonts() {
 
-        skin.dispose();
+        for (Skin skin:skins){
+            skin.dispose();
+        }
 
         for(Texture texture:wallTextures){
             texture.dispose();
