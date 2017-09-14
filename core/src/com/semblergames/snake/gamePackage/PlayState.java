@@ -122,7 +122,7 @@ public class PlayState extends GameState {
     private Snake snake;
     private float speed;
     private float time;
-    private Skin skin;
+    private Skin[] skins;
 
 
     //skor
@@ -224,7 +224,7 @@ public class PlayState extends GameState {
         //postavljanje zmije
 
 
-        snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2 - 3, skin);
+        snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2 - 3, skins[GameData.SKIN_POINTER]);
 
         switch(GameData.SNAKE_SPEED){
             case 1:{
@@ -659,7 +659,10 @@ public class PlayState extends GameState {
 
         Pattern.loadPatterns();
 
-        skin = new Skin(10);
+        skins = new Skin[18];
+        for (int i = 0;i<18;i++){
+            skins[i] = new Skin(i+1);
+        }
 
         wallTextures = new Texture[6];
         wallTextures[0] = new Texture("field/wall.png");
@@ -734,7 +737,9 @@ public class PlayState extends GameState {
     @Override
     protected void disposeTexturesAndFonts() {
 
-        skin.dispose();
+        for (Skin skin:skins){
+            skin.dispose();
+        }
 
         for(Texture texture:wallTextures){
             texture.dispose();

@@ -23,9 +23,9 @@ public class Snake {
      */
     private Direction direction;
     /**
-     *is snake growing
+     *snake size
      */
-    private boolean grow = false;
+    private int snakeSize;
     /**
      *color of the snake
      */
@@ -59,6 +59,7 @@ public class Snake {
         }
         this.skin = skin;
         update();
+        snakeSize = initialLength;
     }
 
     public boolean update(){
@@ -93,8 +94,7 @@ public class Snake {
             }
         }
         segments.add(new Segment(x, y, direction));
-        if (!grow) segments.remove(0);
-        grow = false;
+        if (segments.size() > snakeSize) segments.remove(0);
 
         Direction lastOrientation;
         lastOrientation = segments.get(segments.size() - 1).getOrientation();
@@ -161,7 +161,7 @@ public class Snake {
     }
 
     public void grow(){
-        grow = true;
+        snakeSize++;
     }
 
     public boolean setDirection(Direction direction) {
