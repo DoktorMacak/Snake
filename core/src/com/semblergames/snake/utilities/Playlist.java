@@ -2,6 +2,7 @@ package com.semblergames.snake.utilities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.semblergames.snake.main;
@@ -42,6 +43,7 @@ public class Playlist {
 
         for (int i = 0; i < 10; i++) {
             songs[i] = Gdx.audio.newMusic(Gdx.files.internal("music/"+(i+1)+".mp3"));
+            songs[i].setVolume(0.8f);
             textures[i] = new Texture("music/" + (i + 1) + ".png");
         }
         playing = false;

@@ -160,7 +160,7 @@ public class ShopState extends GameState {
 
             if(GameData.SKINS[pointer]){
                 GameData.SKIN_POINTER = pointer;
-            }else if(GameData.POINT_STARS > GameData.SKIN_PRICES[pointer]){
+            }else if(GameData.POINT_STARS >= GameData.SKIN_PRICES[pointer]){
                 GameData.SKIN_POINTER = pointer;
                 GameData.SKINS[pointer] = true;
                 GameData.POINT_STARS -= GameData.SKIN_PRICES[pointer];
