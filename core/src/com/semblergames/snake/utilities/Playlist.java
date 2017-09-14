@@ -14,7 +14,7 @@ public class Playlist {
     private static final float MAX_Y = 60*main.SCALEY;
     private static final float MIN_Y = -60*main.SCALEY;
     
-    private static final float SPEED = 60*main.SCALEY;
+    private static final float SPEED = 240*main.SCALEY;
 
     private Music[] songs;
 
@@ -40,10 +40,27 @@ public class Playlist {
         songs = new Music[10];
         textures = new Texture[10];
 
+        Music.OnCompletionListener onCompletionListener = new Music.OnCompletionListener() {
+            @Override
+            public void onCompletion(Music music) {
+                current++;
+                if(current == songs.length){
+                    current = 0;
+                }
+                currentSong = songs[current];
+                currentSong.play();
+                y = MIN_Y;
+                vy = SPEED;
+                phase = 0;
+                time = 0;
+            }
+        };
+
 
         for (int i = 0; i < 10; i++) {
             songs[i] = Gdx.audio.newMusic(Gdx.files.internal("music/"+(i+1)+".mp3"));
             songs[i].setVolume(0.8f);
+            songs[i].setOnCompletionListener(onCompletionListener);
             textures[i] = new Texture("music/" + (i + 1) + ".png");
         }
         playing = false;
@@ -112,19 +129,6 @@ public class Playlist {
                     }
                     break;
                 }
-            }
-
-            if(!currentSong.isPlaying()){
-                current++;
-                if(current == songs.length){
-                    current = 0;
-                }
-                currentSong = songs[current];
-                currentSong.play();
-                y = MIN_Y;
-                vy = SPEED;
-                phase = 0;
-                time = 0;
             }
         }
     }

@@ -108,6 +108,7 @@ public class GameOverState extends GameState {
         if (GameData.HIGH_SCORE > GameData.CURRENT_SCORE){
             parameter.color = new Color(0.914f,0.488f,0.148f, 1);
         }else {
+            GameData.HIGH_SCORE = GameData.CURRENT_SCORE;
             parameter.color = new Color(0.329f,0.667f,0.863f, 1);
         }
         parameter.size = (int)(60*main.SCALEX);

@@ -435,9 +435,6 @@ public class PlayState extends GameState {
             if(deadTime > 1.5f){
                 deadTime = -1;
                 GameData.CURRENT_SCORE = score;
-                if(score > GameData.HIGH_SCORE){
-                    GameData.HIGH_SCORE = score;
-                }
                 listener.changeState(main.GAME_OVER_STATE);
             }
 

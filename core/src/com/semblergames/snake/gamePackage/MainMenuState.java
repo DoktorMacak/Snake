@@ -102,7 +102,7 @@ public class MainMenuState extends GameState{
                 case NEXT_PLAY:{
                     if(GameData.SHOW_TUTORIAL){
                         listener.changeState(main.TUTORIAL_STATE);
-                        //GameData.SHOW_TUTORIAL = false;
+                        GameData.SHOW_TUTORIAL = false;
                     }else{
                         listener.changeState(main.PLAY_STATE);
                     }

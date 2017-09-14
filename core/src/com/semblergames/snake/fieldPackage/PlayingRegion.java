@@ -61,9 +61,9 @@ public class PlayingRegion {
                 field[y][x].setType(Field.WALL);
             }
             //standard
-            int amount = random.nextInt(8);
+            int amount = random.nextInt(4);
 
-            if(amount < 5){
+            if(amount < 3){
                 int x = random.nextInt(width);
                 int y = random.nextInt(height);
 
