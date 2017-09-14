@@ -44,6 +44,13 @@ public class GameOverState extends GameState {
 
         textY = 790*main.SCALEY;
 
+        if (GameData.HIGH_SCORE > GameData.CURRENT_SCORE){
+            font.setColor(new Color(0.918f,0.49f,0.15f, 1));
+        }else {
+            GameData.HIGH_SCORE = GameData.CURRENT_SCORE;
+            font.setColor(new Color(0.329f,0.667f,0.863f, 1));
+        }
+
     }
 
     @Override
@@ -61,7 +68,6 @@ public class GameOverState extends GameState {
         font.getColor().a = alpha;
 
         font.draw(batch, "SCORE: "+ GameData.CURRENT_SCORE, textX, textY);
-
 
         batch.end();
     }
@@ -105,12 +111,9 @@ public class GameOverState extends GameState {
 
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-        if (GameData.HIGH_SCORE > GameData.CURRENT_SCORE){
-            parameter.color = new Color(0.914f,0.488f,0.148f, 1);
-        }else {
-            GameData.HIGH_SCORE = GameData.CURRENT_SCORE;
-            parameter.color = new Color(0.329f,0.667f,0.863f, 1);
-        }
+
+        parameter.color = new Color(0.918f,0.49f,0.15f, 1);
+
         parameter.size = (int)(60*main.SCALEX);
 
         font = generator.generateFont(parameter);

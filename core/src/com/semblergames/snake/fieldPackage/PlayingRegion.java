@@ -61,25 +61,23 @@ public class PlayingRegion {
                 field[y][x].setType(Field.WALL);
             }
             //standard
-            int amount = random.nextInt(4);
 
-            if(amount < 3){
-                int x = random.nextInt(width);
-                int y = random.nextInt(height);
+            int x = random.nextInt(width);
+            int y = random.nextInt(height);
 
-                while(field[y][x].getType() != Field.EMPTY){
-                    x = random.nextInt(width);
-                    y = random.nextInt(height);
-                }
-
-                field[y][x].setType(Field.STANDARD_COIN);
+            while(field[y][x].getType() != Field.EMPTY){
+                x = random.nextInt(width);
+                y = random.nextInt(height);
             }
+
+            field[y][x].setType(Field.STANDARD_COIN);
+
             //magnet
-            amount = random.nextInt(8);
+            int amount = random.nextInt(8);
 
             if(amount == 0){
-                int x = random.nextInt(width);
-                int y = random.nextInt(height);
+                x = random.nextInt(width);
+                y = random.nextInt(height);
 
                 while(field[y][x].getType() != Field.EMPTY){
                     x = random.nextInt(width);
@@ -92,8 +90,8 @@ public class PlayingRegion {
             amount = random.nextInt(8);
 
             if(amount == 0){
-                int x = random.nextInt(width);
-                int y = random.nextInt(height);
+                x = random.nextInt(width);
+                y = random.nextInt(height);
 
                 while(field[y][x].getType() != Field.EMPTY){
                     x = random.nextInt(width);
@@ -107,8 +105,8 @@ public class PlayingRegion {
             amount = random.nextInt(8);
 
             if(amount == 0){
-                int x = random.nextInt(width);
-                int y = random.nextInt(height);
+                x = random.nextInt(width);
+                y = random.nextInt(height);
 
                 while(field[y][x].getType() != Field.EMPTY){
                     x = random.nextInt(width);
