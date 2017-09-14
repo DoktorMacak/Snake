@@ -65,23 +65,23 @@ public class AndroidLauncher extends AndroidApplication {
 
 			GameData.SKIN_PRICES[0] = 0;
 
-			GameData.SKIN_PRICES[1] = 0;//25
-            GameData.SKIN_PRICES[2] = 0;
-            GameData.SKIN_PRICES[3] = 0;
-            GameData.SKIN_PRICES[4] = 0;//50
-            GameData.SKIN_PRICES[5] = 0;
-            GameData.SKIN_PRICES[6] = 0;//100
-            GameData.SKIN_PRICES[7] = 0;
-            GameData.SKIN_PRICES[8] = 0;
-            GameData.SKIN_PRICES[9] = 0;//125
-            GameData.SKIN_PRICES[10] = 0;
-            GameData.SKIN_PRICES[11] = 0;//150
-            GameData.SKIN_PRICES[12] = 0;
-            GameData.SKIN_PRICES[13] = 0;
-            GameData.SKIN_PRICES[14] = 0;//200
-            GameData.SKIN_PRICES[15] = 0;
-            GameData.SKIN_PRICES[16] = 0;
-            GameData.SKIN_PRICES[17] = 0;
+			GameData.SKIN_PRICES[1] = 25;//25
+            GameData.SKIN_PRICES[2] = 25;
+            GameData.SKIN_PRICES[3] = 25;
+            GameData.SKIN_PRICES[4] = 50;//50
+            GameData.SKIN_PRICES[5] = 50;
+            GameData.SKIN_PRICES[6] = 100;//100
+            GameData.SKIN_PRICES[7] = 100;
+            GameData.SKIN_PRICES[8] = 100;
+            GameData.SKIN_PRICES[9] = 125;//125
+            GameData.SKIN_PRICES[10] = 125;
+            GameData.SKIN_PRICES[11] = 150;//150
+            GameData.SKIN_PRICES[12] = 150;
+            GameData.SKIN_PRICES[13] = 150;
+            GameData.SKIN_PRICES[14] = 200;//200
+            GameData.SKIN_PRICES[15] = 200;
+            GameData.SKIN_PRICES[16] = 200;
+            GameData.SKIN_PRICES[17] = 200;
 
 
 		}catch(Exception e){
