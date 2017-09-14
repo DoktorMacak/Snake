@@ -12,6 +12,7 @@ public class Skin {
     private Texture head;
     private Texture corner;
     private Texture body;
+    private Texture deadHead;
 
     public Skin(int skin){
         setSkin(skin);
@@ -22,6 +23,7 @@ public class Skin {
         head = new Texture("skins/parts/"+skin+"head.png");
         body = new Texture("skins/parts/"+skin+"body.png");
         if (skin > 6) corner = new Texture("skins/parts/"+skin+"corner.png");
+        deadHead = new Texture("skins/parts/"+skin+"headd.png");
     }
 
     public Texture getBody() {
@@ -41,5 +43,9 @@ public class Skin {
         head.dispose();
         body.dispose();
         if(corner != null) corner.dispose();
+    }
+
+    public Texture getDeadHead() {
+        return deadHead;
     }
 }

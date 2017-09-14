@@ -228,23 +228,23 @@ public class PlayState extends GameState {
 
         switch(GameData.SNAKE_SPEED){
             case 1:{
-                speed = 0.95f;
+                speed = 0.85f;
                 break;
             }
             case 2:{
-                speed = 0.8f;
+                speed = 0.7f;
                 break;
             }
             case 3:{
-                speed = 0.65f;
+                speed = 0.55f;
                 break;
             }
             case 4:{
-                speed = 0.5f;
+                speed = 0.4f;
                 break;
             }
             case 5:{
-                speed = 0.35f;
+                speed = 0.25f;
                 break;
             }
         }
@@ -334,6 +334,7 @@ public class PlayState extends GameState {
                         field.getAnimation().play();
                         if (!speedPowerup.isActive()) {
                             dead = true;
+                            snake.died();
                             playing = false;
                             if(GameData.PLAY_SOUNDS) {
                                 dieSound.play();

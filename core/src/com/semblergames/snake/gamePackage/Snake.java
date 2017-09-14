@@ -40,6 +40,11 @@ public class Snake {
     private Segment head;
     private List<Segment> body = new ArrayList<Segment>();
     private List<Segment> corners = new ArrayList<Segment>();
+    private boolean over;
+
+    private Segment reverse;
+
+    Texture skinTexture;
 
     public Snake(int initialLength, Direction initialDirection, int initialX, int initialY, Skin skin){
         this.direction = initialDirection;
@@ -60,10 +65,11 @@ public class Snake {
         this.skin = skin;
         update();
         snakeSize = initialLength;
+        over = false;
     }
 
     public boolean update(){
-        boolean over = false;
+        over = false;
         if(nextDirection != null && changeAvailable) {
             switch (direction){
                 case up: if(nextDirection != Direction.up && nextDirection != Direction.down) setDirection(nextDirection);
@@ -94,7 +100,11 @@ public class Snake {
             }
         }
         segments.add(new Segment(x, y, direction));
-        if (segments.size() > snakeSize) segments.remove(0);
+        if (over) segments.remove(segments.size()-1);
+        if (segments.size() > snakeSize) {
+            segments.remove(0);
+            reverse = segments.get(0);
+        }
 
         Direction lastOrientation;
         lastOrientation = segments.get(segments.size() - 1).getOrientation();
@@ -109,7 +119,7 @@ public class Snake {
                 break;
             }
             case right: {
-                head.setRotation(270);
+                head.setRotation(270f);
                 break;
             }
             case up: {
@@ -120,9 +130,9 @@ public class Snake {
         body.clear();
         corners.clear();
         for(int i = segments.size()-2;i>=0;i--){
-            if(segments.get(i).getOrientation() == lastOrientation){
-                if(segments.get(i).getOrientation() == Direction.left ||
-                        segments.get(i).getOrientation() == Direction.right)
+            if(segments.get(i).getOrientation() == lastOrientation || i == 0){
+                if(lastOrientation == Direction.left ||
+                        lastOrientation == Direction.right)
                     body.add(segments.get(i).body(90f));
                 else body.add(segments.get(i).body(0f));
                 lastOrientation = segments.get(i).getOrientation();
@@ -201,7 +211,12 @@ public class Snake {
         float width = main.BLOCK_WIDTH;
         float height = main.BLOCK_HEIGHT;
 
-        Texture skinTexture = skin.getHead();
+
+        if(over){
+            skinTexture = skin.getDeadHead();
+        }else {
+            skinTexture  = skin.getHead();
+        }
         int x = Math.round((segments.get(segments.size()-1).getX()-camera.getX()) * width);
         int y = Math.round((segments.get(segments.size()-1).getY()-camera.getY()) * height);
         batch.draw(skinTexture,x-width/2,y-height/2,width/2,height/2,width,height,1,1,head.getRotation(),0,0,skinTexture.getWidth(),
@@ -237,5 +252,10 @@ public class Snake {
             a.move(dx,dy);
         }
 
+    }
+    public void died(){
+        //segments.add(0, reverse);
+        //segments.remove(segments.size()-1);
+        //over = true;
     }
 }
