@@ -99,15 +99,61 @@ public class Snake {
         Direction lastOrientation;
         lastOrientation = segments.get(segments.size() - 1).getOrientation();
         head = segments.get(segments.size() - 1);
+        switch (head.getOrientation()){
+            case left: {
+                head.setRotation(90f);
+                break;
+            }
+            case down: {
+                head.setRotation(180f);
+                break;
+            }
+            case right: {
+                head.setRotation(270);
+                break;
+            }
+            case up: {
+                head.setRotation(0f);
+                break;
+            }
+        }
         body.clear();
         corners.clear();
         for(int i = segments.size()-2;i>=0;i--){
             if(segments.get(i).getOrientation() == lastOrientation){
+                if(segments.get(i).getOrientation() == Direction.left ||
+                        segments.get(i).getOrientation() == Direction.right)
+                    body.add(segments.get(i).body(90f));
+                else body.add(segments.get(i).body(0f));
                 lastOrientation = segments.get(i).getOrientation();
-                body.add(segments.get(i));
             }else {
+                switch (lastOrientation){
+                    case up: {
+                        if (segments.get(i).getOrientation() == Direction.left)
+                            corners.add(segments.get(i).corner(true,true));
+                        else corners.add(segments.get(i).corner(false,true));
+                        break;
+                    }
+                    case down: {
+                        if (segments.get(i).getOrientation() == Direction.left)
+                            corners.add(segments.get(i).corner(true,false));
+                        else corners.add(segments.get(i).corner(false,false));
+                        break;
+                    }
+                    case left: {
+                        if (segments.get(i).getOrientation() == Direction.down)
+                            corners.add(segments.get(i).corner(false,true));
+                        else corners.add(segments.get(i).corner(false,false));
+                        break;
+                    }
+                    case right: {
+                        if (segments.get(i).getOrientation() == Direction.up)
+                            corners.add(segments.get(i).corner(true,false));
+                        else corners.add(segments.get(i).corner(true,true));
+                        break;
+                    }
+                }
                 lastOrientation = segments.get(i).getOrientation();
-                corners.add(segments.get(i));
             }
         }
 
@@ -158,13 +204,13 @@ public class Snake {
         Texture skinTexture = skin.getHead();
         int x = Math.round((segments.get(segments.size()-1).getX()-camera.getX()) * width);
         int y = Math.round((segments.get(segments.size()-1).getY()-camera.getY()) * height);
-        batch.draw(skinTexture,x-width/2,y-height/2,x,y,width,height,1,1,0,0,0,skinTexture.getWidth(),
+        batch.draw(skinTexture,x-width/2,y-height/2,width/2,height/2,width,height,1,1,head.getRotation(),0,0,skinTexture.getWidth(),
                 skinTexture.getHeight(),false,false);
         skinTexture = skin.getBody();
         for(Segment s:body){
             x = Math.round((s.getX()-camera.getX()) * width);
             y = Math.round((s.getY()-camera.getY()) * height);
-            batch.draw(skinTexture,x-width/2,y-height/2,x,y,width,height,1,1,0f,0,0,skinTexture.getWidth(),
+            batch.draw(skinTexture,x-width/2,y-height/2,width/2,height/2,width,height,1,1,s.getRotation(),0,0,skinTexture.getWidth(),
                     skinTexture.getHeight(),false,false);
         }
         skinTexture = skin.getCorner();
@@ -172,7 +218,7 @@ public class Snake {
             x = Math.round((s.getX()-camera.getX()) * width);
             y = Math.round((s.getY()-camera.getY()) * height);
             batch.draw(skinTexture,x-width/2,y-height/2,x,y,width,height,1,1,0f,0,0,skinTexture.getWidth(),
-                    skinTexture.getHeight(),false,false);
+                    skinTexture.getHeight(),s.getHFlip(),s.getVFlip());
         }
 
     }

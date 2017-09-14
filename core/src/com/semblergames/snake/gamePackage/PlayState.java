@@ -659,7 +659,7 @@ public class PlayState extends GameState {
 
         Pattern.loadPatterns();
 
-        skin = new Skin(GameData.SKIN_POINTER+1);
+        skin = new Skin(10);
 
         wallTextures = new Texture[6];
         wallTextures[0] = new Texture("field/wall.png");
