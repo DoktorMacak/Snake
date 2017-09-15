@@ -113,6 +113,7 @@ public class PlayState extends GameState {
 
     //indikatori faza
 
+    private boolean postPause;
     private boolean tip;
     private boolean playing;
     private boolean paused;
@@ -201,7 +202,7 @@ public class PlayState extends GameState {
         speedPowerup = new PowerupHandler(speedTextures, Direction.left);
 
         tipImage = new Image(tipTexture);
-        tipImage.setPosition(main.WIDTH/2 - tipTexture.getWidth()*main.SCALEX, 900*main.SCALEY);
+        tipImage.setPosition(main.WIDTH/2 - (float)tipTexture.getWidth()*main.SCALEX/2, 930*main.SCALEY);
 
         // postavljanje skora
 
@@ -224,6 +225,7 @@ public class PlayState extends GameState {
         //postavljanje faze
 
         tip = true;
+        postPause = false;
         playing = false;
         dead = false;
         paused = false;
@@ -429,7 +431,7 @@ public class PlayState extends GameState {
             deadTime+= delta;
 
             if(deadTime > 1.5f){
-                deadTime = -1;
+                deadTime = -20;
                 GameData.CURRENT_SCORE = score;
                 listener.changeState(main.GAME_OVER_STATE);
             }
@@ -545,7 +547,7 @@ public class PlayState extends GameState {
     @Override
     public void touchDown(int x, int y) {
 
-        if(playing || tip){
+        if(playing){
 
             xPressed = x;
             yPressed = y;
@@ -556,6 +558,12 @@ public class PlayState extends GameState {
             resumeButton.handleDown(x,y);
             quitButton.handleDown(x,y);
 
+        }else if(tip){
+            xPressed = x;
+            yPressed = y;
+        }else if(postPause){
+            xPressed = x;
+            yPressed = y;
         }
 
     }
@@ -563,7 +571,7 @@ public class PlayState extends GameState {
     @Override
     public void touchDragged(int x, int y) {
 
-        if(playing || tip){
+        if(playing){
             backButton.handleDown(x,y);
         }else if(paused){
             resumeButton.handleDown(x,y);
@@ -575,7 +583,7 @@ public class PlayState extends GameState {
     @Override
     public void touchUp(int x, int y) {
 
-        if(playing || tip){
+        if(playing){
 
             int dx = xPressed - x;
             int dy = yPressed - y;
@@ -583,8 +591,6 @@ public class PlayState extends GameState {
 
             if (Math.abs(dx) > Math.abs(dy)){
                 if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 50*main.SCALEX) {
-                    tip = false;
-                    playing = true;
 
                     if (dx > 0) {
                         if(snake.setDirection(Direction.left)){}
@@ -596,8 +602,6 @@ public class PlayState extends GameState {
                 }
             }else{
                 if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down && Math.abs(dy) > 50*main.SCALEY) {
-                    tip = false;
-                    playing = true;
 
                     if (dy > 0) {
                         if(snake.setDirection(Direction.down)){}
@@ -620,13 +624,87 @@ public class PlayState extends GameState {
 
             if(resumeButton.handleUp(x,y)){
                 paused = false;
-                tip = true;
+                postPause = true;
                 listener.playClicked();
             }
 
             if(quitButton.handleUp(x,y)){
                 listener.changeState(main.MAIN_MENU_STATE);
                 listener.playClicked();
+            }
+
+        }else if(tip){
+            int dx = xPressed - x;
+            int dy = yPressed - y;
+
+
+            if (Math.abs(dx) > Math.abs(dy)){
+                if(Math.abs(dx) > 50*main.SCALEX) {
+                    tip = false;
+                    playing = true;
+
+                    if (dx > 0) {
+                        snake.setDirection(Direction.left);
+                    } else {
+                        snake.setDirection(Direction.right);
+                    }
+                }
+            }else{
+                if (dy < -50*main.SCALEY) {
+                    tip = false;
+                    playing = true;
+
+                }
+            }
+        }else if(postPause){
+            int dx = xPressed - x;
+            int dy = yPressed - y;
+
+            if (Math.abs(dx) > Math.abs(dy)){
+                if(Math.abs(dx) > 50*main.SCALEX) {
+                    if (dx > 0) {
+                        if(snake.getDirection() == Direction.left){
+                            playing = true;
+                            postPause = false;
+                        }else if(snake.getDirection() != Direction.right) {
+                            snake.setDirection(Direction.left);
+                            playing = true;
+                            postPause = false;
+                        }
+                    } else {
+                        if(snake.getDirection() == Direction.right){
+                            playing = true;
+                            postPause = false;
+                        }else if(snake.getDirection() != Direction.left) {
+                            snake.setDirection(Direction.right);
+                            playing = true;
+                            postPause = false;
+                        }
+                    }
+                }
+            }else{
+                if (Math.abs(dy) > 50*main.SCALEY) {
+                    if (dy > 0) {
+                        if(snake.getDirection() == Direction.down){
+                            playing = true;
+                            postPause = false;
+                        }else if(snake.getDirection() != Direction.up) {
+                            snake.setDirection(Direction.down);
+                            playing = true;
+                            postPause = false;
+                        }
+                    } else {
+                        if(snake.getDirection() == Direction.up){
+                            playing = true;
+                            postPause = false;
+                        }else if(snake.getDirection() != Direction.down) {
+                            snake.setDirection(Direction.up);
+                            playing = true;
+                            postPause = false;
+                        }
+                    }
+
+                }
             }
 
         }
@@ -642,9 +720,6 @@ public class PlayState extends GameState {
         }else if(paused){
             paused = false;
             tip = true;
-        }else if(tip){
-            tip = false;
-            paused = true;
         }
     }
 
