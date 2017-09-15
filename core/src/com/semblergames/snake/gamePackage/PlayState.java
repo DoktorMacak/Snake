@@ -56,6 +56,7 @@ public class PlayState extends GameState {
 
     //teksture za okruzenje
 
+    private Texture tipTexture;
     private Texture scoreTexture;
     private Texture whiteTexture;
     private Texture lineTexture;
@@ -107,12 +108,12 @@ public class PlayState extends GameState {
     private PowerupHandler speedPowerup;
     private PowerupHandler magnetPowerup;
 
-    private CountDownView countDownView;
+    private Image tipImage;
 
 
     //indikatori faza
 
-    private boolean countDown;
+    private boolean tip;
     private boolean playing;
     private boolean paused;
     private boolean dead;
@@ -199,8 +200,8 @@ public class PlayState extends GameState {
         magnetPowerup = new PowerupHandler(magnetTextures, Direction.right);
         speedPowerup = new PowerupHandler(speedTextures, Direction.left);
 
-        countDownView = new CountDownView(numbers);
-        countDownView.setPosition(main.WIDTH/2, main.HEIGHT/2 -90*main.SCALEY);
+        tipImage = new Image(tipTexture);
+        tipImage.setPosition(main.WIDTH/2 - tipTexture.getWidth()*main.SCALEX, 900*main.SCALEY);
 
         // postavljanje skora
 
@@ -222,7 +223,7 @@ public class PlayState extends GameState {
 
         //postavljanje faze
 
-        countDown = true;
+        tip = true;
         playing = false;
         dead = false;
         paused = false;
@@ -414,14 +415,6 @@ public class PlayState extends GameState {
 
             }
 
-        }else if(countDown){
-
-            countDownView.update(delta);
-            if(countDownView.isFinished()){
-                countDown = false;
-                playing = true;
-            }
-
         }else if(paused){
 
             resumeButton.update(delta);
@@ -529,10 +522,9 @@ public class PlayState extends GameState {
         font.draw(batch, Integer.toString(score), scoreX, scoreY);
 
 
-        if(countDown){
+        if(tip){
 
-            fadeImage.draw(batch);
-            countDownView.draw(batch);
+            tipImage.draw(batch);
 
         }else if(paused){
 
@@ -543,9 +535,7 @@ public class PlayState extends GameState {
             quitButton.draw(batch);
 
         }else if(dead){
-
             wallHit.draw(batch);
-
         }
 
         batch.end();
@@ -555,7 +545,7 @@ public class PlayState extends GameState {
     @Override
     public void touchDown(int x, int y) {
 
-        if(playing){
+        if(playing || tip){
 
             xPressed = x;
             yPressed = y;
@@ -573,7 +563,7 @@ public class PlayState extends GameState {
     @Override
     public void touchDragged(int x, int y) {
 
-        if(playing){
+        if(playing || tip){
             backButton.handleDown(x,y);
         }else if(paused){
             resumeButton.handleDown(x,y);
@@ -585,7 +575,7 @@ public class PlayState extends GameState {
     @Override
     public void touchUp(int x, int y) {
 
-        if(playing){
+        if(playing || tip){
 
             int dx = xPressed - x;
             int dy = yPressed - y;
@@ -593,11 +583,11 @@ public class PlayState extends GameState {
 
             if (Math.abs(dx) > Math.abs(dy)){
                 if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 50*main.SCALEX) {
-
+                    tip = false;
+                    playing = true;
 
                     if (dx > 0) {
                         if(snake.setDirection(Direction.left)){}
-
 
                     } else {
                         if(snake.setDirection(Direction.right)){}
@@ -606,7 +596,8 @@ public class PlayState extends GameState {
                 }
             }else{
                 if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down && Math.abs(dy) > 50*main.SCALEY) {
-
+                    tip = false;
+                    playing = true;
 
                     if (dy > 0) {
                         if(snake.setDirection(Direction.down)){}
@@ -629,8 +620,7 @@ public class PlayState extends GameState {
 
             if(resumeButton.handleUp(x,y)){
                 paused = false;
-                countDown = true;
-                countDownView.restart();
+                tip = true;
                 listener.playClicked();
             }
 
@@ -649,13 +639,12 @@ public class PlayState extends GameState {
         if(playing){
             playing = false;
             paused = true;
-        }else if(countDown){
-            countDown = false;
-            paused = true;
         }else if(paused){
             paused = false;
-            countDown = true;
-            countDownView.restart();
+            tip = true;
+        }else if(tip){
+            tip = false;
+            paused = true;
         }
     }
 
@@ -724,6 +713,8 @@ public class PlayState extends GameState {
         fadeTexture = new Texture("buttons/fade.png");
         pauseTexture = new Texture("buttons/pause.png");
 
+        tipTexture = new Texture("tutorial/start.png");
+
 
 
         numbers = new Texture[3];
@@ -787,6 +778,8 @@ public class PlayState extends GameState {
         quitTexture.dispose();
         fadeTexture.dispose();
         pauseTexture.dispose();
+
+        tipTexture.dispose();
 
         font.dispose();
 
