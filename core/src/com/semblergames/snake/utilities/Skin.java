@@ -42,6 +42,7 @@ public class Skin {
     public void dispose(){
         head.dispose();
         body.dispose();
+        deadHead.dispose();
         if(corner != null) corner.dispose();
     }
 

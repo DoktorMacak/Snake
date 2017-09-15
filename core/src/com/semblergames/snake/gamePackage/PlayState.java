@@ -652,8 +652,8 @@ public class PlayState extends GameState {
 
         Pattern.loadPatterns();
 
-        skins = new Skin[18];
-        for (int i = 0;i<18;i++){
+        skins = new Skin[GameData.SKINS.length];
+        for (int i = 0;i<skins.length;i++){
             skins[i] = new Skin(i+1);
         }
 
