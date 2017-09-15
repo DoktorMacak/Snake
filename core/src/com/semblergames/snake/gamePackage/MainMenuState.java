@@ -15,7 +15,7 @@ import com.semblergames.snake.utilities.GameData;
 
 public class MainMenuState extends GameState{
 
-    private static final float FONT_SIZE = 60;
+    private static final float FONT_SIZE = 30;
 
     private static final int NEXT_PLAY = 1;
     private static final int NEXT_SETTINGS = 2;
@@ -77,7 +77,12 @@ public class MainMenuState extends GameState{
 
         hsX = main.WIDTH/2 - glyphLayout.width/2;
 
-        hsY = 1000*main.SCALEY;
+        if(GameData.HIGH_SCORE > 0) {
+
+            hsY = 1000 * main.SCALEY;
+        }else{
+            hsY = -100;
+        }
 
     }
 

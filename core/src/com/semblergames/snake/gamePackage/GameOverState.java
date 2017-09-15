@@ -20,6 +20,8 @@ public class GameOverState extends GameState {
 
     private Texture quitTexture;
 
+    private BitmapFont font1;
+    private BitmapFont font2;
     private BitmapFont font;
 
     private Button playAgain;
@@ -27,11 +29,6 @@ public class GameOverState extends GameState {
 
     private float textX;
     private float textY;
-
-    private Color color1;
-    private Color color2;
-
-    private GlyphLayout layout;
 
     @Override
     public void init() {
@@ -42,21 +39,20 @@ public class GameOverState extends GameState {
         quit = new Button(quitTexture);
         quit.setPosition(main.WIDTH/2, 260*main.SCALEY);
 
-        color1 = new Color(0.918f,0.49f,0.15f, 1);
-        color2 = new Color(0.329f,0.667f,0.863f, 1);
+
 
         if (GameData.HIGH_SCORE > GameData.CURRENT_SCORE){
-            font.setColor(color1);
+            font = font1;
         }else {
             GameData.HIGH_SCORE = GameData.CURRENT_SCORE;
-            font.setColor(color2);
+            font = font2;
         }
 
-        layout = new GlyphLayout(font, "SCORE: "+ GameData.CURRENT_SCORE);
+        GlyphLayout layout = new GlyphLayout(font, "SCORE: "+ GameData.CURRENT_SCORE);
 
         textX = main.WIDTH/2 - layout.width/2;
 
-        textY = 790*main.SCALEY;
+        textY = 924*main.SCALEY;
 
 
 
@@ -76,7 +72,7 @@ public class GameOverState extends GameState {
 
         font.getColor().a = alpha;
 
-        font.draw(batch, layout, textX, textY);
+        font.draw(batch, "SCORE: "+ GameData.CURRENT_SCORE, textX, textY);
 
         batch.end();
     }
@@ -125,7 +121,11 @@ public class GameOverState extends GameState {
 
         parameter.size = (int)(60*main.SCALEX);
 
-        font = generator.generateFont(parameter);
+        font1 = generator.generateFont(parameter);
+
+        parameter.color = new Color(0.329f,0.667f,0.863f, 1);
+
+        font2 = generator.generateFont(parameter);
 
 
     }
@@ -139,7 +139,8 @@ public class GameOverState extends GameState {
 
         quitTexture.dispose();
 
-        font.dispose();
+        font1.dispose();
+        font2.dispose();
 
     }
 }
