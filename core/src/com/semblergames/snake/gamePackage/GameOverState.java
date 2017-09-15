@@ -37,10 +37,10 @@ public class GameOverState extends GameState {
     public void init() {
 
         playAgain = new Button(playAgainTexture);
-        playAgain.setPosition(main.WIDTH/2, 480*main.SCALEY);
+        playAgain.setPosition(main.WIDTH/2, 440*main.SCALEY);
 
         quit = new Button(quitTexture);
-        quit.setPosition(main.WIDTH/2, 300*main.SCALEY);
+        quit.setPosition(main.WIDTH/2, 260*main.SCALEY);
 
         color1 = new Color(0.918f,0.49f,0.15f, 1);
         color2 = new Color(0.329f,0.667f,0.863f, 1);

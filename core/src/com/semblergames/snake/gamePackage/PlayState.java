@@ -31,6 +31,7 @@ import com.semblergames.snake.utilities.MagnetedCoinGroup;
 import com.semblergames.snake.utilities.Point;
 import com.semblergames.snake.utilities.PowerupHandler;
 import com.semblergames.snake.utilities.Skin;
+import com.semblergames.snake.utilities.WallHit;
 
 
 public class PlayState extends GameState {
@@ -51,6 +52,7 @@ public class PlayState extends GameState {
     public static Texture [] magnetCoinTextures;
     public static Texture [] speedCoinTexture;
     public static Texture [] pointTexture;
+    public static Texture [] wallDeadTexture;
 
     //teksture za okruzenje
 
@@ -85,6 +87,8 @@ public class PlayState extends GameState {
     private FieldRenderer fieldRenderer;
 
     private MagnetedCoinGroup magnetedCoinGroup;
+
+    private WallHit wallHit;
 
     //elementi okruzenja
 
@@ -166,6 +170,8 @@ public class PlayState extends GameState {
         fieldRenderer = new FieldRenderer();
 
         magnetedCoinGroup = new MagnetedCoinGroup();
+
+        wallHit = new WallHit(wallDeadTexture);
 
         //inicijalizacija okruzenja
 
@@ -391,13 +397,13 @@ public class PlayState extends GameState {
                     if (snake.getHeadSegment().getX() == ((COLUMNS / 2) + 1) * PlayingRegion.width) {
                         moveEverything(Direction.left);
                     }
-                    if (snake.getHeadSegment().getX() == (COLUMNS / 2) * PlayingRegion.width - 1) {
+                    else if (snake.getHeadSegment().getX() == (COLUMNS / 2) * PlayingRegion.width - 1) {
                         moveEverything(Direction.right);
                     }
-                    if (snake.getHeadSegment().getY() == ((ROWS / 2) + 1) * PlayingRegion.height) {
+                    else if (snake.getHeadSegment().getY() == ((ROWS / 2) + 1) * PlayingRegion.height) {
                         moveEverything(Direction.down);
                     }
-                    if (snake.getHeadSegment().getY() == (ROWS / 2) * PlayingRegion.height - 1) {
+                    else if (snake.getHeadSegment().getY() == (ROWS / 2) * PlayingRegion.height - 1) {
                         moveEverything(Direction.up);
                     }
 
@@ -422,6 +428,8 @@ public class PlayState extends GameState {
             quitButton.update(delta);
 
         }else if(dead){
+
+            wallHit.update(delta);
 
             //promena vremena i prelazak na ekran kraja
 
@@ -533,6 +541,10 @@ public class PlayState extends GameState {
 
             resumeButton.draw(batch);
             quitButton.draw(batch);
+
+        }else if(dead){
+
+            wallHit.draw(batch);
 
         }
 
@@ -687,6 +699,11 @@ public class PlayState extends GameState {
             pointTexture[i] = new Texture("field/pointd"+i+".png");
         }
 
+        wallDeadTexture = new Texture[5];
+        for(int i = 1; i < 6;i++){
+            wallDeadTexture[i-1] = new Texture("field/wallh"+i+".png");
+        }
+
         scoreTexture = new Texture("play_gui/score.png");
         whiteTexture = new Texture("play_gui/white.png");
         lineTexture = new Texture("play_gui/lineg.png");
@@ -747,6 +764,10 @@ public class PlayState extends GameState {
             texture.dispose();
         }
         for(Texture texture:speedCoinTexture){
+            texture.dispose();
+        }
+
+        for(Texture texture:wallDeadTexture){
             texture.dispose();
         }
 
@@ -863,26 +884,30 @@ public class PlayState extends GameState {
             case right: {
                 snakeFutureX = snake.getHeadSegment().getX() + 1;
                 snakeFutureY = snake.getHeadSegment().getY();
+                wallHit.setOrientation(Direction.left);
                 break;
             }
             case left:{
                 snakeFutureX = snake.getHeadSegment().getX() - 1;
                 snakeFutureY = snake.getHeadSegment().getY();
+                wallHit.setOrientation(Direction.right);
                 break;
             }
             case down:{
                 snakeFutureX = snake.getHeadSegment().getX() ;
                 snakeFutureY = snake.getHeadSegment().getY() - 1;
+                wallHit.setOrientation(Direction.up);
                 break;
             }
             case up:{
                 snakeFutureX = snake.getHeadSegment().getX();
                 snakeFutureY = snake.getHeadSegment().getY() + 1;
+                wallHit.setOrientation(Direction.down);
                 break;
             }
-
-
         }
+
+        wallHit.setPosition((snake.getHeadSegment().getX() - camera.getX())*main.BLOCK_WIDTH,(snake.getHeadSegment().getY() - camera.getY())*main.BLOCK_HEIGHT);
 
         int regionRow = snakeFutureY / PlayingRegion.height;
         int regionColumn = snakeFutureX / PlayingRegion.width;
@@ -892,6 +917,9 @@ public class PlayState extends GameState {
                 .getField(snakeFutureX % PlayingRegion.width, snakeFutureY % PlayingRegion.height);
 
         if(field.getType() == Field.WALL && !speedPowerup.isActive()){
+
+            wallHit.activate();
+
             snake.setOver(true);
             dead = true;
             playing = false;
