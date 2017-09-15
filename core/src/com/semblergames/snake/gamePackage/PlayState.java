@@ -311,105 +311,100 @@ public class PlayState extends GameState {
                 //ciscenje magnetnih novcica
                 magnetedCoinGroup.clear();
 
-                snakeChanged = true;
+                if(!checkWllInFront()) {
 
+                    snakeChanged = true;
 
-                if (snake.update()) {
-                    dead = true;
-                    playing = false;
-                    if(GameData.PLAY_SOUNDS) {
-                        dieSound.play();
+                    if (snake.update()) {
+                        dead = true;
+                        playing = false;
+                        if (GameData.PLAY_SOUNDS) {
+                            dieSound.play();
+                        }
                     }
-                }
 
-                int regionRow = snake.getHeadSegment().getY() / PlayingRegion.height;
-                int regionColumn = snake.getHeadSegment().getX() / PlayingRegion.width;
+                    int regionRow = snake.getHeadSegment().getY() / PlayingRegion.height;
+                    int regionColumn = snake.getHeadSegment().getX() / PlayingRegion.width;
 
 
-                Field field = regions[regionRow][regionColumn]
-                        .getField(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height);
+                    Field field = regions[regionRow][regionColumn]
+                            .getField(snake.getHeadSegment().getX() % PlayingRegion.width, snake.getHeadSegment().getY() % PlayingRegion.height);
 
-                switch (field.getType()) {
-                    case Field.WALL: {
-                        field.getAnimation().play();
-                        if (!speedPowerup.isActive()) {
-                            dead = true;
-                            snake.died();
-                            playing = false;
-                            if(GameData.PLAY_SOUNDS) {
-                                dieSound.play();
-                            }
-                        }else{
-                            if(GameData.PLAY_SOUNDS) {
+                    switch (field.getType()) {
+                        case Field.WALL: {
+                            field.getAnimation().play();
+
+                            if (GameData.PLAY_SOUNDS) {
                                 hitSound.play();
                             }
+
+                            break;
                         }
-                        break;
+                        case Field.MAGNET_COIN: {
+                            field.getAnimation().play();
+                            magnetPowerup.activate();
+                            if (GameData.PLAY_SOUNDS) {
+                                boostSound.play();
+                            }
+                            break;
+                        }
+                        case Field.STANDARD_COIN: {
+                            field.getAnimation().play();
+                            score += GameData.SNAKE_SPEED;
+                            scoreTextLayout.setText(font, Integer.toString(score));
+                            scoreX = main.WIDTH / 2 - scoreTextLayout.width / 2;
+
+                            float lineWidth = (main.WIDTH - (80 * main.SCALEX + scoreTextLayout.width)) / 2;
+
+                            lineL.setX(lineWidth - lineTexture.getWidth() * main.SCALEX);
+
+                            lineR.setX(main.WIDTH - lineWidth);
+
+                            snake.grow();
+                            if (GameData.PLAY_SOUNDS) {
+                                coinSound.play();
+                            }
+                            break;
+                        }
+                        case Field.SPEED_COIN: {
+                            field.getAnimation().play();
+                            if (!speedPowerup.isActive()) {
+                                speed /= 2;
+                            }
+                            speedPowerup.activate();
+                            if (GameData.PLAY_SOUNDS) {
+                                boostSound.play();
+                            }
+                            break;
+                        }
+                        case Field.POINT_STAR: {
+                            field.getAnimation().play();
+                            GameData.POINT_STARS++;
+                            if (GameData.PLAY_SOUNDS) {
+                                coinSound.play();
+                            }
+                            break;
+                        }
                     }
-                    case Field.MAGNET_COIN: {
-                        field.getAnimation().play();
-                        magnetPowerup.activate();
-                        if(GameData.PLAY_SOUNDS) {
-                            boostSound.play();
-                        }
-                        break;
+
+
+                    if (snake.getHeadSegment().getX() == ((COLUMNS / 2) + 1) * PlayingRegion.width) {
+                        moveEverything(Direction.left);
                     }
-                    case Field.STANDARD_COIN: {
-                        field.getAnimation().play();
-                        score += GameData.SNAKE_SPEED;
-                        scoreTextLayout.setText(font, Integer.toString(score));
-                        scoreX = main.WIDTH / 2 - scoreTextLayout.width / 2;
-
-                        float lineWidth = (main.WIDTH - (80 * main.SCALEX + scoreTextLayout.width)) / 2;
-
-                        lineL.setX(lineWidth - lineTexture.getWidth() * main.SCALEX);
-
-                        lineR.setX(main.WIDTH - lineWidth);
-
-                        snake.grow();
-                        if(GameData.PLAY_SOUNDS) {
-                            coinSound.play();
-                        }
-                        break;
+                    if (snake.getHeadSegment().getX() == (COLUMNS / 2) * PlayingRegion.width - 1) {
+                        moveEverything(Direction.right);
                     }
-                    case Field.SPEED_COIN: {
-                        field.getAnimation().play();
-                        if (!speedPowerup.isActive()) {
-                            speed /= 2;
-                        }
-                        speedPowerup.activate();
-                        if(GameData.PLAY_SOUNDS) {
-                            boostSound.play();
-                        }
-                        break;
+                    if (snake.getHeadSegment().getY() == ((ROWS / 2) + 1) * PlayingRegion.height) {
+                        moveEverything(Direction.down);
                     }
-                    case Field.POINT_STAR: {
-                        field.getAnimation().play();
-                        GameData.POINT_STARS++;
-                        if(GameData.PLAY_SOUNDS) {
-                            coinSound.play();
-                        }
-                        break;
+                    if (snake.getHeadSegment().getY() == (ROWS / 2) * PlayingRegion.height - 1) {
+                        moveEverything(Direction.up);
                     }
-                }
 
+                    time = 0f;
+                    camera.setSpeedToSnake(snake, speed);
 
-                if (snake.getHeadSegment().getX() == ((COLUMNS / 2) + 1) * PlayingRegion.width) {
-                    moveEverything(Direction.left);
                 }
-                if (snake.getHeadSegment().getX() == (COLUMNS / 2) * PlayingRegion.width - 1) {
-                    moveEverything(Direction.right);
-                }
-                if (snake.getHeadSegment().getY() == ((ROWS / 2) + 1) * PlayingRegion.height) {
-                    moveEverything(Direction.down);
-                }
-                if (snake.getHeadSegment().getY() == (ROWS / 2) * PlayingRegion.height - 1) {
-                    moveEverything(Direction.up);
-                }
-
-                time = 0f;
-                camera.setSpeedToSnake(snake,speed);
-
 
             }
 
@@ -857,5 +852,54 @@ public class PlayState extends GameState {
                 break;
         }
 
+    }
+
+    private boolean checkWllInFront(){
+
+        int snakeFutureX = 0;
+        int snakeFutureY = 0;
+
+        switch(snake.getDirection()){
+            case right: {
+                snakeFutureX = snake.getHeadSegment().getX() + 1;
+                snakeFutureY = snake.getHeadSegment().getY();
+                break;
+            }
+            case left:{
+                snakeFutureX = snake.getHeadSegment().getX() - 1;
+                snakeFutureY = snake.getHeadSegment().getY();
+                break;
+            }
+            case down:{
+                snakeFutureX = snake.getHeadSegment().getX() ;
+                snakeFutureY = snake.getHeadSegment().getY() - 1;
+                break;
+            }
+            case up:{
+                snakeFutureX = snake.getHeadSegment().getX();
+                snakeFutureY = snake.getHeadSegment().getY() + 1;
+                break;
+            }
+
+
+        }
+
+        int regionRow = snakeFutureY / PlayingRegion.height;
+        int regionColumn = snakeFutureX / PlayingRegion.width;
+
+
+        Field field = regions[regionRow][regionColumn]
+                .getField(snakeFutureX % PlayingRegion.width, snakeFutureY % PlayingRegion.height);
+
+        if(field.getType() == Field.WALL && !speedPowerup.isActive()){
+            snake.setOver(true);
+            dead = true;
+            playing = false;
+            if (GameData.PLAY_SOUNDS) {
+                dieSound.play();
+            }
+            return true;
+        }
+        return false;
     }
 }

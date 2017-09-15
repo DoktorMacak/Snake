@@ -217,8 +217,8 @@ public class Snake {
         }else {
             skinTexture  = skin.getHead();
         }
-        int x = Math.round((segments.get(segments.size()-1).getX()-camera.getX()) * width);
-        int y = Math.round((segments.get(segments.size()-1).getY()-camera.getY()) * height);
+        float x = (segments.get(segments.size()-1).getX()-camera.getX()) * width;
+        float y = (segments.get(segments.size()-1).getY()-camera.getY()) * height;
         batch.draw(skinTexture,x-width/2,y-height/2,width/2,height/2,width,height,1,1,head.getRotation(),0,0,skinTexture.getWidth(),
                 skinTexture.getHeight(),false,false);
         skinTexture = skin.getBody();
@@ -253,9 +253,8 @@ public class Snake {
         }
 
     }
-    public void died(){
-        //segments.add(0, reverse);
-        //segments.remove(segments.size()-1);
-        //over = true;
+
+    public void setOver(boolean over) {
+        this.over = over;
     }
 }

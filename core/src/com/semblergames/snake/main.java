@@ -243,16 +243,18 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	@Override
 	public void changeState(int x) {
 
-		nextIndex = x;
+		if(x != nextIndex) {
+			nextIndex = x;
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				ready = false;
-				states[nextIndex].init();
-				ready = true;
-			}
-		}).start();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					ready = false;
+					states[nextIndex].init();
+					ready = true;
+				}
+			}).start();
+		}
 	}
 
 	@Override
