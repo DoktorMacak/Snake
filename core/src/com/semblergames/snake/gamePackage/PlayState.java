@@ -614,7 +614,7 @@ public class PlayState extends GameState {
 
 
             if (Math.abs(dx) > Math.abs(dy)){
-                if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 50*main.SCALEX) {
+                if(snake.getDirection() != Direction.right && snake.getDirection() != Direction.left && Math.abs(dx) > 20*main.SCALEX) {
 
                     if (dx > 0) {
                         if(snake.setDirection(Direction.left)){}
@@ -625,7 +625,7 @@ public class PlayState extends GameState {
                     }
                 }
             }else{
-                if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down && Math.abs(dy) > 50*main.SCALEY) {
+                if (snake.getDirection() != Direction.up && snake.getDirection() != Direction.down && Math.abs(dy) > 20*main.SCALEY) {
 
                     if (dy > 0) {
                         if(snake.setDirection(Direction.down)){}
@@ -746,7 +746,7 @@ public class PlayState extends GameState {
             int dy = yPressed - y;
 
             if (Math.abs(dx) > Math.abs(dy)){
-                if(Math.abs(dx) > 50*main.SCALEX) {
+                if(Math.abs(dx) > 20*main.SCALEX) {
                     if (dx > 0) {
                         if(snake.getDirection() == Direction.left){
                             playing = true;
@@ -772,7 +772,7 @@ public class PlayState extends GameState {
                     }
                 }
             }else{
-                if (Math.abs(dy) > 50*main.SCALEY) {
+                if (Math.abs(dy) > 20*main.SCALEY) {
                     if (dy > 0) {
                         if(snake.getDirection() == Direction.down){
                             playing = true;
