@@ -31,7 +31,7 @@ public class Skin {
     }
 
     public Texture getCorner() {
-        if (skin < 7) return body;
+        if (skin < 7 || skin == 30 || skin == 31) return body;
         return corner;
     }
 

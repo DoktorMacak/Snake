@@ -14,7 +14,7 @@ public class ScrollView {
 
 
 
-    private static float MAX_Y = 6*(ScrollItem.TOTAL_HEIGHT+ScrollItem.OFFSET_TO_NEXT);
+    private static float MAX_Y;
     private static float MIN_Y = main.HEIGHT - 200*main.SCALEY;
 
 
