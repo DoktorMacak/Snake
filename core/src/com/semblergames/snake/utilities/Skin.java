@@ -22,7 +22,7 @@ public class Skin {
         this.skin = skin;
         head = new Texture("skins/parts/"+skin+"head.png");
         body = new Texture("skins/parts/"+skin+"body.png");
-        if (skin > 6) corner = new Texture("skins/parts/"+skin+"corner.png");
+        if (skin > 6 && skin != 30 && skin != 31) corner = new Texture("skins/parts/"+skin+"corner.png");
         deadHead = new Texture("skins/parts/"+skin+"headd.png");
     }
 

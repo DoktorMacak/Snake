@@ -14,8 +14,8 @@ public class ScrollView {
 
 
 
-    private static final float MAX_Y = 6*(ScrollItem.TOTAL_HEIGHT+ScrollItem.OFFSET_TO_NEXT);
-    private static final float MIN_Y = main.HEIGHT - 200*main.SCALEY;
+    private static float MAX_Y = 6*(ScrollItem.TOTAL_HEIGHT+ScrollItem.OFFSET_TO_NEXT);
+    private static float MIN_Y = main.HEIGHT - 200*main.SCALEY;
 
 
 
@@ -39,6 +39,8 @@ public class ScrollView {
 
     public ScrollView(int size,BitmapFont font, float y) {
         this.size = size;
+
+        MAX_Y = size % 3 == 0 ? size/3:1+(size/3)*(ScrollItem.TOTAL_HEIGHT+ScrollItem.OFFSET_TO_NEXT);
 
 
         this.items = new ScrollItem[size];
