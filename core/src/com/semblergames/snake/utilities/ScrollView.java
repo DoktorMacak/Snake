@@ -40,7 +40,7 @@ public class ScrollView {
     public ScrollView(int size,BitmapFont font, float y) {
         this.size = size;
 
-        MAX_Y = size % 3 == 0 ? size/3:1+(size/3)*(ScrollItem.TOTAL_HEIGHT+ScrollItem.OFFSET_TO_NEXT);
+        MAX_Y = (size % 3 == 0 ? size/3:1+(size/3))*(ScrollItem.TOTAL_HEIGHT+ScrollItem.OFFSET_TO_NEXT);
 
 
         this.items = new ScrollItem[size];
