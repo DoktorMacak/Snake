@@ -68,6 +68,8 @@ public class Snake {
         over = false;
     }
 
+
+
     public boolean update(){
         over = false;
         if(nextDirection != null && changeAvailable) {
