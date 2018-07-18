@@ -144,6 +144,7 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		Gdx.input.setInputProcessor(this);
 
 		Gdx.input.setCatchBackKey(true);
+		Gdx.input.setCatchMenuKey(true);
 	}
 
 	@Override
@@ -182,6 +183,12 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 		batch.end();
 
 	}
+
+	@Override
+	public void pause(){
+		states[currentIndex].pause();
+	}
+
 	
 	@Override
 	public void dispose () {

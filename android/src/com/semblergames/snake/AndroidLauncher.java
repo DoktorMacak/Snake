@@ -21,7 +21,7 @@ public class AndroidLauncher extends AndroidApplication {
 	private static final String SNAKE_SPEED_PASS = "snakeSpeed";
 	private static final String SKIN_POINTER_PASS = "snakePointer";
 
-	private static final int SKIN_AMOUNT = 18;
+	private static final int SKIN_AMOUNT = 33;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -30,6 +30,7 @@ public class AndroidLauncher extends AndroidApplication {
 
 		config.useImmersiveMode = true;
 		loadData();
+		GameData.POINT_STARS = 1500;
 
 		initialize(new main(), config);
 	}
@@ -65,23 +66,38 @@ public class AndroidLauncher extends AndroidApplication {
 
 			GameData.SKIN_PRICES[0] = 0;
 
-			GameData.SKIN_PRICES[1] = 25;//25
-            GameData.SKIN_PRICES[2] = 25;
-            GameData.SKIN_PRICES[3] = 25;
-            GameData.SKIN_PRICES[4] = 50;//50
-            GameData.SKIN_PRICES[5] = 50;
-            GameData.SKIN_PRICES[6] = 100;//100
-            GameData.SKIN_PRICES[7] = 100;
-            GameData.SKIN_PRICES[8] = 100;
-            GameData.SKIN_PRICES[9] = 125;//125
-            GameData.SKIN_PRICES[10] = 125;
-            GameData.SKIN_PRICES[11] = 150;//150
-            GameData.SKIN_PRICES[12] = 150;
-            GameData.SKIN_PRICES[13] = 150;
-            GameData.SKIN_PRICES[14] = 200;//200
-            GameData.SKIN_PRICES[15] = 200;
-            GameData.SKIN_PRICES[16] = 200;
-            GameData.SKIN_PRICES[17] = 200;
+			GameData.SKIN_PRICES[1] = 15;//15
+			GameData.SKIN_PRICES[2] = 15;
+			GameData.SKIN_PRICES[3] = 15;
+			GameData.SKIN_PRICES[4] = 20;//20
+			GameData.SKIN_PRICES[5] = 20;
+			GameData.SKIN_PRICES[6] = 25;//25
+			GameData.SKIN_PRICES[7] = 25;
+			GameData.SKIN_PRICES[8] = 25;
+			GameData.SKIN_PRICES[9] = 30;//30
+			GameData.SKIN_PRICES[10] = 30;
+			GameData.SKIN_PRICES[11] = 30;
+			GameData.SKIN_PRICES[12] = 35;//35
+			GameData.SKIN_PRICES[13] = 35;
+			GameData.SKIN_PRICES[14] = 45;//45
+			GameData.SKIN_PRICES[15] = 45;
+			GameData.SKIN_PRICES[16] = 45;
+			GameData.SKIN_PRICES[17] = 45;
+			GameData.SKIN_PRICES[18] = 60;//60
+			GameData.SKIN_PRICES[19] = 60;
+			GameData.SKIN_PRICES[20] = 60;
+			GameData.SKIN_PRICES[21] = 65;//65
+			GameData.SKIN_PRICES[22] = 65;
+			GameData.SKIN_PRICES[23] = 65;
+			GameData.SKIN_PRICES[24] = 65;
+			GameData.SKIN_PRICES[25] = 70;//70
+			GameData.SKIN_PRICES[26] = 75;//75
+			GameData.SKIN_PRICES[27] = 75;
+			GameData.SKIN_PRICES[28] = 75;
+			GameData.SKIN_PRICES[29] = 80;//80
+			GameData.SKIN_PRICES[30] = 80;
+			GameData.SKIN_PRICES[31] = 85;//85
+			GameData.SKIN_PRICES[32] = 85;
 
 
 		}catch(Exception e){

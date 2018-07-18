@@ -53,6 +53,10 @@ public class PowerupHandler {
 
     }
 
+    public void reset(){
+        active = false;
+    }
+
     public void activate(){
         timeLapsed = 0;
         activeTime = 0;

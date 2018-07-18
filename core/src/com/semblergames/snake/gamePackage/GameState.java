@@ -45,6 +45,8 @@ public abstract class GameState {
 
     public abstract void backPressed();
 
+    public void pause(){}
+
     protected void drawTexture(SpriteBatch batch, float x, float y, Texture texture){
      float width = (float)texture.getWidth() * main.SCALEX;
      float height = (float)texture.getHeight() * main.SCALEY;
