@@ -249,11 +249,11 @@ public class PlayState extends GameState {
         snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2 - 3, skins[GameData.SKIN_POINTER]);
 
         speeds = new float[5];
-        speeds[0] = 0.51f;
-        speeds[1] = 0.42f;
-        speeds[2] = 0.33f;
-        speeds[3] = 0.24f;
-        speeds[4] = 0.15f;
+        speeds[0] = 0.26f;
+        speeds[1] = 0.24f;
+        speeds[2] = 0.22f;
+        speeds[3] = 0.20f;
+        speeds[4] = 0.18f;
 
         speed = speeds[GameData.SNAKE_SPEED-1];
 
