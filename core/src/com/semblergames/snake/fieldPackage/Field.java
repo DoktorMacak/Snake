@@ -19,6 +19,7 @@ public class Field {
     public static final int SPEED_COIN = 3;
     public static final int STANDARD_COIN = 4;
     public static final int POINT_STAR = 5;
+    public static final int DOUBLE_STAR = 6;
 
 
     private static final float DURATION = 0.08f;
@@ -92,6 +93,11 @@ public class Field {
                 texture = PlayState.pointTexture[animation.getCurrentFrame()];
                 break;
             }
+            case DOUBLE_STAR:{
+                texture = PlayState.doublePointTexture[animation.getCurrentFrame()];
+                break;
+            }
+
         }
 
         if(texture != null) {

@@ -73,7 +73,7 @@ public class PlayingRegion {
             field[y][x].setType(Field.STANDARD_COIN);
 
             //magnet
-            int amount = random.nextInt(8);
+            int amount = random.nextInt(9);
 
             if(amount == 0){
                 x = random.nextInt(width);
@@ -87,7 +87,7 @@ public class PlayingRegion {
                 field[y][x].setType(Field.MAGNET_COIN);
             }
             //speed
-            amount = random.nextInt(8);
+            amount = random.nextInt(9);
 
             if(amount == 0){
                 x = random.nextInt(width);
@@ -102,7 +102,7 @@ public class PlayingRegion {
             }
 
             //point
-            amount = random.nextInt(8);
+            amount = random.nextInt(9);
 
             if(amount == 0){
                 x = random.nextInt(width);
@@ -116,6 +116,19 @@ public class PlayingRegion {
                 field[y][x].setType(Field.POINT_STAR);
             }
 
+            //double star
+            amount = random.nextInt(18);
+
+            if(amount == 0){
+                x = random.nextInt(width);
+                y = random.nextInt(height);
+
+                while(field[y][x].getType() != Field.EMPTY){
+                    x = random.nextInt(width);
+                    y = random.nextInt(height);
+                }
+                field[x][y].setType(Field.DOUBLE_STAR);
+            }
         }
 
     }

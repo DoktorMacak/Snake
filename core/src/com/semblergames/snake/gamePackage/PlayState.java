@@ -53,6 +53,7 @@ public class PlayState extends GameState {
     public static Texture [] speedCoinTexture;
     public static Texture [] pointTexture;
     public static Texture [] wallDeadTexture;
+    public static Texture [] doublePointTexture;
 
     //teksture za okruzenje
 
@@ -394,6 +395,13 @@ public class PlayState extends GameState {
                                 pointSound.play();
                             }
                             break;
+                        }
+                        case Field.DOUBLE_STAR:{
+                            field.getAnimation().play();
+                            GameData.POINT_STARS+=5;
+                            if(GameData.PLAY_SOUNDS){
+                                pointSound.play();
+                            }
                         }
                     }
 
@@ -826,9 +834,15 @@ public class PlayState extends GameState {
 
         pointTexture = new Texture[6];
         pointTexture[0] = new Texture("field/point.png");
+
+        doublePointTexture = new Texture[6];
+        doublePointTexture[0] = new Texture("field/point2.png");
         for(int i = 1; i < 6;i++){
             pointTexture[i] = new Texture("field/pointd"+i+".png");
+            doublePointTexture[i] = pointTexture[i];
         }
+
+
 
         wallDeadTexture = new Texture[5];
         for(int i = 1; i < 6;i++){
@@ -896,6 +910,9 @@ public class PlayState extends GameState {
         for(Texture texture:pointTexture){
             texture.dispose();
         }
+
+        doublePointTexture[0].dispose();
+
         for(Texture texture:magnetCoinTextures){
             texture.dispose();
         }

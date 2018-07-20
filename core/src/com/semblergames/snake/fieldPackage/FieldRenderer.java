@@ -12,6 +12,7 @@ public class FieldRenderer {
     private ArrayList<Field> magnetCoins;
     private ArrayList<Field> standardCoins;
     private ArrayList<Field> points;
+    private ArrayList<Field> doublePoints;
 
     private float minX;
     private float maxX;
@@ -24,6 +25,7 @@ public class FieldRenderer {
         magnetCoins = new ArrayList<Field>();
         standardCoins = new ArrayList<Field>();
         points = new ArrayList<Field>();
+        doublePoints = new ArrayList<Field>();
 
         minX = -main.BLOCK_WIDTH;
         maxX = main.WIDTH + main.BLOCK_WIDTH;
@@ -54,6 +56,10 @@ public class FieldRenderer {
             field.draw(batch);
         }
         speedCoins.clear();
+        for(Field field:doublePoints){
+            field.draw(batch);
+        }
+        doublePoints.clear();
     }
 
     public void process(Field field, float delta, float x, float y) {
@@ -89,6 +95,12 @@ public class FieldRenderer {
                 field.update(delta);
                 field.setPosition(x,y);
                 points.add(field);
+                break;
+            }
+            case Field.DOUBLE_STAR:{
+                field.update(delta);
+                field.setPosition(x,y);
+                doublePoints.add(field);
                 break;
             }
         }
