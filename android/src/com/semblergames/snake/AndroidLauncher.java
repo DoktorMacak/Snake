@@ -29,6 +29,9 @@ public class AndroidLauncher extends AndroidApplication {
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 
 		config.useImmersiveMode = true;
+		config.useAccelerometer = false;
+		config.useCompass = false;
+		config.useGyroscope = false;
 		loadData();
 
 		initialize(new main(), config);

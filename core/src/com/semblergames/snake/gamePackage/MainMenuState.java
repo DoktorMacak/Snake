@@ -63,7 +63,7 @@ public class MainMenuState extends GameState{
         quitButton.setPosition(main.WIDTH/2, 260*main.SCALEY);
 
         noAdImage = new Image(noAdTexture);
-        noAdImage.setPosition(0,main.HEIGHT*main.SCALEY - noAdTexture.getHeight()*main.SCALEY);
+        noAdImage.setPosition(0,main.HEIGHT - noAdTexture.getHeight()*main.SCALEY);
 
         tSnakeAnimation = new Animation();
         for(int i = 0; i < 36;i++){
@@ -129,6 +129,8 @@ public class MainMenuState extends GameState{
 
         quitButton.update(delta);
         quitButton.draw(batch);
+
+        noAdImage.draw(batch);
 
         font.getColor().a = alpha;
 
