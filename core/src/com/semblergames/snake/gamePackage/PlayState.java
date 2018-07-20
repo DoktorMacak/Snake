@@ -133,6 +133,8 @@ public class PlayState extends GameState {
     private float speed;
     private float time;
     private Skin[] skins;
+    private float [] speeds;
+    private float speedAccel;
 
 
     //skor
@@ -245,28 +247,16 @@ public class PlayState extends GameState {
 
         snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2 - 3, skins[GameData.SKIN_POINTER]);
 
-        switch(GameData.SNAKE_SPEED){
-            case 1:{
-                speed = 0.51f;
-                break;
-            }
-            case 2:{
-                speed = 0.42f;
-                break;
-            }
-            case 3:{
-                speed = 0.33f;
-                break;
-            }
-            case 4:{
-                speed = 0.24f;
-                break;
-            }
-            case 5:{
-                speed = 0.15f;
-                break;
-            }
-        }
+        speeds = new float[5];
+        speeds[0] = 0.51f;
+        speeds[1] = 0.42f;
+        speeds[2] = 0.33f;
+        speeds[3] = 0.24f;
+        speeds[4] = 0.15f;
+
+        speed = speeds[GameData.SNAKE_SPEED-1];
+
+        speedAccel = speed/3f;
 
         time = 0f;
 
@@ -306,9 +296,11 @@ public class PlayState extends GameState {
             // update powerupova
 
             speedPowerup.update(delta);
-            if(speedPowerup.isFinished()){
-                speed *=2;
-
+            if(speedPowerup.isActive() && speedPowerup.getTimeLapsed() > 6.5f){
+                speed+=delta*speedAccel;
+                if(speed > speeds[GameData.SNAKE_SPEED-1]){
+                    speed = speeds[GameData.SNAKE_SPEED-1];
+                }
             }
 
             magnetPowerup.update(delta);
@@ -388,7 +380,7 @@ public class PlayState extends GameState {
                         case Field.SPEED_COIN: {
                             field.getAnimation().play();
                             if (!speedPowerup.isActive()) {
-                                speed /= 2;
+                                speed = speeds[GameData.SNAKE_SPEED-1] / 2;
                             }
                             speedPowerup.activate();
                             if (GameData.PLAY_SOUNDS) {
@@ -696,28 +688,7 @@ public class PlayState extends GameState {
 
                 snake = new Snake(3, Direction.up, (COLUMNS* PlayingRegion.width) /2, (ROWS* PlayingRegion.height) /2 - 3, skins[GameData.SKIN_POINTER]);
 
-                switch(GameData.SNAKE_SPEED){
-                    case 1:{
-                        speed = 0.85f;
-                        break;
-                    }
-                    case 2:{
-                        speed = 0.7f;
-                        break;
-                    }
-                    case 3:{
-                        speed = 0.55f;
-                        break;
-                    }
-                    case 4:{
-                        speed = 0.4f;
-                        break;
-                    }
-                    case 5:{
-                        speed = 0.25f;
-                        break;
-                    }
-                }
+                speed = speeds[GameData.SNAKE_SPEED-1];
 
                 time = 0f;
 

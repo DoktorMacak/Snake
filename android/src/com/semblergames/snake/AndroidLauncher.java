@@ -30,7 +30,6 @@ public class AndroidLauncher extends AndroidApplication {
 
 		config.useImmersiveMode = true;
 		loadData();
-		GameData.POINT_STARS = 1500;
 
 		initialize(new main(), config);
 	}
