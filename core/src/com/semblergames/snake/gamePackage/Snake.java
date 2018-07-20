@@ -227,16 +227,26 @@ public class Snake {
         for(Segment s:body){
             x = ((float)s.getX()-camera.getX()) * width;
             y = ((float)s.getY()-camera.getY()) * height;
-            batch.draw(skinTexture,x-width/2,y-height/2,width/2,height/2,width,height,1,1,s.getRotation(),0,0,skinTexture.getWidth(),
+            float rotation = s.getRotation();
+            if(!skin.isHasCorner()) rotation = 0;
+            batch.draw(skinTexture,x-width/2,y-height/2,width/2,height/2,width,height,1,1,rotation,0,0,skinTexture.getWidth(),
                     skinTexture.getHeight(),false,false);
         }
-        skinTexture = skin.getCorner();
-        for(Segment s:corners){
-            x = ((float)s.getX()-camera.getX()) * width;
-            y = ((float)s.getY()-camera.getY()) * height;
-            batch.draw(skinTexture,x-width/2,y-height/2,x,y,width,height,1,1,0f,0,0,skinTexture.getWidth(),
-                    skinTexture.getHeight(),s.getHFlip(),s.getVFlip());
+
+
+        if(skin.isHasCorner()) {
+            skinTexture = skin.getCorner();
         }
+        for (Segment s : corners) {
+            boolean vflip = s.getVFlip() && skin.isHasCorner();
+            boolean hflip = s.getHFlip() && skin.isHasCorner();
+            x = ((float) s.getX() - camera.getX()) * width;
+            y = ((float) s.getY() - camera.getY()) * height;
+            batch.draw(skinTexture, x - width / 2, y - height / 2, x, y, width, height, 1, 1, 0f, 0, 0, skinTexture.getWidth(),
+                    skinTexture.getHeight(), hflip, vflip);
+        }
+
+
 
     }
 

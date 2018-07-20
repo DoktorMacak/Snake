@@ -57,7 +57,7 @@ public class ShopState extends GameState {
         backButton = new Button(menuTexture);
         backButton.setPosition(120*main.SCALEX, main.HEIGHT - 90*main.SCALEY);
 
-        scrollView = new ScrollView(skins.length, font, main.HEIGHT - 200*main.SCALEY);
+        scrollView = new ScrollView(skins.length, font, main.HEIGHT - 336*main.SCALEY);
 
         lockPoints = new ArrayList<Point>();
         starPoints = new ArrayList<Point>();
