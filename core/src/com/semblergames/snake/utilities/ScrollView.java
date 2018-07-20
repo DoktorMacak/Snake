@@ -52,7 +52,7 @@ public class ScrollView {
 
         this.y = y;
         dy = 0;
-        speedY = 0 ;
+        speedY = 0;
 
         pressed = false;
     }
@@ -98,6 +98,7 @@ public class ScrollView {
 
         int pointer = -1;
 
+
         if(Math.abs(dy - y) < 20* main.SCALEY){
             for(int i =0; i < items.length;i++){
                 if(items[i].isInside(x,y)){
@@ -105,6 +106,8 @@ public class ScrollView {
                     break;
                 }
             }
+        }else{
+            speedY = y - pressY;
         }
 
         return pointer;
