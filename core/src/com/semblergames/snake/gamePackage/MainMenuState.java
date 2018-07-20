@@ -17,10 +17,7 @@ public class MainMenuState extends GameState{
 
     private static final float FONT_SIZE = 30;
 
-    private static final int NEXT_PLAY = 1;
-    private static final int NEXT_SETTINGS = 2;
-    private static final int NEXT_SHOP = 3;
-    private static final int NEXT_NULL = 0;
+
 
     private Texture[] tSnakeTexture;
 
@@ -39,12 +36,13 @@ public class MainMenuState extends GameState{
     private BitmapFont font;
     private GlyphLayout glyphLayout;
 
-    private int nextAction;
+    private boolean buttonPressed;
 
     private float hsX;
     private float hsY;
 
     private boolean ready;
+    private boolean animationShouldPlay;
 
     @Override
     public void init() {
@@ -69,8 +67,10 @@ public class MainMenuState extends GameState{
 
 
         ready = true;
+        animationShouldPlay = false;
 
-        nextAction = NEXT_NULL;
+        buttonPressed = false;
+
 
         glyphLayout = new GlyphLayout(font, "HIGH SCORE: "+ GameData.HIGH_SCORE);
 
@@ -96,32 +96,18 @@ public class MainMenuState extends GameState{
 
         tSnakeAnimation.update(delta);
 
-        if(tSnakeAnimation.getCurrentFrame() == 19 && ready && nextAction == NEXT_NULL){
+        if(tSnakeAnimation.getCurrentFrame() == 19 && ready && !animationShouldPlay){
             tSnakeAnimation.pause();
             ready = false;
         }
 
         if(tSnakeAnimation.isFinished()){
             tSnakeAnimation.setFinished(false);
-            switch (nextAction){
-                case NEXT_PLAY:{
-                    if(GameData.SHOW_TUTORIAL){
-                        listener.changeState(main.TUTORIAL_STATE);
-                        GameData.SHOW_TUTORIAL = false;
-                    }else{
-                        listener.changeState(main.PLAY_STATE);
-                    }
-
-                    break;
-                }
-                case NEXT_SETTINGS:{
-                    listener.changeState(main.SETTINGS_STATE);
-                    break;
-                }
-                case NEXT_SHOP:{
-                    listener.changeState(main.SHOP_STATE);
-                    break;
-                }
+            if(GameData.SHOW_TUTORIAL){
+                listener.changeState(main.TUTORIAL_STATE);
+                GameData.SHOW_TUTORIAL = false;
+            }else{
+                listener.changeState(main.PLAY_STATE);
             }
         }
 
@@ -162,22 +148,26 @@ public class MainMenuState extends GameState{
 
     @Override
     public void touchUp(int x, int y) {
-        if(playButton.handleUp(x,y)){
-            tSnakeAnimation.play();
-            nextAction = NEXT_PLAY;
+        if(playButton.handleUp(x,y) && !buttonPressed){
+            buttonPressed = true;
+            if(tSnakeAnimation.getCurrentFrame() < 19){
+                animationShouldPlay = true;
+            }else {
+                tSnakeAnimation.play();
+            }
             listener.playClicked();
         }
-        if(settingsButton.handleUp(x,y)){
-            tSnakeAnimation.play();
-            nextAction = NEXT_SETTINGS;
+        if(settingsButton.handleUp(x,y) && !buttonPressed){
+            buttonPressed = true;
+            listener.changeState(main.SETTINGS_STATE);
             listener.playClicked();
         }
-        if(shopButton.handleUp(x,y)){
-            tSnakeAnimation.play();
-            nextAction = NEXT_SHOP;
+        if(shopButton.handleUp(x,y) && !buttonPressed){
+            buttonPressed = true;
+            listener.changeState(main.SHOP_STATE);
             listener.playClicked();
         }
-        if(quitButton.handleUp(x,y)){
+        if(quitButton.handleUp(x,y) && !buttonPressed){
             Gdx.app.exit();
         }
     }

@@ -31,7 +31,6 @@ public class ScrollView {
 
     private float pressY;
 
-    private float speedY;
 
     private boolean pressed;
 
@@ -52,15 +51,8 @@ public class ScrollView {
 
         this.y = y;
         dy = 0;
-        speedY = 0;
 
         pressed = false;
-    }
-
-    public void update(float delta){
-        if(!pressed){
-
-        }
     }
 
     public void handleDown(int x, int y){
@@ -72,7 +64,6 @@ public class ScrollView {
             float deltaY = y - pressY;
             float lastY = this.y;
             this.y+=deltaY;
-            speedY = deltaY;
 
 
             if(this.y > MAX_Y){
@@ -98,7 +89,6 @@ public class ScrollView {
 
         int pointer = -1;
 
-
         if(Math.abs(dy - y) < 20* main.SCALEY){
             for(int i =0; i < items.length;i++){
                 if(items[i].isInside(x,y)){
@@ -106,8 +96,6 @@ public class ScrollView {
                     break;
                 }
             }
-        }else{
-            speedY = y - pressY;
         }
 
         return pointer;

@@ -154,6 +154,7 @@ public class PlayState extends GameState {
     private Sound coinSound;
     private Sound dieSound;
     private Sound hitSound;
+    private Sound pointSound;
 
     public PlayState() {
     }
@@ -379,9 +380,7 @@ public class PlayState extends GameState {
                         }
                         case Field.SPEED_COIN: {
                             field.getAnimation().play();
-                            if (!speedPowerup.isActive()) {
-                                speed = speeds[GameData.SNAKE_SPEED-1] / 2;
-                            }
+                            speed = speeds[GameData.SNAKE_SPEED-1] / 2;
                             speedPowerup.activate();
                             if (GameData.PLAY_SOUNDS) {
                                 boostSound.play();
@@ -392,7 +391,7 @@ public class PlayState extends GameState {
                             field.getAnimation().play();
                             GameData.POINT_STARS++;
                             if (GameData.PLAY_SOUNDS) {
-                                coinSound.play();
+                                pointSound.play();
                             }
                             break;
                         }
@@ -878,6 +877,7 @@ public class PlayState extends GameState {
         coinSound = Gdx.audio.newSound(Gdx.files.internal("sounds/coin.wav"));
         dieSound = Gdx.audio.newSound(Gdx.files.internal("sounds/die.wav"));
         hitSound = Gdx.audio.newSound(Gdx.files.internal("sounds/hit.wav"));
+        pointSound = Gdx.audio.newSound(Gdx.files.internal("sounds/point.wav"));
     }
 
     @Override
@@ -934,6 +934,7 @@ public class PlayState extends GameState {
         coinSound.dispose();
         dieSound.dispose();
         hitSound.dispose();
+        pointSound.dispose();
     }
 
     private void moveEverything(Direction direction){
