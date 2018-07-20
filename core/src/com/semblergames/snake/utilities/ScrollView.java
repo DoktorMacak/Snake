@@ -15,7 +15,7 @@ public class ScrollView {
 
 
     private static float MAX_Y;
-    private static float MIN_Y = main.HEIGHT - 336*main.SCALEY;
+    private static float MIN_Y = main.HEIGHT - 256*main.SCALEY;
 
 
 
