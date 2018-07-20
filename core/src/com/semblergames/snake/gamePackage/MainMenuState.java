@@ -62,6 +62,9 @@ public class MainMenuState extends GameState{
         quitButton = new Button(quitTexture);
         quitButton.setPosition(main.WIDTH/2, 260*main.SCALEY);
 
+        noAdImage = new Image(noAdTexture);
+        noAdImage.setPosition(0,main.HEIGHT*main.SCALEY - noAdTexture.getHeight()*main.SCALEY);
+
         tSnakeAnimation = new Animation();
         for(int i = 0; i < 36;i++){
             tSnakeAnimation.addFrame(0.05f);
@@ -192,6 +195,8 @@ public class MainMenuState extends GameState{
         shopTexture = new Texture("buttons/shop.png");
         quitTexture = new Texture("buttons/exit.png");
 
+        noAdTexture = new Texture("buttons/noads.png");
+
         tSnakeTexture = new Texture[36];
 
         for(int i = 1; i < 37;i++){
@@ -206,6 +211,7 @@ public class MainMenuState extends GameState{
         settingsTexture.dispose();
         shopTexture.dispose();
         quitTexture.dispose();
+        noAdTexture.dispose();
 
         for(Texture texture:tSnakeTexture){
             texture.dispose();
