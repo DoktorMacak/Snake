@@ -81,7 +81,7 @@ public class AndroidLauncher extends AndroidApplication {
 			GameData.SKIN_PRICES[14] = 45;//45
 			GameData.SKIN_PRICES[15] = 45;
 			GameData.SKIN_PRICES[16] = 45;
-			GameData.SKIN_PRICES[17] = 45;
+			GameData.SKIN_PRICES[17] = 50;//50
 			GameData.SKIN_PRICES[18] = 60;//60
 			GameData.SKIN_PRICES[19] = 60;
 			GameData.SKIN_PRICES[20] = 60;
