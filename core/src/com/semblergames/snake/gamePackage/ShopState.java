@@ -1,5 +1,7 @@
 package com.semblergames.snake.gamePackage;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -47,6 +49,8 @@ public class ShopState extends GameState {
     private ScrollView scrollView;
 
     private GlyphLayout layout;
+
+    private Sound lockedSound;
 
     @Override
     public void init() {
@@ -160,13 +164,17 @@ public class ShopState extends GameState {
 
             if(GameData.SKINS[pointer]){
                 GameData.SKIN_POINTER = pointer;
+                listener.playClicked();
             }else if(GameData.POINT_STARS >= GameData.SKIN_PRICES[pointer]){
                 GameData.SKIN_POINTER = pointer;
                 GameData.SKINS[pointer] = true;
                 GameData.POINT_STARS -= GameData.SKIN_PRICES[pointer];
+                listener.playClicked();
+            }else{
+                lockedSound.play();
             }
 
-            listener.playClicked();
+
 
         }
     }
@@ -192,6 +200,8 @@ public class ShopState extends GameState {
 
         font = generator.generateFont(parameter);
 
+        lockedSound = Gdx.audio.newSound(Gdx.files.internal("sounds/locked.wav"));
+
     }
 
     @Override
@@ -208,6 +218,8 @@ public class ShopState extends GameState {
         selectedTexture.dispose();
 
         font.dispose();
+
+        lockedSound.dispose();
     }
 
     @Override

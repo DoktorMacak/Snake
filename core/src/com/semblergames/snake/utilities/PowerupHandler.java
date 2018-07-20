@@ -120,4 +120,8 @@ public class PowerupHandler {
     public boolean isActive() {
         return active;
     }
+
+    public float getTimeLapsed(){
+        return timeLapsed;
+    }
 }
