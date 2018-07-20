@@ -12,6 +12,7 @@ import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.Animation;
 import com.semblergames.snake.utilities.Button;
 import com.semblergames.snake.utilities.GameData;
+import com.semblergames.snake.utilities.Image;
 
 public class MainMenuState extends GameState{
 
@@ -27,11 +28,14 @@ public class MainMenuState extends GameState{
     private Texture settingsTexture;
     private Texture shopTexture;
     private Texture quitTexture;
+    private Texture noAdTexture;
 
     private Button playButton;
     private Button settingsButton;
     private Button shopButton;
     private Button quitButton;
+
+    private Image noAdImage;
 
     private BitmapFont font;
     private GlyphLayout glyphLayout;

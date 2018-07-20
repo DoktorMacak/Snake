@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.Texture;
 public class Skin {
     private int skin;
 
+    private boolean hasCorner;
+
     private Texture head;
     private Texture corner;
     private Texture body;
@@ -22,7 +24,11 @@ public class Skin {
         this.skin = skin;
         head = new Texture("skins/parts/"+skin+"head.png");
         body = new Texture("skins/parts/"+skin+"body.png");
-        if (skin > 6 && skin != 30 && skin != 31) corner = new Texture("skins/parts/"+skin+"corner.png");
+        hasCorner = false;
+        if (skin > 6 && skin != 30 && skin != 31){
+            corner = new Texture("skins/parts/"+skin+"corner.png");
+            hasCorner = true;
+        }
         deadHead = new Texture("skins/parts/"+skin+"headd.png");
     }
 
@@ -31,12 +37,15 @@ public class Skin {
     }
 
     public Texture getCorner() {
-        if (skin < 7 || skin == 30 || skin == 31) return body;
         return corner;
     }
 
     public Texture getHead() {
         return head;
+    }
+
+    public boolean isHasCorner(){
+        return hasCorner;
     }
 
     public void dispose(){
