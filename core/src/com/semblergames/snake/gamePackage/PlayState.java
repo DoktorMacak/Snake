@@ -296,7 +296,7 @@ public class PlayState extends GameState {
         if(playing){
 
             // update powerupova
-
+            speedPowerup.activate();
             speedPowerup.update(delta);
             if(speedPowerup.isActive() && speedPowerup.getTimeLapsed() > 6.5f){
                 speed+=delta*speedAccel;
@@ -304,7 +304,7 @@ public class PlayState extends GameState {
                     speed = speeds[GameData.SNAKE_SPEED-1];
                 }
             }
-
+            magnetPowerup.activate();
             magnetPowerup.update(delta);
 
             //update magnetizovanih
@@ -961,17 +961,38 @@ public class PlayState extends GameState {
                 snake.move(-PlayingRegion.width,0);
                 camera.move(-PlayingRegion.width,0);
                 for(int i = 0; i < ROWS;i++){
+                    PlayingRegion r = regions[i][0];
                     for(int j = 0; j < COLUMNS-1;j++){
                         regions[i][j] = regions[i][j+1];
                     }
+                    regions[i][COLUMNS-1] = r;
                 }
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         for(int i = 0; i < ROWS; i++) {
-                            regions[i][COLUMNS-1] = new PlayingRegion(PlayingRegion.FILLED);
+                            regions[i][COLUMNS-1].init(PlayingRegion.FILLED);
                         }
+
+                        for(Segment segment:snake.getSegments()){
+                            int regionColumn = segment.getX() / PlayingRegion.width;
+
+
+                            if(regionColumn == COLUMNS-1){
+                                int regionRow = segment.getY() / PlayingRegion.height;
+
+                                int x = segment.getX() % PlayingRegion.width;
+                                int y = segment.getY() % PlayingRegion.height;
+                                if(x>=0 && y>=0) {
+                                    regions[regionRow][regionColumn]
+                                            .getField(x, y).setType(Field.EMPTY);
+                                }
+                            }
+
+                        }
+
+
                     }
                 }).start();
 
@@ -980,17 +1001,37 @@ public class PlayState extends GameState {
                 snake.move(PlayingRegion.width,0);
                 camera.move(PlayingRegion.width,0);
                 for(int i = 0; i < ROWS;i++){
+                    PlayingRegion r = regions[i][COLUMNS-1];
                     for(int j = COLUMNS-1; j > 0;j--){
                         regions[i][j] = regions[i][j-1];
                     }
+                    regions[i][0] = r;
                 }
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         for(int i = 0; i < ROWS; i++) {
-                            regions[i][0] = new PlayingRegion(PlayingRegion.FILLED);
+                            regions[i][0].init(PlayingRegion.FILLED);
                         }
+
+                        for(Segment segment:snake.getSegments()){
+                            int regionColumn = segment.getX() / PlayingRegion.width;
+
+
+                            if(regionColumn == 0){
+                                int regionRow = segment.getY() / PlayingRegion.height;
+
+                                int x = segment.getX() % PlayingRegion.width;
+                                int y = segment.getY() % PlayingRegion.height;
+                                if(x>=0 && y>=0) {
+                                    regions[regionRow][regionColumn]
+                                            .getField(x, y).setType(Field.EMPTY);
+                                }
+                            }
+
+                        }
+
                     }
                 }).start();
                 break;
@@ -998,17 +1039,37 @@ public class PlayState extends GameState {
                 snake.move(0, PlayingRegion.height);
                 camera.move(0, PlayingRegion.height);
                 for(int i = 0; i < COLUMNS;i++){
+                    PlayingRegion r = regions[ROWS-1][i];
                     for(int j = ROWS-1; j > 0;j--){
                         regions[j][i] = regions[j-1][i];
                     }
+                    regions[0][i] = r;
                 }
 
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         for(int i = 0; i < COLUMNS; i++) {
-                            regions[0][i] = new PlayingRegion(PlayingRegion.FILLED);
+                            regions[0][i].init(PlayingRegion.FILLED);
                         }
+
+                        for(Segment segment:snake.getSegments()){
+                            int regionRow = segment.getY() / PlayingRegion.height;
+
+
+                            if(regionRow == 0){
+                                int regionColumn = segment.getX() / PlayingRegion.width;
+
+                                int x = segment.getX() % PlayingRegion.width;
+                                int y = segment.getY() % PlayingRegion.height;
+                                if(x>=0 && y>=0) {
+                                    regions[regionRow][regionColumn]
+                                            .getField(x, y).setType(Field.EMPTY);
+                                }
+                            }
+
+                        }
+
                     }
                 }).start();
                 break;
@@ -1016,15 +1077,34 @@ public class PlayState extends GameState {
                 snake.move(0,-PlayingRegion.height);
                 camera.move(0,-PlayingRegion.height);
                 for(int i = 0; i < COLUMNS;i++){
+                    PlayingRegion r = regions[0][i];
                     for(int j = 0; j < ROWS-1;j++){
                         regions[j][i] = regions[j+1][i];
                     }
+                    regions[ROWS-1][i] = r;
                 }
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         for(int i = 0; i < COLUMNS; i++) {
-                            regions[ROWS-1][i] = new PlayingRegion(PlayingRegion.FILLED);
+                            regions[ROWS-1][i].init(PlayingRegion.FILLED);
+                        }
+
+                        for(Segment segment:snake.getSegments()){
+                            int regionRow = segment.getY() / PlayingRegion.height;
+
+
+                            if(regionRow == ROWS-1){
+                                int regionColumn = segment.getX() / PlayingRegion.width;
+
+                                int x = segment.getX() % PlayingRegion.width;
+                                int y = segment.getY() % PlayingRegion.height;
+                                if(x>=0 && y>=0) {
+                                    regions[regionRow][regionColumn]
+                                            .getField(x, y).setType(Field.EMPTY);
+                                }
+                            }
+
                         }
                     }
                 }).start();

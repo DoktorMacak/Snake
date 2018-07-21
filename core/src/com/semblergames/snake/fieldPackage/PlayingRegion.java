@@ -127,7 +127,7 @@ public class PlayingRegion {
                     x = random.nextInt(width);
                     y = random.nextInt(height);
                 }
-                field[x][y].setType(Field.DOUBLE_STAR);
+                field[y][x].setType(Field.DOUBLE_STAR);
             }
         }
 
