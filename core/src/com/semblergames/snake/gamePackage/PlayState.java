@@ -984,7 +984,7 @@ public class PlayState extends GameState {
 
                                 int x = segment.getX() % PlayingRegion.width;
                                 int y = segment.getY() % PlayingRegion.height;
-                                if(x>=0 && y>=0) {
+                                if(x>=0 && y>=0 && regionRow >= 0) {
                                     regions[regionRow][regionColumn]
                                             .getField(x, y).setType(Field.EMPTY);
                                 }
@@ -1024,7 +1024,7 @@ public class PlayState extends GameState {
 
                                 int x = segment.getX() % PlayingRegion.width;
                                 int y = segment.getY() % PlayingRegion.height;
-                                if(x>=0 && y>=0) {
+                                if(x>=0 && y>=0 && regionRow >= 0) {
                                     regions[regionRow][regionColumn]
                                             .getField(x, y).setType(Field.EMPTY);
                                 }
@@ -1062,7 +1062,7 @@ public class PlayState extends GameState {
 
                                 int x = segment.getX() % PlayingRegion.width;
                                 int y = segment.getY() % PlayingRegion.height;
-                                if(x>=0 && y>=0) {
+                                if(x>=0 && y>=0 && regionColumn >= 0) {
                                     regions[regionRow][regionColumn]
                                             .getField(x, y).setType(Field.EMPTY);
                                 }
@@ -1099,7 +1099,7 @@ public class PlayState extends GameState {
 
                                 int x = segment.getX() % PlayingRegion.width;
                                 int y = segment.getY() % PlayingRegion.height;
-                                if(x>=0 && y>=0) {
+                                if(x>=0 && y>=0 && regionColumn >= 0) {
                                     regions[regionRow][regionColumn]
                                             .getField(x, y).setType(Field.EMPTY);
                                 }
