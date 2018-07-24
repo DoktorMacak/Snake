@@ -50,7 +50,7 @@ public class GameOverState extends GameState {
         quit.setPosition(main.WIDTH/2, 260*main.SCALEY);
 
         share = new Button(shareTexture);
-        share.setPosition(main.WIDTH/2, 620*main.SCALEY);
+        share.setPosition(main.WIDTH/2, 665*main.SCALEY);
 
 
 
