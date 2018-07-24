@@ -14,4 +14,6 @@ public interface ChangeState {
     public void playClicked();
 
     public int getPreviousState();
+
+    public void shareScore(int score);
 }

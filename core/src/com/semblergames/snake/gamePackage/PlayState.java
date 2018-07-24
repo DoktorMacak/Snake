@@ -296,7 +296,6 @@ public class PlayState extends GameState {
         if(playing){
 
             // update powerupova
-            speedPowerup.activate();
             speedPowerup.update(delta);
             if(speedPowerup.isActive() && speedPowerup.getTimeLapsed() > 6.5f){
                 speed+=delta*speedAccel;
@@ -304,7 +303,6 @@ public class PlayState extends GameState {
                     speed = speeds[GameData.SNAKE_SPEED-1];
                 }
             }
-            magnetPowerup.activate();
             magnetPowerup.update(delta);
 
             //update magnetizovanih

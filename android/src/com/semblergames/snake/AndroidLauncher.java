@@ -7,11 +7,10 @@ import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.GameData;
-import com.semblergames.snake.utilities.ShareContent;
+import com.semblergames.snake.utilities.ShareScore;
 
-public class AndroidLauncher extends AndroidApplication implements ShareContent{
+public class AndroidLauncher extends AndroidApplication implements ShareScore{
 
 	private static final String FILE_NAME = "tsnake_settings";
 
@@ -36,7 +35,7 @@ public class AndroidLauncher extends AndroidApplication implements ShareContent{
 		config.useGyroscope = false;
 		loadData();
 
-		initialize(new main(), config);
+		initialize(new main(this), config);
 	}
 
 	@Override

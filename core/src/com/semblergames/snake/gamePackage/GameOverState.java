@@ -20,15 +20,25 @@ public class GameOverState extends GameState {
 
     private Texture quitTexture;
 
+    private Texture shareTexture;
+    private Texture starTexture;
+
     private BitmapFont font1;
     private BitmapFont font2;
+    private BitmapFont font3;
     private BitmapFont font;
 
     private Button playAgain;
     private Button quit;
+    private Button share;
 
     private float textX;
     private float textY;
+
+    private float starTextX;
+    private float starTextY;
+    private float starX;
+    private float starY;
 
     @Override
     public void init() {
@@ -38,6 +48,9 @@ public class GameOverState extends GameState {
 
         quit = new Button(quitTexture);
         quit.setPosition(main.WIDTH/2, 260*main.SCALEY);
+
+        share = new Button(shareTexture);
+        share.setPosition(main.WIDTH/2, 620*main.SCALEY);
 
 
 
@@ -53,6 +66,17 @@ public class GameOverState extends GameState {
         textX = main.WIDTH/2 - layout.width/2;
 
         textY = 924*main.SCALEY;
+
+        starX = main.WIDTH - 90*main.SCALEX;
+        starY = main.HEIGHT - 90*main.SCALEY;
+
+        starTextY = main.HEIGHT - 60*main.SCALEY;
+
+        layout = new GlyphLayout(font, Integer.toString(GameData.POINT_STARS));
+
+        float twid = layout.width;
+
+        starTextX = main.WIDTH - 143*main.SCALEX - twid;
 
 
 
@@ -70,9 +94,15 @@ public class GameOverState extends GameState {
         quit.draw(batch);
         quit.update(delta);
 
+        drawTexture(batch,starX, starY, starTexture);
+
         font.getColor().a = alpha;
 
         font.draw(batch, "SCORE: "+ GameData.CURRENT_SCORE, textX, textY);
+
+        font3.getColor().a = alpha;
+
+        font3.draw(batch, Integer.toString(GameData.POINT_STARS), starTextX, starTextY);
 
         batch.end();
     }
@@ -81,12 +111,14 @@ public class GameOverState extends GameState {
     public void touchDown(int x, int y) {
         playAgain.handleDown(x,y);
         quit.handleDown(x,y);
+        share.handleDown(x,y);
     }
 
     @Override
     public void touchDragged(int x, int y) {
         playAgain.handleDown(x,y);
         quit.handleDown(x,y);
+        share.handleDown(x,y);
     }
 
     @Override
@@ -98,6 +130,9 @@ public class GameOverState extends GameState {
         if(quit.handleUp(x,y)){
             listener.changeState(main.MAIN_MENU_STATE, main.GAME_OVER_STATE);
             listener.playClicked();
+        }
+        if(share.handleUp(x,y)){
+            listener.shareScore(GameData.CURRENT_SCORE);
         }
     }
 
@@ -114,6 +149,10 @@ public class GameOverState extends GameState {
 
         quitTexture = new Texture("game_over/quit.png");
 
+        shareTexture = new Texture("buttons/share.png");
+
+        starTexture = new Texture("field/point.png");
+
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
 
@@ -127,6 +166,11 @@ public class GameOverState extends GameState {
 
         font2 = generator.generateFont(parameter);
 
+        parameter.color = new Color(0,0,0,1);
+        parameter.size = (int)(60*main.SCALEX);
+
+        font3 = generator.generateFont(parameter);
+
 
     }
 
@@ -139,8 +183,13 @@ public class GameOverState extends GameState {
 
         quitTexture.dispose();
 
+        shareTexture.dispose();
+
+        starTexture.dispose();
+
         font1.dispose();
         font2.dispose();
+        font3.dispose();
 
     }
 }
