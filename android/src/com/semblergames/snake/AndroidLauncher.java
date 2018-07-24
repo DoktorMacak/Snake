@@ -168,7 +168,7 @@ public class AndroidLauncher extends AndroidApplication implements ShareScore{
 	public void shareScore(int score) {
 		Intent shareIntent = new Intent();
 		shareIntent.setAction(Intent.ACTION_SEND);
-		shareIntent.putExtra(Intent.EXTRA_TEXT, "Score: "+score+" points! Try to beat me now!");
+		shareIntent.putExtra(Intent.EXTRA_TEXT, "I scored: "+score+" in Turbo Snake!\nTry for yourself: https://play.google.com/store/apps/details?id=com.semblergames.snake");
 		shareIntent.setType("text/plain");
 		startActivity(shareIntent);
 	}

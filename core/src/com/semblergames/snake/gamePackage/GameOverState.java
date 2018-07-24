@@ -72,7 +72,7 @@ public class GameOverState extends GameState {
 
         starTextY = main.HEIGHT - 60*main.SCALEY;
 
-        layout = new GlyphLayout(font, Integer.toString(GameData.POINT_STARS));
+        layout = new GlyphLayout(font3, Integer.toString(GameData.POINT_STARS));
 
         float twid = layout.width;
 
@@ -93,6 +93,9 @@ public class GameOverState extends GameState {
 
         quit.draw(batch);
         quit.update(delta);
+
+        share.draw(batch);
+        share.update(delta);
 
         drawTexture(batch,starX, starY, starTexture);
 
