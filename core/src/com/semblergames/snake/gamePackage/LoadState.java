@@ -43,7 +43,7 @@ public class LoadState extends GameState{
 
         if(animation.isFinished()){
             animation.setFinished(false);
-            listener.changeState(main.MAIN_MENU_STATE);
+            listener.changeState(main.MAIN_MENU_STATE, main.LOAD_STATE);
             if(GameData.PLAY_MUSIC){
                 listener.playMusic();
             }

@@ -1,6 +1,7 @@
 package com.semblergames.snake;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -8,8 +9,9 @@ import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import com.semblergames.snake.main;
 import com.semblergames.snake.utilities.GameData;
+import com.semblergames.snake.utilities.ShareContent;
 
-public class AndroidLauncher extends AndroidApplication {
+public class AndroidLauncher extends AndroidApplication implements ShareContent{
 
 	private static final String FILE_NAME = "tsnake_settings";
 
@@ -161,5 +163,14 @@ public class AndroidLauncher extends AndroidApplication {
 
 		}catch(Exception e){}
 
+	}
+
+	@Override
+	public void shareScore(int score) {
+		Intent shareIntent = new Intent();
+		shareIntent.setAction(Intent.ACTION_SEND);
+		shareIntent.putExtra(Intent.EXTRA_TEXT, "Score: "+score+" points! Try to beat me now!");
+		shareIntent.setType("text/plain");
+		startActivity(shareIntent);
 	}
 }

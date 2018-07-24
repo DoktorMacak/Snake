@@ -149,7 +149,7 @@ public class ShopState extends GameState {
     @Override
     public void touchUp(int x, int y) {
         if(backButton.handleUp(x,y)){
-            listener.changeState(main.MAIN_MENU_STATE);
+            listener.changeState(main.MAIN_MENU_STATE,main.SHOP_STATE);
             listener.playClicked();
         }
 
@@ -224,6 +224,6 @@ public class ShopState extends GameState {
 
     @Override
     public void backPressed() {
-        listener.changeState(main.MAIN_MENU_STATE);
+        listener.changeState(main.MAIN_MENU_STATE,main.SHOP_STATE);
     }
 }

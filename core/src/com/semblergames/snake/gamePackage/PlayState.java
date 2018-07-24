@@ -443,7 +443,7 @@ public class PlayState extends GameState {
             if(deadTime > 1.5f){
                 deadTime = -20;
                 GameData.CURRENT_SCORE = score;
-                listener.changeState(main.GAME_OVER_STATE);
+                listener.changeState(main.GAME_OVER_STATE, main.PLAY_STATE);
             }
 
         }else if(tip || postPause){
@@ -652,7 +652,7 @@ public class PlayState extends GameState {
             }
 
             if(quitButton.handleUp(x,y)){
-                listener.changeState(main.MAIN_MENU_STATE);
+                listener.changeState(main.MAIN_MENU_STATE,main.PLAY_STATE);
                 listener.playClicked();
             }
 
@@ -975,24 +975,6 @@ public class PlayState extends GameState {
                             regions[i][COLUMNS-1].init(PlayingRegion.FILLED);
                         }
 
-                        for(Segment segment:snake.getSegments()){
-                            int regionColumn = segment.getX() / PlayingRegion.width;
-
-
-                            if(regionColumn == COLUMNS-1){
-                                int regionRow = segment.getY() / PlayingRegion.height;
-
-                                int x = segment.getX() % PlayingRegion.width;
-                                int y = segment.getY() % PlayingRegion.height;
-                                if(x>=0 && y>=0 && regionRow >= 0) {
-                                    regions[regionRow][regionColumn]
-                                            .getField(x, y).setType(Field.EMPTY);
-                                }
-                            }
-
-                        }
-
-
                     }
                 }).start();
 
@@ -1015,23 +997,6 @@ public class PlayState extends GameState {
                             regions[i][0].init(PlayingRegion.FILLED);
                         }
 
-                        for(Segment segment:snake.getSegments()){
-                            int regionColumn = segment.getX() / PlayingRegion.width;
-
-
-                            if(regionColumn == 0){
-                                int regionRow = segment.getY() / PlayingRegion.height;
-
-                                int x = segment.getX() % PlayingRegion.width;
-                                int y = segment.getY() % PlayingRegion.height;
-                                if(x>=0 && y>=0 && regionRow >= 0) {
-                                    regions[regionRow][regionColumn]
-                                            .getField(x, y).setType(Field.EMPTY);
-                                }
-                            }
-
-                        }
-
                     }
                 }).start();
                 break;
@@ -1052,24 +1017,6 @@ public class PlayState extends GameState {
                         for(int i = 0; i < COLUMNS; i++) {
                             regions[0][i].init(PlayingRegion.FILLED);
                         }
-
-                        for(Segment segment:snake.getSegments()){
-                            int regionRow = segment.getY() / PlayingRegion.height;
-
-
-                            if(regionRow == 0){
-                                int regionColumn = segment.getX() / PlayingRegion.width;
-
-                                int x = segment.getX() % PlayingRegion.width;
-                                int y = segment.getY() % PlayingRegion.height;
-                                if(x>=0 && y>=0 && regionColumn >= 0) {
-                                    regions[regionRow][regionColumn]
-                                            .getField(x, y).setType(Field.EMPTY);
-                                }
-                            }
-
-                        }
-
                     }
                 }).start();
                 break;
@@ -1090,22 +1037,6 @@ public class PlayState extends GameState {
                             regions[ROWS-1][i].init(PlayingRegion.FILLED);
                         }
 
-                        for(Segment segment:snake.getSegments()){
-                            int regionRow = segment.getY() / PlayingRegion.height;
-
-
-                            if(regionRow == ROWS-1){
-                                int regionColumn = segment.getX() / PlayingRegion.width;
-
-                                int x = segment.getX() % PlayingRegion.width;
-                                int y = segment.getY() % PlayingRegion.height;
-                                if(x>=0 && y>=0 && regionColumn >= 0) {
-                                    regions[regionRow][regionColumn]
-                                            .getField(x, y).setType(Field.EMPTY);
-                                }
-                            }
-
-                        }
                     }
                 }).start();
                 break;
