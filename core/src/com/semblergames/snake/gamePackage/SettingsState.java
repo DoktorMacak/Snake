@@ -101,7 +101,7 @@ public class SettingsState extends GameState {
     @Override
     public void touchUp(int x, int y) {
         if(backButton.handleUp(x,y)){
-            listener.changeState(main.MAIN_MENU_STATE);
+            listener.changeState(main.MAIN_MENU_STATE, main.SETTINGS_STATE);
             listener.playClicked();
         }
         if(playMusic.handleUp(x,y)){
@@ -185,6 +185,6 @@ public class SettingsState extends GameState {
 
     @Override
     public void backPressed() {
-        listener.changeState(main.MAIN_MENU_STATE);
+        listener.changeState(main.MAIN_MENU_STATE, main.SETTINGS_STATE);
     }
 }

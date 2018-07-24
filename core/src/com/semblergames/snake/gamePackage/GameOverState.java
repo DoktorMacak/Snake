@@ -92,18 +92,18 @@ public class GameOverState extends GameState {
     @Override
     public void touchUp(int x, int y) {
         if(playAgain.handleUp(x,y)){
-            listener.changeState(main.PLAY_STATE);
+            listener.changeState(main.PLAY_STATE, main.GAME_OVER_STATE);
             listener.playClicked();
         }
         if(quit.handleUp(x,y)){
-            listener.changeState(main.MAIN_MENU_STATE);
+            listener.changeState(main.MAIN_MENU_STATE, main.GAME_OVER_STATE);
             listener.playClicked();
         }
     }
 
     @Override
     public void backPressed() {
-        listener.changeState(main.MAIN_MENU_STATE);
+        listener.changeState(main.MAIN_MENU_STATE, main.GAME_OVER_STATE);
     }
 
     @Override

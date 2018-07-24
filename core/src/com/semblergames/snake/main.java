@@ -61,6 +61,7 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	private int currentIndex;
 	private boolean ready;
 
+	private int previousIndex;
 
 	private float alpha;
 
@@ -249,8 +250,8 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	}
 
 	@Override
-	public void changeState(int x) {
-
+	public void changeState(int x, int y) {
+		previousIndex = y;
 		if(x != nextIndex) {
 			nextIndex = x;
 
@@ -266,6 +267,11 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 
 
 
+	}
+
+	@Override
+	public int getPreviousState(){
+		return previousIndex;
 	}
 
 	@Override

@@ -71,12 +71,18 @@ public class MainMenuState extends GameState{
         }
         tSnakeAnimation.playOnce();
 
+        if(listener.getPreviousState() == main.SHOP_STATE || listener.getPreviousState() == main.SETTINGS_STATE){
+            tSnakeAnimation.setCurrentFrame(19);
+            tSnakeAnimation.pause();
+        }
 
 
         ready = true;
         animationShouldPlay = false;
 
         buttonPressed = false;
+
+
 
 
         glyphLayout = new GlyphLayout(font, "HIGH SCORE: "+ GameData.HIGH_SCORE);
@@ -111,10 +117,10 @@ public class MainMenuState extends GameState{
         if(tSnakeAnimation.isFinished()){
             tSnakeAnimation.setFinished(false);
             if(GameData.SHOW_TUTORIAL){
-                listener.changeState(main.TUTORIAL_STATE);
+                listener.changeState(main.TUTORIAL_STATE, main.MAIN_MENU_STATE);
                 GameData.SHOW_TUTORIAL = false;
             }else{
-                listener.changeState(main.PLAY_STATE);
+                listener.changeState(main.PLAY_STATE, main.MAIN_MENU_STATE);
             }
         }
 
@@ -168,12 +174,12 @@ public class MainMenuState extends GameState{
         }
         if(settingsButton.handleUp(x,y) && !buttonPressed){
             buttonPressed = true;
-            listener.changeState(main.SETTINGS_STATE);
+            listener.changeState(main.SETTINGS_STATE, main.MAIN_MENU_STATE);
             listener.playClicked();
         }
         if(shopButton.handleUp(x,y) && !buttonPressed){
             buttonPressed = true;
-            listener.changeState(main.SHOP_STATE);
+            listener.changeState(main.SHOP_STATE, main.MAIN_MENU_STATE);
             listener.playClicked();
         }
         if(quitButton.handleUp(x,y) && !buttonPressed){
