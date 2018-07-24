@@ -25,6 +25,7 @@ import com.semblergames.snake.utilities.ChangeState;
 import com.semblergames.snake.utilities.GameData;
 import com.semblergames.snake.utilities.Image;
 import com.semblergames.snake.utilities.Playlist;
+import com.semblergames.snake.utilities.ShareScore;
 import com.semblergames.snake.utilities.Skin;
 
 public class main extends ApplicationAdapter implements InputProcessor, ChangeState{
@@ -80,6 +81,16 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	private SpriteBatch batch;
 	private ShapeRenderer renderer;
 	private FreeTypeFontGenerator fontGenerator;
+
+	/**
+	 * listener za share
+	 */
+
+	ShareScore shareScore;
+
+	public main(ShareScore sc){
+		shareScore = sc;
+	}
 
 
 	@Override
@@ -288,5 +299,10 @@ public class main extends ApplicationAdapter implements InputProcessor, ChangeSt
 	public void playClicked() {
 		if(GameData.PLAY_SOUNDS)
 		click.play();
+	}
+
+	@Override
+	public void shareScore(int score) {
+		shareScore.shareScore(score);
 	}
 }

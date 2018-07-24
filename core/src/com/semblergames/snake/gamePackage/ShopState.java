@@ -32,6 +32,7 @@ public class ShopState extends GameState {
     private Texture starTexture;
     private Texture selectedTexture;
 
+
     private BitmapFont font;
 
 
