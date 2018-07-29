@@ -172,7 +172,9 @@ public class ShopState extends GameState {
                 GameData.POINT_STARS -= GameData.SKIN_PRICES[pointer];
                 listener.playClicked();
             }else{
-                lockedSound.play();
+                if(GameData.PLAY_SOUNDS) {
+                    lockedSound.play();
+                }
             }
 
 

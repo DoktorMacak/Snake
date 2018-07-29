@@ -396,7 +396,7 @@ public class PlayState extends GameState {
                         }
                         case Field.DOUBLE_STAR:{
                             field.getAnimation().play();
-                            GameData.POINT_STARS+=5;
+                            GameData.POINT_STARS+=2;
                             if(GameData.PLAY_SOUNDS){
                                 pointSound.play();
                             }
